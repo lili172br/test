@@ -173,8 +173,12 @@
         // 音訊內容初始化
         let audioCtx = null;
         function initAudio() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
         }
 
         function playClickSound() {
@@ -198,30 +202,29 @@
             osc.stop(now + 0.12);
         }
 
-        // 精準震動回饋觸發器 (綁定在壓下的瞬間)
+        // 精準單次短震動 (相容性最高)
         function triggerHapticFeedback() {
             if (navigator.vibrate) {
-                // 設計了一個乾淨、短促且有紮實物理回饋感的雙重微震動節奏
-                // 震動 15毫秒 -> 暫停 10毫秒 -> 再震動 15毫秒
-                navigator.vibrate([15, 10, 15]);
+                navigator.vibrate(20); // 實打實震動 20 毫秒
             }
         }
 
         // 監聽交互事件
         document.querySelectorAll('.play-sound').forEach(element => {
             
-            // 偵測裝置支援的按下事件 (touchstart 用於手機，mousedown 用於電腦)
+            // 保險機制 1：在手指剛碰觸或滑鼠剛按下的瞬間直接觸發震動
             const pressEvent = ('ontouchstart' in window) ? 'touchstart' : 'mousedown';
             element.addEventListener(pressEvent, function() {
                 if (this.classList.contains('navigating')) return;
                 triggerHapticFeedback();
             });
 
-            // 實際點擊放開 -> 觸發音效與黑屏過場跳轉
+            // 實際點擊放開 -> 觸發音效、黑屏過場跳轉，並作為保險再次觸發震動
             element.addEventListener('click', function(e) {
                 if (this.classList.contains('navigating')) return;
                 this.classList.add('navigating');
 
+                triggerHapticFeedback(); // 保險機制 2
                 playClickSound();
 
                 const targetUrl = this.getAttribute('data-href');
@@ -256,7 +259,7 @@
             });
         });
 
-        // 點擊環境音訊與觸覺解鎖
+        // 點擊解鎖音訊環境
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
