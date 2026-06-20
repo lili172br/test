@@ -141,6 +141,18 @@
             
         </section>
 
+        <section class="text-left space-y-2 px-1">
+            <h3 class="text-[9px] text-zinc-600 font-mono tracking-[0.25em] uppercase">
+                [ SYS_CHANGELOG_TERMINAL ]
+            </h3>
+            <div class="w-full bg-[#070707] border border-zinc-900 rounded-xl p-4 font-mono text-[10px] text-zinc-500 space-y-1.5 leading-relaxed">
+                <div><span class="text-zinc-700">2026.06.20</span> // <span class="text-zinc-400">BUILD_V3.9_HAPTIC</span> // 部署核心高敏震動物理回饋系統，優化行動端環境相容性。</div>
+                <div><span class="text-zinc-700">2026.05.14</span> // <span class="text-zinc-400">NODE_03_LAUNCH</span> // 部署「時空穿梭系統」，完成動態金鑰驗證協議測試。</div>
+                <div><span class="text-zinc-700">2026.03.02</span> // <span class="text-zinc-400">SECURE_TUNING</span> // 全站接入 JWT 加密權限驗證，修復 URL 參數防篡改限制。</div>
+                <div><span class="text-zinc-700">2025.12.18</span> // <span class="text-zinc-400">SYS_INITIALIZE</span> // 核心控制台 li_172.br 節點正式在主網上線。</div>
+            </div>
+        </section>
+
         <hr class="border-zinc-900 w-full max-w-[40%] mx-auto my-4">
 
         <section class="text-[10px] text-zinc-600 text-left space-y-2.5 px-3 py-2 border-l border-zinc-800 font-sans">
@@ -202,29 +214,29 @@
             osc.stop(now + 0.12);
         }
 
-        // 精準單次短震動 (相容性最高)
-        function triggerHapticFeedback() {
+        // 精準單次短震動
+        function triggerHapticFeedback(duration = 20) {
             if (navigator.vibrate) {
-                navigator.vibrate(20); 
+                navigator.vibrate(duration); 
             }
         }
 
         // 監聽交互事件
         document.querySelectorAll('.play-sound').forEach(element => {
             
-            // 在手指剛碰觸或滑鼠剛按下的瞬間直接觸發震動
+            // 保險 1：手指或滑鼠按下的瞬間觸發震動 (15ms)
             const pressEvent = ('ontouchstart' in window) ? 'touchstart' : 'mousedown';
             element.addEventListener(pressEvent, function() {
                 if (this.classList.contains('navigating')) return;
-                triggerHapticFeedback();
+                triggerHapticFeedback(15);
             });
 
-            // 實際點擊放開 -> 觸發音效、黑屏過場跳轉，並作為保險再次觸發震動
+            // 保險 2：點擊確認放開的瞬間再震動一次 (25ms)，雙重確保絕對會震
             element.addEventListener('click', function(e) {
                 if (this.classList.contains('navigating')) return;
                 this.classList.add('navigating');
 
-                triggerHapticFeedback(); 
+                triggerHapticFeedback(25); 
                 playClickSound();
 
                 const targetUrl = this.getAttribute('data-href');
