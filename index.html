@@ -23,15 +23,13 @@
             background: #0a0a0a;
             border: 1px solid #1f1f1f;
             -webkit-tap-highlight-color: transparent;
-            transition: transform 0.1s ease, border-color 0.2s ease, background-color 0.2s ease;
+            transition: transform 0.1s ease, border-color 0.3s ease;
             cursor: pointer;
         }
-        /* 當被點擊或啟動故障狀態時的視覺反饋 */
-        .project-card.glitch-active {
+        .project-card:active {
             transform: scale(0.98);
             border-color: #dc2626;
-            background: #0f0505;
-            box-shadow: 0 0 15px rgba(220, 38, 38, 0.15);
+            background: #0d0d0d;
         }
         .btn-threads:active {
             transform: scale(0.95);
@@ -99,44 +97,44 @@
                 </span>
             </div>
             
-            <button data-href="./1/index.html" class="play-sound text-left w-full block project-card p-6 rounded-xl" data-original="🔮 社群陰暗面 // 潛意識面具">
-                <div class="flex justify-between items-center mb-2.5 pointer-events-none">
-                    <h2 class="text-sm font-bold text-zinc-200 glitch-target">
+            <button data-href="./1/index.html" class="play-sound text-left w-full block project-card p-6 rounded-xl">
+                <div class="flex justify-between items-center mb-2.5">
+                    <h2 class="text-sm font-bold text-zinc-200">
                         🔮 社群陰暗面 // 潛意識面具
                     </h2>
                     <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-900/40">
                         ONLINE
                     </span>
                 </div>
-                <p class="text-xs text-zinc-500 leading-relaxed font-sans pointer-events-none">
+                <p class="text-xs text-zinc-500 leading-relaxed font-sans">
                     探討網路人格背後的集體偽善。解構你在社群網絡與現實面具交織下的潛意識核心流動。
                 </p>
             </button>
 
-            <button data-href="./2/index.html" class="play-sound text-left w-full block project-card p-6 rounded-xl" data-original="🥊 鐵拳教育 // 潛意識人格審判">
-                <div class="flex justify-between items-center mb-2.5 pointer-events-none">
-                    <h2 class="text-sm font-bold text-zinc-200 glitch-target">
+            <button data-href="./2/index.html" class="play-sound text-left w-full block project-card p-6 rounded-xl">
+                <div class="flex justify-between items-center mb-2.5">
+                    <h2 class="text-sm font-bold text-zinc-200">
                         🥊 鐵拳教育 // 潛意識人格審判
                     </h2>
                     <span class="text-[9px] font-mono text-red-400 bg-red-950/30 px-2 py-0.5 rounded border border-red-900/40">
                         TRENDING
                     </span>
                 </div>
-                <p class="text-xs text-zinc-500 leading-relaxed font-sans pointer-events-none">
+                <p class="text-xs text-zinc-500 leading-relaxed font-sans">
                     配合 Netflix 影集爆紅熱潮。12題高壓盲測情境，審判你在體制霸凌與權力傾軋下的真實人格。
                 </p>
             </button>
 
-            <button data-href="./3/index.html" class="play-sound text-left w-full block project-card p-6 rounded-xl" data-original="⚡ 時空穿梭系統 // 核心實驗室">
-                <div class="flex justify-between items-center mb-2.5 pointer-events-none">
-                    <h2 class="text-sm font-bold text-zinc-200 glitch-target">
+            <button data-href="./3/index.html" class="play-sound text-left w-full block project-card p-6 rounded-xl">
+                <div class="flex justify-between items-center mb-2.5">
+                    <h2 class="text-sm font-bold text-zinc-200">
                         ⚡ 時空穿梭系統 // 核心實驗室
                     </h2>
                     <span class="text-[9px] font-mono text-cyan-400 bg-cyan-950/30 px-2 py-0.5 rounded border border-cyan-900/40">
                         NEW_NODE
                     </span>
                 </div>
-                <p class="text-xs text-zinc-500 leading-relaxed font-sans pointer-events-none">
+                <p class="text-xs text-zinc-500 leading-relaxed font-sans">
                     初始化量子時幕同步核心。支援自訂驗證金鑰與行動代號，動態觀測多維度時間亂流並生成旅行紀念小卡。
                 </p>
             </button>
@@ -157,7 +155,7 @@
         </section>
 
         <footer class="text-[9px] text-zinc-800 font-mono pt-1 tracking-widest">
-            CORE_SYS_V3.9_GLITCHED // © 2026 li_172.br.
+            CORE_SYS_V3.9_HAPTIC // © 2026 li_172.br.
         </footer>
         
     </main>
@@ -200,47 +198,23 @@
             osc.stop(now + 0.12);
         }
 
-        // 矩陣故障亂碼生成器
-        const glitchChars = "XÆA-12//Ø90_§ΔΞΣΩΨΦ★☠☣⚡";
-        let glitchInterval = null;
-
-        function startGlitchEffect(card) {
-            const target = card.querySelector('.glitch-target');
-            const originalText = card.getAttribute('data-original');
-            card.classList.add('glitch-active');
-            
-            // 觸發漏電感連震回饋 (Vibration API)
-            if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
-
-            clearInterval(glitchInterval);
-            glitchInterval = setInterval(() => {
-                let scrambled = "";
-                for (let i = 0; i < originalText.length; i++) {
-                    if (Math.random() > 0.35 && originalText[i] !== " ") {
-                        scrambled += glitchChars[Math.floor(Math.random() * glitchChars.length)];
-                    } else {
-                        scrambled += originalText[i];
-                    }
-                }
-                target.innerText = scrambled;
-            }, 600);
+        // 精準震動回饋觸發器 (綁定在壓下的瞬間)
+        function triggerHapticFeedback() {
+            if (navigator.vibrate) {
+                // 設計了一個乾淨、短促且有紮實物理回饋感的雙重微震動節奏
+                // 震動 15毫秒 -> 暫停 10毫秒 -> 再震動 15毫秒
+                navigator.vibrate([15, 10, 15]);
+            }
         }
 
-        function stopGlitchEffect(card) {
-            card.classList.remove('glitch-active');
-            clearInterval(glitchInterval);
-            const target = card.querySelector('.glitch-target');
-            if (target) target.innerText = card.getAttribute('data-original');
-        }
-
-        // 監聽交互事件 (兼顧電腦鼠標與行動端觸控)
+        // 監聽交互事件
         document.querySelectorAll('.play-sound').forEach(element => {
             
-            // 手指按下或滑鼠點下瞬間 -> 啟動雜訊與震動
+            // 偵測裝置支援的按下事件 (touchstart 用於手機，mousedown 用於電腦)
             const pressEvent = ('ontouchstart' in window) ? 'touchstart' : 'mousedown';
             element.addEventListener(pressEvent, function() {
-                if (this.classList.contains('navigating') || this.id === 'threads-link') return;
-                startGlitchEffect(this);
+                if (this.classList.contains('navigating')) return;
+                triggerHapticFeedback();
             });
 
             // 實際點擊放開 -> 觸發音效與黑屏過場跳轉
@@ -282,16 +256,12 @@
             });
         });
 
-        // 點擊環境音訊解鎖
+        // 點擊環境音訊與觸覺解鎖
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        // 核心修復：防止瀏覽器「返回」時因快取卡在全黑過場，並重置故障字元
+        // 防止瀏覽器「返回」時因快取卡在全黑過場
         window.addEventListener('pageshow', function (event) {
-            document.querySelectorAll('.project-card').forEach(card => {
-                stopGlitchEffect(card);
-            });
-
             if (event.persisted) {
                 const loader = document.getElementById('scene-loader');
                 const loaderText = document.getElementById('loader-text');
