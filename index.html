@@ -42,6 +42,19 @@
         .animate-fade-in {
             animation: masterFadeIn 0.5s ease-out forwards;
         }
+        /* 跑馬燈核心動畫：極致放慢（60秒）以減輕視覺負擔 */
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .marquee-content {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: marquee 60s linear infinite;
+        }
+        .marquee-content:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-start min-h-screen px-5 py-8 sm:justify-center animate-fade-in">
@@ -83,6 +96,21 @@
                 <span class="text-sm">💬</span> 
                 <span>開啟 THREADS APP</span>
             </button>
+        </section>
+
+        <section class="w-full relative overflow-hidden bg-[#060606] border-y border-zinc-950 py-1.5 flex items-center select-none">
+            <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none"></div>
+            
+            <div class="marquee-content gap-12 font-mono text-[10px] text-red-950/80 tracking-widest">
+                <span>[SYS_ALERT] 2026.06.20 // 核心觸覺物理回饋系統 HAPTIC_V2.0 升級完畢...</span>
+                <span>[SYS_ALERT] 2026.05.14 // NODE_03 量子時幕同步核心已接入主網，動態金鑰校驗協議通過...</span>
+                <span>[SYS_ALERT] ALL SUB-NODES STATUS // ONLINE_ACTIVE // 數據快取機制正常運作中...</span>
+                <span>[SYS_ALERT] 2026.06.20 // 核心觸覺物理回饋系統 HAPTIC_V2.0 升級完畢...</span>
+                <span>[SYS_ALERT] 2026.05.14 // NODE_03 量子時幕同步核心已接入主網，動態金鑰校驗協議通過...</span>
+                <span>[SYS_ALERT] ALL SUB-NODES STATUS // ONLINE_ACTIVE // 數據快取機制正常運作中...</span>
+            </div>
+
+            <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none"></div>
         </section>
 
         <hr class="border-zinc-900 w-full max-w-[60%] mx-auto my-2">
@@ -153,16 +181,43 @@
             </div>
         </section>
 
+        <section class="text-left space-y-2 px-1">
+            <h3 class="text-[9px] text-zinc-600 font-mono tracking-[0.25em] uppercase">
+                [ CORE_MATRIX_OVERVIEW // 核心技術與世界觀報告 ]
+            </h3>
+            <div class="w-full bg-[#070707] border border-zinc-900 rounded-xl p-4 font-sans text-[11px] text-zinc-500 space-y-3 leading-relaxed">
+                <div>
+                    <span class="font-mono text-[9px] text-zinc-400 block uppercase mb-0.5">01 // 數位具現化與感官工程</span>
+                    本控制台 li_172.br 為獨立創作者「黎」所建構之多維度數位實驗場。核心研究聚焦於將虛擬網絡數據轉化為實體人類感官之交互工程（Interactive Engineering）。我們透過現代前端技術，打破傳統網頁僅限於視覺與聽覺的局限，深度整合 <span class="text-zinc-400 font-mono text-[10px]">Web Audio API</span> 音訊合成器與行動端原生 <span class="text-zinc-400 font-mono text-[10px]">Web Haptics (Vibration API)</span> 物理觸覺回饋機制，將代碼邏輯具現化為可被感知的高回饋動態波形，創造具備物理實體感的賽博空間交互控制面板。
+                </div>
+                <div>
+                    <span class="font-mono text-[9px] text-zinc-400 block uppercase mb-0.5">02 // 多維度實驗節點與行為觀測</span>
+                    本站旗下所屬之核心實驗節點具備多樣化的數位互動型態：<br>
+                    • <span class="text-zinc-400">Node_01 & Node_02（行為盲測模組）</span>：主體用於進行「社群網絡交互與集體潛意識」之行為科學觀測。透過高度解構性的心理情境盲測，動態剖析當代使用者在現實人格、社群面具與權力傾軋交織下的行為模式。<br>
+                    • <span class="text-zinc-400">Node_03（時空穿梭系統）</span>：為核心工具實驗室，初始化量子時幕同步核心，支援使用者輸入自訂驗證金鑰與行動代號，動態觀測多維度時間亂流並即時在前端渲染生成旅行紀念小卡。<br>
+                    所有模組均採用響應式介面（Responsive Design）與極端優化之加載過場協議，確保在行動端與案頭端皆能呈現最高流暢度的視覺張力與沉浸感。
+                </div>
+                <div>
+                    <span class="font-mono text-[9px] text-zinc-400 block uppercase mb-0.5">03 // 數據安全與傳輸協議聲明</span>
+                    作為前沿網頁技術之實驗站點，本系統高度重視數據傳輸之安全性與用戶私隱。主控台交互模組（包含時空穿梭系統與行動代號生成器）之底層架構，均基於標準 Web 安全協議進行開發測試，涉及 <span class="text-zinc-400 font-mono text-[10px]">JSON Web Tokens (JWT)</span> 數位簽章驗證機制、URL 安全加密參數校驗以及 Cookie 行為防篡改防護。本站點嚴格遵循最小權限原則，所有交互生成之認證金鑰與旅行紀念數據均採客戶端（Client-Side）本地加密快取處理，絕不主動採集、儲存或外洩使用者之個人識別私隱資料，確保數據生態之純淨與安全。
+                </div>
+            </div>
+        </section>
+
         <hr class="border-zinc-900 w-full max-w-[40%] mx-auto my-4">
 
         <section class="text-[10px] text-zinc-600 text-left space-y-2.5 px-3 py-2 border-l border-zinc-800 font-sans">
             <div>
                 <span class="font-mono text-zinc-500 block text-[9px] uppercase">[ CORE_SYS_INFO ]</span>
-                網站 li_172.br 為獨立創作者「黎」所有。主要用於互動心理盲測模組、網頁高回饋交互工程、視覺美學呈現與 Web 安全協議（包含 JWT 驗證機制與 URL 安全加密參數）之開發測試研究。
+                網站 li_172.br 為獨立創作者「黎」所有。主要用於互動心理盲測模組、網頁高回饋交互工程、視覺美學呈現與 Web 安全協議之開發測試研究。
             </div>
             <div>
-                <span class="font-mono text-zinc-500 block text-[9px] uppercase">[ PRIVACY_POLICY ]</span>
-                本站整合 Google AdSense 服務，Google 作為第三方發布商將透過 Cookie 技術收集匿名瀏覽行為數據以提供個人化廣告服務。使用者可隨時調整瀏覽器 Cookie 權限，本系統絕不主動採集您的個人識別私隱資料。
+                <span class="font-mono text-zinc-500 block text-[9px] uppercase">[ LEGAL_DISCLAIMER ]</span>
+                本站點所有互動盲測模組與情境設計僅供娛樂與前端交互技術研究展示用途，不具備任何專業心理學或醫療診斷建議功能。部分實驗情境靈感源於流行影視文化作品，其相關商標與著作權均屬原權利人所有，本站僅作非營利之網頁前端工程學術研究。
+            </div>
+            <div>
+                <span class="font-mono text-zinc-500 block text-[9px] uppercase">[ PRIVACY_COOKIE_POLICY ]</span>
+                本站整合 Google AdSense 廣告服務。第三方供應商（包括 Google）會根據您先前在該網站或其他網站上的訪問記錄，使用 Cookie 技術收集匿名瀏覽行為數據以投放廣告。使用者可隨時調整瀏覽器 Cookie 權限，或隨時訪問 <a href="https://www.google.com/settings/ads" target="_blank" class="text-zinc-500 underline border-dotted">Google 廣告設定</a> 頁面停用個人化廣告。本系統絕不主動採集您的個人識別私隱資料。
             </div>
         </section>
 
@@ -224,14 +279,14 @@
         // 監聽交互事件
         document.querySelectorAll('.play-sound').forEach(element => {
             
-            // 保險 1：手指或滑鼠按下的瞬間觸發震動 (15ms)
+            // 保險 1：按下的瞬間震動 (15ms)
             const pressEvent = ('ontouchstart' in window) ? 'touchstart' : 'mousedown';
             element.addEventListener(pressEvent, function() {
                 if (this.classList.contains('navigating')) return;
                 triggerHapticFeedback(15);
             });
 
-            // 保險 2：點擊確認放開的瞬間再震動一次 (25ms)，雙重確保絕對會震
+            // 保險 2：確認點擊放開的瞬間再震動一次 (25ms)
             element.addEventListener('click', function(e) {
                 if (this.classList.contains('navigating')) return;
                 this.classList.add('navigating');
@@ -275,7 +330,7 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        // 防止瀏覽器「返回」時因快取卡在全黑過場
+        // 防止瀏覽器「返回」時快取問題
         window.addEventListener('pageshow', function (event) {
             if (event.persisted) {
                 const loader = document.getElementById('scene-loader');
