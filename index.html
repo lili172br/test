@@ -116,8 +116,8 @@
                     <h2 class="text-sm font-bold text-zinc-200">
                         🥊 鐵拳教育 // 潛意識人格審判
                     </h2>
-                    <span class="text-[9px] font-mono text-red-400 bg-red-950/30 px-2 py-0.5 rounded border border-red-900/40">
-                        TRENDING
+                    <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-900/40">
+                        ONLINE
                     </span>
                 </div>
                 <p class="text-xs text-zinc-500 leading-relaxed font-sans">
@@ -130,8 +130,8 @@
                     <h2 class="text-sm font-bold text-zinc-200">
                         ⚡ 時空穿梭系統 // 核心實驗室
                     </h2>
-                    <span class="text-[9px] font-mono text-cyan-400 bg-cyan-950/30 px-2 py-0.5 rounded border border-cyan-900/40">
-                        NEW_NODE
+                    <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-900/40">
+                        ONLINE
                     </span>
                 </div>
                 <p class="text-xs text-zinc-500 leading-relaxed font-sans">
@@ -205,14 +205,14 @@
         // 精準單次短震動 (相容性最高)
         function triggerHapticFeedback() {
             if (navigator.vibrate) {
-                navigator.vibrate(20); // 實打實震動 20 毫秒
+                navigator.vibrate(20); 
             }
         }
 
         // 監聽交互事件
         document.querySelectorAll('.play-sound').forEach(element => {
             
-            // 保險機制 1：在手指剛碰觸或滑鼠剛按下的瞬間直接觸發震動
+            // 在手指剛碰觸或滑鼠剛按下的瞬間直接觸發震動
             const pressEvent = ('ontouchstart' in window) ? 'touchstart' : 'mousedown';
             element.addEventListener(pressEvent, function() {
                 if (this.classList.contains('navigating')) return;
@@ -224,7 +224,7 @@
                 if (this.classList.contains('navigating')) return;
                 this.classList.add('navigating');
 
-                triggerHapticFeedback(); // 保險機制 2
+                triggerHapticFeedback(); 
                 playClickSound();
 
                 const targetUrl = this.getAttribute('data-href');
