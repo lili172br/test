@@ -119,27 +119,27 @@
         .btn-secondary { background-color: #050505; border-color: #3f3f46; color: #a1a1aa; }
         .btn-secondary:hover { border-color: #71717a; color: #fff; }
 
-        /* 洗牌動畫：精準對齊控制 */
-        .shuffling-0 { animation: cyberShuffleLeft 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.3s; }
-        .shuffling-1 { animation: cyberShuffleCenter 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.6s; }
-        .shuffling-2 { animation: cyberShuffleRight 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.9s; }
+        /* 移除原本混亂的 animation delay，改由單一純 CSS class 快速執行 */
+        .js-shuffle-left { animation: cyberShuffleLeft 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .js-shuffle-center { animation: cyberShuffleCenter 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .js-shuffle-right { animation: cyberShuffleRight 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
         @keyframes cyberShuffleLeft {
             0% { transform: translateX(0) scale(1); z-index: 1; }
-            30% { transform: translateX(180px) scale(0.9) rotate(8deg); z-index: 5; }
-            60% { transform: translateX(180px) scale(1.05) rotate(-8deg); z-index: 1; }
+            30% { transform: translateX(160px) scale(0.95) rotate(6deg); z-index: 5; }
+            60% { transform: translateX(160px) scale(1.02) rotate(-6deg); z-index: 1; }
             100% { transform: translateX(0) scale(1); z-index: 2; }
         }
         @keyframes cyberShuffleCenter {
             0% { transform: scale(1); z-index: 2; }
-            30% { transform: scale(1.1) rotate(-5deg); z-index: 1; }
-            60% { transform: scale(0.85) rotate(5deg); z-index: 5; }
+            30% { transform: scale(1.08) rotate(-4deg); z-index: 1; }
+            60% { transform: scale(0.92) rotate(4deg); z-index: 5; }
             100% { transform: scale(1); z-index: 2; }
         }
         @keyframes cyberShuffleRight {
             0% { transform: translateX(0) scale(1); z-index: 3; }
-            30% { transform: translateX(-180px) scale(1.05) rotate(-8deg); z-index: 2; }
-            60% { transform: translateX(-180px) scale(0.9) rotate(8deg); z-index: 5; }
+            30% { transform: translateX(-160px) scale(1.02) rotate(-6deg); z-index: 2; }
+            60% { transform: translateX(-160px) scale(0.95) rotate(6deg); z-index: 5; }
             100% { transform: translateX(0) scale(1); z-index: 2; }
         }
 
@@ -212,6 +212,14 @@
         // ==================== 進階矩陣音效引擎 (Web Audio API) ====================
         const AudioEngine = new (window.AudioContext || window.webkitAudioContext)();
 
+        // 預先生成高級白噪音緩衝區（用於擬真的卡牌摩擦聲）
+        const bufferSize = AudioEngine.sampleRate * 0.4; // 0.4秒的長度
+        const noiseBuffer = AudioEngine.createBuffer(1, bufferSize, AudioEngine.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1;
+        }
+
         function playSound(type, step = 0) {
             if (AudioEngine.state === 'suspended') { AudioEngine.resume(); }
             const now = AudioEngine.currentTime;
@@ -227,34 +235,57 @@
                 osc.connect(gain); gain.connect(AudioEngine.destination);
                 osc.start(now); osc.stop(now + 0.08);
             } 
+            // 【終極升級】高級擬真賽博刷牌聲（白噪音高通濾波 + 低頻基底）
             else if (type === 'shuffle_swipe') {
-                const osc = AudioEngine.createOscillator();
-                const gain = AudioEngine.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(180, now);
-                osc.frequency.linearRampToValueAtTime(90, now + 0.4);
-                gain.gain.setValueAtTime(0, now);
-                gain.gain.linearRampToValueAtTime(0.25, now + 0.05);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                osc.connect(gain); gain.connect(AudioEngine.destination);
-                osc.start(now); osc.stop(now + 0.4);
+                // 1. 白噪音源（模擬實體紙牌空氣切風聲）
+                const noiseNode = AudioEngine.createBufferSource();
+                noiseNode.buffer = noiseBuffer;
+
+                const filter = AudioEngine.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.setValueAtTime(1200, now); // 濾掉刺耳低頻，留下乾淨的沙沙聲
+                filter.frequency.exponentialRampToValueAtTime(800, now + 0.35);
+
+                const noiseGain = AudioEngine.createGain();
+                noiseGain.gain.setValueAtTime(0.18, now);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+                noiseNode.connect(filter);
+                filter.connect(noiseGain);
+                noiseGain.connect(AudioEngine.destination);
+
+                // 2. 低頻正弦波（模擬卡牌飛出時的厚實物理震動）
+                const subOsc = AudioEngine.createOscillator();
+                const subGain = AudioEngine.createGain();
+                subOsc.type = 'sine';
+                subOsc.frequency.setValueAtTime(130, now);
+                subOsc.frequency.linearRampToValueAtTime(60, now + 0.3);
+
+                subGain.gain.setValueAtTime(0.15, now);
+                subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+                subOsc.connect(subGain);
+                subGain.connect(AudioEngine.destination);
+
+                // 聯動同步啟動
+                noiseNode.start(now); noiseNode.stop(now + 0.35);
+                subOsc.start(now); subOsc.stop(now + 0.3);
             } 
-            // 【核心修正】高低階梯式翻牌音效：隨步驟上升純五度和弦
+            // 高級階梯式翻牌音效
             else if (type === 'flip') {
                 const osc1 = AudioEngine.createOscillator();
                 const osc2 = AudioEngine.createOscillator();
                 const gain = AudioEngine.createGain();
                 
-                // 定義三張牌的階梯式頻率組合 (1.過去 -> 2.現在 -> 3.未來)
-                let baseFreq1 = 349.23; // F4 (過去：沉穩起點)
-                let baseFreq2 = 523.25; // C5 (純五度上升)
+                let baseFreq1 = 349.23; // F4
+                let baseFreq2 = 523.25; // C5
                 
-                if (step === 1) { // 現在牌
+                if (step === 1) { 
                     baseFreq1 = 440.00; // A4
                     baseFreq2 = 659.25; // E5
-                } else if (step === 2) { // 未來牌
+                } else if (step === 2) { 
                     baseFreq1 = 523.25; // C5
-                    baseFreq2 = 783.99; // G5 (高昂未來)
+                    baseFreq2 = 783.99; // G5
                 }
 
                 osc1.type = 'sine';
@@ -322,10 +353,10 @@
 
         const tarotMeanings = {
             "The Fool": { nameCN: "愚者", general: { upright: "新的開始、自由、冒險。代表一個充滿勇氣的全新旅程。", reversed: "魯莽、輕率、不負責任。警惕缺乏計劃的盲目行動。" }, love: { upright: "一段充滿新鮮感、無拘無束的新戀情即將展開。", reversed: "感情中過度盲目，可能存在不願意給予承諾的恐懼。" }, work: { upright: "適合挑戰全新的領域、創業或跳槽。拋開傳統束縛。", reversed: "工作上缺乏規劃導致混亂，盲目換工作引發風險。" } },
-            "The Magician": { nameCN: "魔術師", general: { upright: "創造力、行動力、潛力發揮。眼前有著無限資源供你靈活運用。", reversed: "操縱、欺騙、能力未發揮. 計畫可能不夠踏實。" }, love: { upright: "關係中溝通流暢，充滿趣味。單身者有望吸引優秀對象。", reversed: "注意感情中的甜言蜜語背後是否藏有隱瞞或流於表面。" }, work: { upright: "展現強大工作能力的時期，能完美掌握新專案、新技術。", reversed: "空有才華卻缺乏執行力，注意職場上被話術欺騙。" } },
+            "The Magician": { nameCN: "魔術師", general: { upright: "創造力、行動力、潛力發揮。眼前有著無限資源供你靈活運用。", reversed: "操縱、欺騙、能力未發揮。計畫可能不夠踏實。" }, love: { upright: "關係中溝通流暢，充滿趣味。單身者有望吸引優秀對象。", reversed: "注意感情中的甜言蜜語背後是否藏有隱瞞或流於表面。" }, work: { upright: "展現強大工作能力的時期，能完美掌握新專案、新技術。", reversed: "空有才華卻缺乏執行力，注意職場上被話術欺騙。" } },
             "The High Priestess": { nameCN: "女祭司", general: { upright: "直覺、潛意識、智慧、冷靜。現在是傾聽心靈聲音的時刻。", reversed: "膚淺、過度理性、壓抑情感。你可能忽略了隱藏的真相。" }, love: { upright: "感情上較為被動、精神交流大於物質。單身者目前享受獨處。", reversed: "情感壓抑過度導致隔閡，或是過度敏感猜忌，無法坦率。" }, work: { upright: "適合從事研究、企劃、分析等靜態工作，靠精準直覺做出抉擇。", reversed: "面對職場決策時過度猶豫不決，或是資訊不透明導致研判錯誤。" } },
             "The Empress": { nameCN: "皇后", general: { upright: "豐收、繁榮、孕育、母愛。代表物質生活與精神生活的富足。", reversed: "缺乏安全感、過度控制。注意不要給予他人過度的情感勒索。" }, love: { upright: "感情生活充滿甜蜜與熱情，彼此包容，這是一段非常滋養的吉兆。", reversed: "在關係中過度溺愛、佔有慾過強，或因物質問題產生摩擦。" }, work: { upright: "職場發展順遂，努力將迎來實質的回報或業績大紅利。", reversed: "工作流於怠惰、安逸，缺乏積極度；注意預算出問題。" } },
-            "The Emperor": { nameCN: "皇帝", general: { upright: "權力、穩定、控制、秩序。擁有堅強的意志力與清晰的掌控架構。", reversed: "暴政、軟弱、控制狂。容易流於教條僵化，或失去掌控力。" }, love: { upright: "感情關係穩定、具有安全感，對方願意承擔責任。", reversed: "感情中一方過於專斷、固執、難以溝通，互動充滿壓迫感。" }, work: { upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者。", reversed: "職場遇到僵化的體制、遭遇暴君型主管壓榨，計畫停滯。" } },
+            "The Emperor": { nameCN: "皇帝", general: { upright: "權力、穩定、控制、秩序。擁有堅強的意志力與清晰的掌控架構。", reversed: "暴政、軟弱、控制狂。容易流於教條僵化，或失去掌控力。" }, love: { upright: "感情關係穩定、具有安全感，對方願意承擔責任。", reversed: "感情中一方過於專斷、固執、難以溝通，互動充滿壓迫感 Rhodes。" }, work: { upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者。", reversed: "職場遇到僵化的體制、遭遇暴君型主管壓榨，計畫停滯。" } },
             "default": { nameCN: "未知卡牌", general: { upright: "事情正朝著積極的方向發展，保持信心與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐。" }, love: { upright: "感情方面請順應內心，真誠互動將會迎來好結果。", reversed: "情感可能出現短暫停滯，多溝通才能化解潛在的心結。" }, work: { upright: "工作學業推進順利，持之以恆必能取得成果。", reversed: "發展受制於環境，建議多看多聽，盲目推展並非明智。" } }
         };
 
@@ -396,27 +427,35 @@
                     </div>
                 `;
                 deckDiv.appendChild(cardBox);
-
-                // 【核心修正】不再使用不準確的 setTimeout，直接接聽 CSS 動畫啟動事件
-                const cardEl = cardBox.querySelector('.card');
-                cardEl.addEventListener('animationstart', () => {
-                    playSound('shuffle_swipe');
-                });
             });
 
-            // 觸發帶有延遲類別的 CSS 動畫
-            document.getElementById('card-0').classList.add('shuffling-0');
-            document.getElementById('card-1').classList.add('shuffling-1');
-            document.getElementById('card-2').classList.add('shuffling-2');
-
-            // 動畫總時長（最大延遲 0.9s + 動畫時間 1.2s = 2.1s）後解鎖
-            setTimeout(() => {
-                for(let i=0; i<3; i++) {
-                    const el = document.getElementById(`card-${i}`);
-                    if(el) el.classList.remove('shuffling-0', 'shuffling-1', 'shuffling-2');
+            // 【終極修復：JavaScript 強制時鐘排程】
+            // 建立一個確定的時間步進器，保證音效發出和 CSS 載入同步到同一個執行幀
+            let currentCardShuffleIndex = 0;
+            const classes = ['js-shuffle-left', 'js-shuffle-center', 'js-shuffle-right'];
+            
+            const shuffleInterval = setInterval(() => {
+                if (currentCardShuffleIndex < 3) {
+                    const targetCard = document.getElementById(`card-${currentCardShuffleIndex}`);
+                    if (targetCard) {
+                        // 音軌播放與視覺類別注入綁定在同一個代碼區塊中，徹底杜絕時間差
+                        playSound('shuffle_swipe');
+                        targetCard.classList.add(classes[currentCardShuffleIndex]);
+                    }
+                    currentCardShuffleIndex++;
+                } else {
+                    clearInterval(shuffleInterval);
+                    
+                    // 動畫總運行時長結束後（最後一張牌 0.8s 後），解除點擊鎖定
+                    setTimeout(() => {
+                        for(let i=0; i<3; i++) {
+                            const el = document.getElementById(`card-${i}`);
+                            if(el) el.classList.remove('js-shuffle-left', 'js-shuffle-center', 'js-shuffle-right');
+                        }
+                        unlockNextCard();
+                    }, 900);
                 }
-                unlockNextCard();
-            }, 2100);
+            }, 400); // 每隔 400ms 精準射出一張牌並刷一聲
         }
 
         function unlockNextCard() {
@@ -435,7 +474,6 @@
         function handleCardFlip(index) {
             const cardEl = document.getElementById(`card-${index}`);
             if (cardEl && cardEl.classList.contains('playable') && !cardEl.classList.contains('flipped')) {
-                // 【核心修正】翻牌時將當前翻牌的 index 傳入，實現階梯式音高
                 playSound('flip', index); 
                 cardEl.classList.add('flipped');
                 cardEl.classList.remove('playable');
