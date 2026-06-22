@@ -24,7 +24,7 @@
             justify-content: space-between;
         }
         
-        .main-content { flex-grow: 1; }
+        .main-content { flex-grow: 1; width: 100%; }
         h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 20px; }
         .sys-status { font-size: 9px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 25px; }
         
@@ -46,19 +46,20 @@
         #user-question-display { font-size: 15px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
         #flow-hint { color: #52525b; font-style: italic; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; tracking: 0.1em; }
 
-        .container { display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; margin-top: 20px; min-height: 340px; }
-        .card-box { width: 160px; text-align: center; }
+        /* 修正後的穩定容器：確保寬度絕對不跑擺 */
+        .container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; min-height: 340px; width: 100%; box-sizing: border-box; }
+        .card-box { width: 160px; text-align: center; box-sizing: border-box; }
         .card-box h3 { color: #71717a; font-size: 11px; margin-bottom: 12px; tracking: 0.1em; text-transform: uppercase; }
         
+        /* 基礎卡牌樣式 */
         .card { 
-            width: 160px; height: 274px; perspective: 1000px; margin-bottom: 15px; 
-            pointer-events: none; opacity: 0.2; transition: transform 0.2s, opacity 0.3s;
+            width: 160px; height: 274px; perspective: 1000px; margin: 0 auto 15px auto; 
+            pointer-events: none; opacity: 0.2; transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s; box-sizing: border-box;
         }
         
+        /* 修正排版：移除了會影響版面的 scale(1.03) */
         .card.scanning {
-            opacity: 0.8;
-            box-shadow: 0 0 15px rgba(220, 38, 38, 0.6);
-            transform: scale(1.03);
+            opacity: 0.9;
         }
         
         .card.playable { 
@@ -75,20 +76,22 @@
         
         .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); box-sizing: border-box; }
         
         .card-back { 
             background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-size: 36px;
         }
+        /* 洗牌時的亮紅邊框，不影響尺寸 */
         .card.scanning .card-back {
             border-color: #dc2626;
             color: #fff;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
         }
         .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; border-radius: 10px; }
         .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
         
         .result-card-static {
-            width: 160px; height: 274px; margin-bottom: 15px; background-color: #000; border: 1px solid #52525b; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); overflow: hidden;
+            width: 160px; height: 274px; margin: 0 auto 15px auto; background-color: #000; border: 1px solid #52525b; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); overflow: hidden; box-sizing: border-box;
         }
         .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
         .reversed { transform: rotate(180deg); }
@@ -102,7 +105,7 @@
         .reversed-text { color: #ef4444; }
         
         .summary-box {
-            max-width: 600px; margin: 30px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 25px; border-radius: 12px; text-align: left; line-height: 1.8;
+            max-width: 600px; margin: 30px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 25px; border-radius: 12px; text-align: left; line-height: 1.8; box-sizing: border-box;
         }
         .summary-box h2 { color: #ffffff; text-align: center; margin-top: 0; font-size: 15px; letter-spacing: 2px; border-bottom: 1px solid #1f1f1f; padding-bottom: 10px; }
         .summary-box p { margin: 15px 0 0 0; font-size: 13px; color: #d1d1d1; text-indent: 2em; }
@@ -112,7 +115,7 @@
             font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 20px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; line-height: 1.5;
         }
 
-        .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 15px; max-width: 420px; width: 100%; }
+        .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 15px; max-width: 420px; width: 100%; box-sizing: border-box; }
         .sub-btn-group { display: flex; gap: 15px; justify-content: center; width: 100%; }
         .sub-btn-group button { flex: 1; padding: 14px 0; }
         .btn-alignment-wide { width: 100%; }
@@ -186,41 +189,32 @@
     </footer>
 
     <script>
-        // ==================== 頂級好萊塢科幻音效嵌入 (真實音檔解碼) ====================
+        // ==================== 頂級優化科幻音效引擎 ====================
         const AudioEngine = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // 外部載入的高階科幻 UI 採樣 Base64 音檔資料
-        const AUDIO_ASSETS = {
-            // 洗牌：清脆的高級數位晶片嗶聲
-            shuffle: "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQQAAAAzADMAMwAz",
-            // 翻牌：厚實、有空間空氣感的大氣科幻展開聲
-            flip: "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQQAAABFAGUARQBl"
-        };
 
         function playSound(type, step = 0) {
             if (AudioEngine.state === 'suspended') { AudioEngine.resume(); }
             const now = AudioEngine.currentTime;
             
-            // 點擊事件：超短數位清脆音
+            // 【修復找回】：原本清脆、好聽的按鈕專屬點擊音效
             if (type === 'click') {
                 const osc = AudioEngine.createOscillator();
                 const gain = AudioEngine.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(1200, now);
-                osc.frequency.exponentialRampToValueAtTime(600, now + 0.04);
-                gain.gain.setValueAtTime(0.06, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                 osc.connect(gain); gain.connect(AudioEngine.destination);
-                osc.start(now); osc.stop(now + 0.04);
+                osc.start(now); osc.stop(now + 0.05);
             } 
-            // 【洗牌改版】：高質感科技微感回音晶片音，完全擺脫打鼓沉悶感
+            // 洗牌：清脆的高級數位晶片嗶聲
             else if (type === 'shuffle_tick') {
                 const osc = AudioEngine.createOscillator();
                 const filter = AudioEngine.createBiquadFilter();
                 const gain = AudioEngine.createGain();
                 
                 osc.type = 'sine';
-                // 階梯式乾淨高頻
                 let freq = 1600 + (step * 250);
                 osc.frequency.setValueAtTime(freq, now);
                 osc.frequency.exponentialRampToValueAtTime(freq - 600, now + 0.05);
@@ -236,11 +230,9 @@
                 gain.connect(AudioEngine.destination);
                 osc.start(now); osc.stop(now + 0.05);
             } 
-            // 【翻牌改版】：大氣、具有未來感的雙層交織音效（全息螢幕展開聽感）
+            // 翻牌：大氣、具有未來感的全息螢幕展開聽感
             else if (type === 'flip') {
-                // 底層豐厚空氣感
                 const oscBase = AudioEngine.createOscillator();
-                // 表層數位解碼流
                 const oscTop = AudioEngine.createOscillator();
                 const gain = AudioEngine.createGain();
                 
@@ -266,16 +258,18 @@
                 oscBase.start(now); oscTop.start(now);
                 oscBase.stop(now + 0.35); oscTop.stop(now + 0.35);
             }
+            // 錯誤提示音
             else if (type === 'error') {
                 const osc = AudioEngine.createOscillator();
                 const gain = AudioEngine.createGain();
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(140, now);
-                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
                 osc.connect(gain); gain.connect(AudioEngine.destination);
                 osc.start(now); osc.stop(now + 0.15);
             }
+            // 成功提示音
             else if (type === 'success') {
                 const notes = [523.25, 659.25, 783.99, 1046.5];
                 notes.forEach((freq, index) => {
@@ -283,18 +277,19 @@
                     const gain = AudioEngine.createGain();
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + index * 0.05);
-                    gain.gain.setValueAtTime(0.05, now + index * 0.05);
+                    gain.gain.setValueAtTime(0.06, now + index * 0.05);
                     gain.gain.exponentialRampToValueAtTime(0.002, now + index * 0.05 + 0.15);
                     osc.connect(gain); gain.connect(AudioEngine.destination);
                     osc.start(now + index * 0.05); osc.stop(now + index * 0.05 + 0.15);
                 });
             }
+            // 截圖提示音
             else if (type === 'capture') {
                 const osc = AudioEngine.createOscillator();
                 const gain = AudioEngine.createGain();
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(1800, now);
-                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.setValueAtTime(0.06, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
                 osc.connect(gain); gain.connect(AudioEngine.destination);
                 osc.start(now); osc.stop(now + 0.08);
@@ -352,7 +347,7 @@
                 return;
             }
 
-            playSound('click');
+            playSound('click'); // 執行原本按鈕音
 
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ MATRIX_TARGET // ${typeNames[selectedType]} : ${questionInput} ]`;
@@ -409,7 +404,7 @@
                             const cardEl = document.getElementById(`card-${i}`);
                             if (cardEl) cardEl.classList.remove('scanning');
                             
-                            const slot = document.getElementById(`front-slot-${i}`);
+                            const slot = document.getElementById('front-slot-' + i);
                             if (slot) {
                                 slot.innerHTML = `<img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">`;
                             }
