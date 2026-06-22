@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🔮 聖三角潛意識矩陣占卜 // Sub-Node</title>
-    <!-- 引入 html2canvas 庫用於前端小卡生成 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { 
@@ -128,6 +127,14 @@
         .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; border-radius: 10px; }
         .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
         
+        /* 結果頁面專用卡片樣式：移除 3D 旋轉衝突 */
+        .result-card-static {
+            width: 160px; height: 274px; margin-bottom: 15px; opacity: 1; filter: grayscale(0%);
+            background-color: #000; border: 1px solid #52525b; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+            overflow: hidden;
+        }
+        .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
+
         .reversed { transform: rotate(180deg); }
         
         /* 解釋文字區 */
@@ -215,7 +222,7 @@
         .view-node { display: none; }
         .view-node.active-node { display: block; }
 
-        /* Google Ads 合規頁尾 */
+        /* Google Ads 廣告合規頁尾 */
         footer {
             font-size: 10px;
             color: #444446;
@@ -233,7 +240,6 @@
         <h1>🔮 聖三角潛意識矩陣占卜</h1>
         <div class="sys-status">SYS_STATUS: ACTIVE // NODE_TAROT</div>
         
-        <!-- ==================== 1. 主頁區塊 ==================== -->
         <div id="home-view" class="view-node active-node panel-section">
             <div class="intro-text">
                 <p>歡迎來到聖三角潛意識量子矩陣。本系統基於經典神祕學「三位一體」時間軸模型，引導你映射內心的真實流動。</p>
@@ -247,7 +253,6 @@
             <button class="btn-primary" onclick="switchView('divination-view')">進入占卜矩陣 // ENTER</button>
         </div>
 
-        <!-- ==================== 2. 占卜頁區塊 ==================== -->
         <div id="divination-view" class="view-node panel-section">
             <label for="question">[ INITIALIZE_INPUT ] 請輸入你的問題並在心中默想3次：</label>
             <input type="text" id="question" placeholder="輸入你想解構的潛意識流動...">
@@ -266,14 +271,11 @@
             <div id="deck" class="container"></div>
         </div>
 
-        <!-- ==================== 3. 結果頁區塊 ==================== -->
         <div id="result-view" class="view-node panel-section">
             <div class="action-container">
-                <!-- 上方按鈕：返回主頁 -->
                 <button class="btn-secondary" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
             </div>
 
-            <!-- 可用於截圖小卡的完整範圍 -->
             <div id="capture-node">
                 <div id="result-question-title" style="font-size:14px; font-weight:bold; color:#fff; margin-bottom:20px; border-left:3px solid #dc2626; padding-left:10px; text-align:left;"></div>
                 <div id="result-deck-display" class="container"></div>
@@ -282,16 +284,13 @@
 
             <div class="action-container">
                 <div class="sub-btn-group">
-                    <!-- 下方左按鈕：重新占卜 -->
                     <button class="btn-secondary" onclick="switchView('divination-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
-                    <!-- 下方右按鈕：生成小卡並跳轉 -->
-                    <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡並領取福袋 // SAVE</button>
+                    <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ==================== GOOGLE ADS 合規宣告頁尾 ==================== -->
     <footer>
         <p>⚡ 系統宣告 // Disclaimer</p>
         <p>本專案卡牌圖像與部分數據源自開源項目 tarot-json，圖像規格為 350x600px，於美國境內屬公眾領域（Public Domain）。</p>
@@ -299,7 +298,6 @@
     </footer>
 
     <script>
-        // 開源數據庫核心配置
         const tarotData = {
           "cards": [
             { "name": "The Fool", "img": "m00.jpg" },
@@ -339,12 +337,12 @@
                 nameCN: "皇帝",
                 general: { upright: "權力、穩定、控制、秩序。擁有堅強的意志力、領導力與清晰的掌控架構。", reversed: "暴政、軟弱、控制狂。容易流於教條僵化，或對局勢逐漸失去掌控力。" },
                 love: { upright: "感情關係穩定、具有安全感，對方可能是一位較有主導權、願意承擔責任的人。", reversed: "感情中一方過於專斷、固執、難以溝通，缺乏浪漫，互動充滿壓迫感。" },
-                work: { upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者，穩定推進權力基礎。", reversed: "職場遇到僵化的體制、遭遇暴君型主管壓榨，或自身領導不當導致計畫停滯。" }
+                work: { upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者，穩定推進權力基礎。", reversed: "職場遇到僵化的體制、遭遇暴君型主管压榨，或自身領導不當導致計畫停滯。" }
             },
             "default": {
                 nameCN: "未知卡牌",
                 general: { upright: "事情正朝著積極的方向發展，保持信心與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐、審慎評估。" },
-                love: { upright: "感情方面請順應內心，真誠互動將會迎來好結果。", reversed: "情感可能出現短暫停滯，多溝通才能化解潛在的心結 Rhodes。" },
+                love: { upright: "感情方面請順應內心，真誠互動將會迎來好結果。", reversed: "情感可能出現短暫停滯，多溝通才能化解潛在的心結。" },
                 work: { upright: "工作學業推進順利，持之以恆必能取得預期中的成果。", reversed: "發展受制於環境，建議多看多聽，盲目推展並非明智之舉。" }
             }
         };
@@ -353,7 +351,6 @@
         let currentFlipIndex = 0; 
         let selectedType = 'general';
 
-        // 頁面切換控制核心
         function switchView(viewId) {
             document.querySelectorAll('.view-node').forEach(node => {
                 node.classList.remove('active-node');
@@ -373,7 +370,6 @@
             switchView('home-view');
         }
 
-        // 初始化占卜程序
         function startTarotSession() {
             const questionInput = document.getElementById('question').value.trim();
             selectedType = document.getElementById('question-type').value;
@@ -390,17 +386,14 @@
             
             currentFlipIndex = 0;
 
-            // 洗牌抽 3 張
             const shuffled = [...tarotData.cards].sort(() => 0.5 - Math.random());
             currentHandData = shuffled.slice(0, 3).map(card => {
                 return { ...card, isReversed: Math.random() < 0.5 };
             });
             
-            // 高級洗牌時間
             setTimeout(() => { dealCards(); }, 1400); 
         }
 
-        // 投放與分發卡牌
         function dealCards() {
             const deckDiv = document.getElementById('deck');
             const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
@@ -453,15 +446,13 @@
             }
         }
 
-        // 彙整並建構最終結果頁
         function compileAndShowResultView() {
             const questionInput = document.getElementById('question').value.trim();
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             
-            // 填寫結果頁的標題
-            document.getElementById('result-question-title').innerText = `[ 占卜專案目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
+            // 更換成有神秘感的名詞
+            document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
             
-            // 複製已翻開的牌陣到結果區
             const resultDeckDiv = document.getElementById('result-deck-display');
             resultDeckDiv.innerHTML = '';
             
@@ -475,14 +466,11 @@
 
                 const cardBox = document.createElement('div');
                 cardBox.className = 'card-box';
+                // 核心修復：此處改用靜態的 .result-card-static 排除所有卡背與 3D 遮擋問題，保證 100% 可視
                 cardBox.innerHTML = `
                     <h3>${positions[index]}</h3>
-                    <div class="card flipped" style="pointer-events:none; opacity:1; filter:grayscale(0%);">
-                        <div class="card-inner">
-                            <div class="card-front" style="transform: rotateY(0deg);">
-                                <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
-                            </div>
-                        </div>
+                    <div class="result-card-static">
+                        <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
                     </div>
                     <div class="result-info">
                         <span class="card-title-en">${card.name}</span>
@@ -494,10 +482,7 @@
                 resultDeckDiv.appendChild(cardBox);
             });
 
-            // 生成大師點評總結
             generateComprehensiveSummary();
-            
-            // 切換到結果頁面
             switchView('result-view');
         }
 
@@ -526,17 +511,16 @@
             }
 
             const summaryDiv = document.getElementById('summary-section');
-            summaryDiv.innerHTML = `<h2>🔮 [ COMPREHENSIVE_SUMMARY_NODE ]</h2><p>${summaryText}</p>`;
+            // 修改為純中文標題
+            summaryDiv.innerHTML = `<h2>🔮 [ 綜合矩陣點評 ]</h2><p>${summaryText}</p>`;
         }
 
-        // 生成小卡並在一秒後進行跳轉
         function generateCardAndRedirect() {
             const targetNode = document.getElementById('capture-node');
             
-            // 使用 html2canvas 將 DOM 渲染為畫布並導出 PNG
             html2canvas(targetNode, {
                 backgroundColor: "#050505",
-                scale: 2, // 提高解析度防模糊
+                scale: 2, 
                 useCORS: true
             }).then(canvas => {
                 const image = canvas.toDataURL("image/png");
@@ -545,14 +529,11 @@
                 link.href = image;
                 link.click();
                 
-                // 跳出提示並安排 1 秒後精準跳轉
-                console.log("小卡生成完畢，準備重定向至推廣節點...");
                 setTimeout(() => {
                     window.location.href = "https://s.shopee.tw/40eMd6bUyk";
                 }, 1000);
             }).catch(err => {
                 console.error("小卡生成出錯:", err);
-                // 即使生成出錯也強制執行跳轉以確保廣告轉化率
                 window.location.href = "https://s.shopee.tw/40eMd6bUyk";
             });
         }
