@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🔮 聖三角潛意識矩陣占卜 // Sub-Node</title>
+    <!-- 引入 html2canvas 庫用於前端小卡生成 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { 
@@ -93,7 +94,7 @@
             filter: grayscale(30%);
         }
         
-        /* 可點擊狀態：高亮、發光、呼吸燈 */
+        /* 可點擊狀態 */
         .card.playable { 
             pointer-events: auto; 
             opacity: 1; 
@@ -163,14 +164,13 @@
         .summary-box h2 { color: #ffffff; text-align: center; margin-top: 0; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #1f1f1f; padding-bottom: 10px; }
         .summary-box p { margin: 15px 0 0 0; font-size: 13px; color: #d1d1d1; text-indent: 2em; }
 
-        /* 結果輸出節點包裝（用於小卡截圖範圍） */
+        /* 結果輸出節點包裝 */
         #capture-node {
             padding: 15px;
             background: #050505;
             border-radius: 16px;
         }
 
-        /* 核心防溢出控制：優化標題樣式，強制換行防爆界面 */
         .result-title-node {
             font-size: 14px; 
             font-weight: bold; 
@@ -179,18 +179,22 @@
             border-left: 3px solid #dc2626; 
             padding-left: 10px; 
             text-align: left;
-            word-break: break-all;      /* 強制任意字元換行 */
-            white-space: normal;        /* 允許正常換行 */
+            word-break: break-all;
+            white-space: normal;
             line-height: 1.5;
         }
 
-        /* 按鈕垂直層級控制 */
+        /* 核心更新：精準對齊寬度的垂直排列控制 */
         .action-container { 
-            margin: 30px 0 10px 0; 
+            margin: 30px auto 10px auto; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             gap: 15px; 
+            max-width: 420px; /* 限制按鈕群組最大寬度，避免在大螢幕上拉得太寬 */
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 10px;
         }
         .sub-btn-group { 
             display: flex; 
@@ -198,9 +202,14 @@
             justify-content: center; 
             width: 100%; 
         }
-        .btn-wide {
-            width: calc(85% + 24px); /* 寬度稍微拉寬與左右平排對齊，視覺更和諧 */
-            max-width: 335px;
+        /* 讓下方平排的兩個按鈕平分寬度 */
+        .sub-btn-group button {
+            flex: 1;
+            padding: 14px 0; /* 移除左右固定 padding，改靠 flex 撐開 */
+        }
+        /* 核心對齊設定：返回主頁按鈕寬度設為 100%，使其完美切齊下方兩個按鈕的最大寬度 */
+        .btn-alignment-wide {
+            width: 100%;
             box-sizing: border-box;
         }
         
@@ -224,7 +233,7 @@
         .btn-secondary { background-color: #050505; border-color: #3f3f46; color: #a1a1aa; }
         .btn-secondary:hover { border-color: #71717a; color: #fff; }
 
-        /* 高級賽博交疊洗牌動畫 (Cyber Shuffle) */
+        /* 高級賽博交疊洗牌動畫 */
         .shuffling-0 { animation: cyberShuffleLeft 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
         .shuffling-1 { animation: cyberShuffleCenter 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
         .shuffling-2 { animation: cyberShuffleRight 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
@@ -248,11 +257,9 @@
             100% { transform: translateX(0) scale(1); z-index: 2; }
         }
 
-        /* 頁面切換控制 */
         .view-node { display: none; }
         .view-node.active-node { display: block; }
 
-        /* Google Ads 廣告合規頁尾 */
         footer {
             font-size: 10px;
             color: #444446;
@@ -270,6 +277,7 @@
         <h1>🔮 聖三角潛意識矩陣占卜</h1>
         <div class="sys-status">SYS_STATUS: ACTIVE // NODE_TAROT</div>
         
+        <!-- ==================== 1. 主頁區塊 ==================== -->
         <div id="home-view" class="view-node active-node panel-section">
             <div class="intro-text">
                 <p>歡迎來到聖三角潛意識量子矩陣。本系統基於經典神祕學「三位一體」時間軸模型，引導你映射內心的真實流動。</p>
@@ -280,9 +288,11 @@
                 </ul>
                 <p>請梳理好你的思緒，準備進入核心觀測節點。</p>
             </div>
-            <button class="btn-primary" onclick="switchView('divination-view')">進入占卜矩陣 // ENTER</button>
+            <!-- 加入點擊音效 -->
+            <button class="btn-primary" onclick="playSound('click'); switchView('divination-view')">進入占卜矩陣 // ENTER</button>
         </div>
 
+        <!-- ==================== 2. 占卜頁區塊 ==================== -->
         <div id="divination-view" class="view-node panel-section">
             <label for="question">[ INITIALIZE_INPUT ] 請輸入你的問題並在心中默想3次：</label>
             <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
@@ -294,13 +304,15 @@
                 <option value="work">工作學業事業 // WORK</option>
             </select>
             <br>
-            <button id="draw-btn" class="btn-primary" onclick="startTarotSession()">開始洗牌占卜 // RUN</button>
+            <!-- 開始占卜按鈕 -->
+            <button id="draw-btn" class="btn-primary" onclick="playSound('click'); startTarotSession()">開始洗牌占卜 // RUN</button>
 
             <div id="user-question-display"></div>
             <div id="flow-hint"></div>
             <div id="deck" class="container"></div>
         </div>
 
+        <!-- ==================== 3. 結果頁區塊 ==================== -->
         <div id="result-view" class="view-node panel-section">
             
             <div id="capture-node">
@@ -309,12 +321,15 @@
                 <div id="summary-section" class="summary-box"></div>
             </div>
 
+            <!-- 核心更新：按鈕重排與寬度完美對齊 -->
             <div class="action-container">
-                <button class="btn-secondary btn-wide" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
+                <!-- 1. 上方：返回主頁按鈕（套用全寬對齊類別） -->
+                <button class="btn-secondary btn-alignment-wide" onclick="playSound('click'); resetToHome()">🔙 返回主頁 // HOME</button>
                 
+                <!-- 2. 下方：重新占卜與生成小卡平排 -->
                 <div class="sub-btn-group">
-                    <button class="btn-secondary" onclick="switchView('divination-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
-                    <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
+                    <button class="btn-secondary" onclick="playSound('click'); switchView('divination-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
+                    <button class="btn-primary" onclick="playSound('click'); generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
                 </div>
             </div>
         </div>
@@ -327,6 +342,78 @@
     </footer>
 
     <script>
+        // ==================== 核心音效引擎 (Web Audio API) ====================
+        const AudioEngine = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            // 防止部分瀏覽器因安全機制限制未解鎖音頻上下文
+            if (AudioEngine.state === 'suspended') {
+                AudioEngine.resume();
+            }
+
+            const now = AudioEngine.currentTime;
+            
+            if (type === 'click') {
+                // 清脆短促的電子點擊聲
+                const osc = AudioEngine.createOscillator();
+                const gain = AudioEngine.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.connect(gain);
+                gain.connect(AudioEngine.destination);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } 
+            else if (type === 'shuffle') {
+                // 模擬數據矩陣洗牌的科技低鳴
+                const duration = 1.2;
+                const osc = AudioEngine.createOscillator();
+                const gain = AudioEngine.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(110, now);
+                // 頻率上下震盪營造洗牌感
+                for(let i = 0; i < duration; i += 0.15) {
+                    osc.frequency.setValueAtTime(110 + (i * 40) % 60, now + i);
+                }
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0.3, now + duration - 0.2);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+                osc.connect(gain);
+                gain.connect(AudioEngine.destination);
+                osc.start(now);
+                osc.stop(now + duration);
+            } 
+            else if (type === 'flip') {
+                // 潛意識解碼擴散的清脆翻牌聲
+                const osc1 = AudioEngine.createOscillator();
+                const osc2 = AudioEngine.createOscillator();
+                const gain = AudioEngine.createGain();
+                
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(440, now);
+                osc1.frequency.exponentialRampToValueAtTime(880, now + 0.3);
+                
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(220, now);
+                osc2.frequency.exponentialRampToValueAtTime(660, now + 0.3);
+                
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(AudioEngine.destination);
+                
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.4);
+                osc2.stop(now + 0.4);
+            }
+        }
+
         const tarotData = {
           "cards": [
             { "name": "The Fool", "img": "m00.jpg" },
@@ -370,7 +457,7 @@
             },
             "default": {
                 nameCN: "未知卡牌",
-                general: { upright: "事情正朝著積極的方向發展，保持信心與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐、審慎評估。" },
+                general: { upright: "事情正朝著積極的方向發展，保持信心與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐、審審評估。" },
                 love: { upright: "感情方面請順應內心，真誠互動將會迎來好結果。", reversed: "情感可能出現短暫停滯，多溝通才能化解潛在的心結。" },
                 work: { upright: "工作學業推進順利，持之以恆必能取得預期中的成果。", reversed: "發展受制於環境，建議多看多聽，盲目推展並非明智之舉。" }
             }
@@ -387,7 +474,6 @@
             document.getElementById(viewId).classList.add('active-node');
         }
 
-        // 修改重置邏輯：限制字數下，維持輸入框空值
         function resetDivinationEngine() {
             document.getElementById('question').value = '';
             document.getElementById('user-question-display').innerText = '';
@@ -408,6 +494,9 @@
                 alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！");
                 return;
             }
+
+            // 觸發洗牌音效
+            playSound('shuffle');
 
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ MATRIX_TARGET // ${typeNames[selectedType]} : ${questionInput} ]`;
@@ -469,6 +558,8 @@
         function handleCardFlip(index) {
             const cardEl = document.getElementById(`card-${index}`);
             if (cardEl && cardEl.classList.contains('playable') && !cardEl.classList.contains('flipped')) {
+                // 觸發翻牌音效
+                playSound('flip');
                 cardEl.classList.add('flipped');
                 cardEl.classList.remove('playable');
                 currentFlipIndex++;
