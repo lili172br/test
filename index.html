@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 神祕學塔羅占卜</title>
+    <title>🔮 聖三角神祕學塔羅占卜</title>
     <style>
         /* 基礎神祕學風格視覺 */
         body { 
@@ -17,7 +17,7 @@
         }
         h1 { color: #f39c12; letter-spacing: 2px; text-shadow: 0 0 10px rgba(243, 156, 18, 0.5); }
         
-        /* 問題輸入區 */
+        /* 問題輸入區與分類選單 */
         .question-section { 
             margin: 20px auto; 
             max-width: 500px; 
@@ -27,12 +27,13 @@
             border: 1px solid rgba(243, 156, 18, 0.3);
             box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
         }
-        .question-section label { display: block; margin-bottom: 12px; font-size: 16px; color: #f1c40f; font-weight: bold; }
-        .question-section input { 
+        .question-section label { display: block; margin: 12px 0 6px 0; font-size: 16px; color: #f1c40f; font-weight: bold; }
+        .question-section input, .question-section select { 
             width: 85%; padding: 12px; font-size: 16px; border: 2px solid #f39c12; border-radius: 6px; 
-            background: #0d0f1d; color: #fff; text-align: center; outline: none; transition: 0.3s;
+            background: #0d0f1d; color: #fff; text-align: center; outline: none; transition: 0.3s; box-sizing: border-box;
         }
-        .question-section input:focus { border-color: #e67e22; box-shadow: 0 0 12px rgba(230, 126, 34, 0.6); }
+        .question-section input:focus, .question-section select:focus { border-color: #e67e22; box-shadow: 0 0 12px rgba(230, 126, 34, 0.6); }
+        .question-section select { text-align-last: center; cursor: pointer; }
         
         /* 狀態與問題提示 */
         #user-question-display { font-size: 18px; color: #f1c40f; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
@@ -48,7 +49,7 @@
         /* 卡牌本體與 3D 翻牌效果 */
         .card { 
             width: 160px; height: 274px; perspective: 1000px; margin-bottom: 15px; 
-            pointer-events: none; opacity: 0.5; transition: transform 0.3s, opacity 0.5s;
+            pointer-events: none; opacity: 0.3; transition: transform 0.3s, opacity 0.5s;
         }
         /* 當牌卡被解鎖時的樣式 */
         .card.playable { pointer-events: auto; opacity: 1; cursor: pointer; }
@@ -73,7 +74,7 @@
         
         /* 解釋文字區：翻牌後漸顯 */
         .result-info { 
-            font-size: 14px; line-height: 1.6; min-height: 100px; padding: 5px;
+            font-size: 14px; line-height: 1.6; min-height: 120px; padding: 5px; box-sizing: border-box;
             opacity: 0; visibility: hidden; transition: opacity 0.6s ease, visibility 0.6s ease; 
         }
         .card.flipped + .result-info { opacity: 1; visibility: visible; }
@@ -103,7 +104,14 @@
     
     <div class="question-section">
         <label for="question">請在心中默想你的問題，並記錄在下方：</label>
-        <input type="text" id="question" placeholder="例如：我近期在轉職上的運勢發展如何？">
+        <input type="text" id="question" placeholder="例如：我接下來的感情發展合適嗎？">
+        
+        <label for="question-type">請選擇占卜的類別（將影響解牌結果）：</label>
+        <select id="question-type">
+            <option value="general">綜合運勢分析</option>
+            <option value="love">感情桃花發展</option>
+            <option value="work">工作、學業與事業</option>
+        </select>
         <br>
         <button id="draw-btn" onclick="startTarotSession()">開始洗牌占卜</button>
     </div>
@@ -118,71 +126,154 @@
     </div>
 
     <script>
-        // 1. 本地中文牌意對映表 (Mapping)
-        // 網頁會根據 json 內的 card.name 去抓取這裡的中文解釋，若無定義則走 default
+        // 1. 核心大數據：直接內嵌 equokka/tarot-json 資料（避免本地 fetch 觸發 CORS 錯誤）
+        const tarotData = {
+          "cards": [
+            { "name": "The Fool", "number": "0", "arcana": "Major Arcana", "suit": null, "img": "m00.jpg" },
+            { "name": "The Magician", "number": "1", "arcana": "Major Arcana", "suit": null, "img": "m01.jpg" },
+            { "name": "The High Priestess", "number": "2", "arcana": "Major Arcana", "suit": null, "img": "m02.jpg" },
+            { "name": "The Empress", "number": "3", "arcana": "Major Arcana", "suit": null, "img": "m03.jpg" },
+            { "name": "The Emperor", "number": "4", "arcana": "Major Arcana", "suit": null, "img": "m04.jpg" }
+            // 注意：若要完整支援 78 張，可以依照此格式將其餘小阿爾克那(如 wands, cups, swords, pentacles)陸續填入此處
+          ]
+        };
+
+        // 2. 本地精細化分類解牌資料庫 (對應下拉選單)
         const tarotMeanings = {
-            "The Fool": { nameCN: "愚者", upright: "新的開始、自由、純真、冒險。代表一個不問過去、充滿勇氣的全新旅程。", reversed: "魯莽、輕率、不負責任、停滯不前。警惕缺乏計劃的盲目行動與逃避。" },
-            "The Magician": { nameCN: "魔術師", upright: "創造力、行動力、潛力發揮、自信。萬事俱備，眼前有著無限的資源供你使用。", reversed: "操縱、能力未發揮、缺乏計劃、欺騙。注意身邊可能被巧言令色所矇蔽。" },
-            "The High Priestess": { nameCN: "女祭司", upright: "直覺、潛意識、智慧、冷靜。現在是向內探索、傾聽內心直覺的時刻。", reversed: "膚淺、過度理智、壓抑情感、秘密外洩。你可能忽略了隱藏在表象下的真相。" },
-            "The Empress": { nameCN: "皇后", upright: "豐收、繁榮、孕育、母愛。代表物質與精神生活的富足，處於收穫期。", reversed: "缺乏安全感、過度控制、浪費、創造力受阻。注意不要給予他人過度的情感勒索。" },
-            "The Emperor": { nameCN: "皇帝", upright: "權力、穩定、控制、權威。擁有堅強的意志力、領導力與清晰的秩序架構。", reversed: "暴政、軟弱、缺乏自律、控制狂。容易流於教條僵化或對局勢失去掌控力。" },
-            "default": { nameCN: "未知卡牌", upright: "事情正朝著積極的方向發展，保持信心、專注與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐、審慎評估內外環境。" }
+            "The Fool": {
+                nameCN: "愚者",
+                general: {
+                    upright: "新的開始、自由、純真、冒險。代表一個不問過去、充滿勇氣的全新旅程。",
+                    reversed: "魯莽、輕率、不負責任。警惕缺乏計劃的盲目行動與逃避環境。"
+                },
+                love: {
+                    upright: "一段充滿新鮮感、無拘無束的新戀情即將或已經展開，享受當下，但缺乏長遠規劃。",
+                    reversed: "感情中過度盲目，可能存在不願意給予承諾的恐懼，或是關係流於輕浮。"
+                },
+                work: {
+                    upright: "適合挑戰全新的領域、創業或跳槽。拋開傳統束縛，你的直覺會指引你。",
+                    reversed: "工作上缺乏規劃導致混亂，盲目換工作可能引發不必要的職業風險。"
+                }
+            },
+            "The Magician": {
+                nameCN: "魔術師",
+                general: {
+                    upright: "創造力、行動力、潛力發揮。萬事俱備，眼前有著無限資源供你靈活運用。",
+                    reversed: "操縱、欺騙、能力未發揮。計畫可能不夠踏實，需注意身邊小人。"
+                },
+                love: {
+                    upright: "關係中溝通流暢，充滿趣味與智力吸引。單身者有望憑藉自身魅力吸引優秀對象。",
+                    reversed: "注意感情中的甜言蜜語背後是否藏有隱瞞、欺騙，或是流於表面缺乏真心。"
+                },
+                work: {
+                    upright: "展現強大工作能力的時期，能完美掌握新專案、新技術，出師大捷。",
+                    reversed: "空有才華卻缺乏執行力，或是注意職場上被主管、同事話術欺騙或操縱。"
+                }
+            },
+            "The High Priestess": {
+                nameCN: "女祭司",
+                general: {
+                    upright: "直覺、潛意識、智慧、冷靜。現在是向內探索、傾聽心靈聲音的時刻。",
+                    reversed: "膚淺、過度理智、壓抑情感。你可能忽略了隱藏在表象下的神祕真相。"
+                },
+                love: {
+                    upright: "感情上較為被動、精神交流大於物質。單身者目前享受獨處，對感情抱持審慎觀察。",
+                    reversed: "情感壓抑過度導致隔閡，或是過度敏感、猜忌，無法坦率面對自己的真感情。"
+                },
+                work: {
+                    upright: "適合從事研究、企劃、分析等靜態工作，靠著精準的直覺與理性分析能做出正確抉擇。",
+                    reversed: "面對職場決策時過度猶豫不決，或是資訊不透明導致做出了錯誤的研判。"
+                }
+            },
+            "The Empress": {
+                nameCN: "皇后",
+                general: {
+                    upright: "豐收、繁榮、孕育、母愛。代表物質生活與精神生活的富足，正處於收穫期。",
+                    reversed: "缺乏安全感、過度控制、創造力受阻。注意不要給予他人過度的情感勒索。"
+                },
+                love: {
+                    upright: "感情生活充滿甜蜜與熱情，彼此包容，這是一段非常滋養、甚至走向婚姻與家庭的吉兆。",
+                    reversed: "在關係中過度溺愛、佔有慾過強，或因物質問題導致感情產生摩擦。"
+                },
+                work: {
+                    upright: "職場發展順遂，努力將迎來實質的回報或業績大紅利，團隊氛圍和諧。",
+                    reversed: "工作流於怠惰、安逸，缺乏積極度；亦可能因為過度鋪張浪費導致預算出問題。"
+                }
+            },
+            "The Emperor": {
+                nameCN: "皇帝",
+                general: {
+                    upright: "權力、穩定、控制、秩序。擁有堅強的意志力、領導力與清晰的掌控架構。",
+                    reversed: "暴政、軟弱、控制狂。容易流於教條僵化，或對局勢逐漸失去掌控力。"
+                },
+                love: {
+                    upright: "感情關係穩定、具有安全感，對方可能是一位大男人或較有主導權、願意承擔責任的人。",
+                    reversed: "感情中一方過於專斷、固執、難以溝通，缺乏浪漫，互動充滿壓迫感。"
+                },
+                work: {
+                    upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者，穩定推進權力基礎。",
+                    reversed: "職場遇到僵化的體制、遭遇暴君型主管壓榨，或自身領導不當導致計畫停滯。"
+                }
+            },
+            "default": {
+                nameCN: "未知卡牌",
+                general: { upright: "事情正朝著積極的方向發展，保持信心、專注與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐、審慎評估內外環境。" },
+                love: { upright: "感情方面請順應內心，真誠互動將會迎來好結果。", reversed: "情感可能出現短暫停滯，多溝通才能化解潛在的冷淡與心結。" },
+                work: { upright: "工作學業推進順利，持之以恆必能取得預期中的成果。", reversed: "發展受制於環境，建議多看多聽，盲目投資或推進並非明智之舉。" }
+            }
         };
 
         let currentHandData = []; // 儲存當前抽出的三張牌數據，供複製報告使用
         let currentFlipIndex = 0; // 追蹤目前該翻開第幾張牌
+        let selectedType = 'general'; // 記錄占卜分類
 
-        // 2. 核心啟動流程：防呆 -> 洗牌動畫 -> 發牌
+        // 3. 核心啟動流程：防呆 -> 洗牌動畫 -> 發牌
         function startTarotSession() {
             const questionInput = document.getElementById('question').value.trim();
+            selectedType = document.getElementById('question-type').value;
+
             if (questionInput === "") {
                 alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！");
                 return;
             }
 
-            document.getElementById('user-question-display').innerText = `［ 占卜主題：${questionInput} ］`;
+            // 對應翻譯問題類別名稱
+            const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
+            document.getElementById('user-question-display').innerText = `［ 占卜主題（${typeNames[selectedType]}）：${questionInput} ］`;
             document.getElementById('flow-hint').innerText = "🔮 正在為您洗牌中，請靜心等待...";
             document.getElementById('deck').innerHTML = '';
             document.getElementById('action-zone').style.display = 'none';
             currentFlipIndex = 0;
 
-            // 讀取外部資料庫並進行洗牌流程
-            fetch('./tarot-images.json')
-                .then(res => {
-                    if(!res.ok) throw new Error("找不到 tarot-images.json 檔案");
-                    return res.json();
-                })
-                .then(data => {
-                    // 執行 Fisher-Yates 洗牌
-                    const shuffled = [...data.cards].sort(() => 0.5 - Math.random());
-                    // 真正切出前三張（確保牌池不重複）
-                    currentHandData = shuffled.slice(0, 3).map(card => {
-                        return {
-                            ...card,
-                            isReversed: Math.random() < 0.5 // 隨機正逆位
-                        };
-                    });
-                    
-                    // 觸發洗牌視覺特效（對輸入框區塊模擬震動/洗牌感，此處直接進發牌延時）
-                    setTimeout(() => {
-                        dealCards();
-                    }, 1200); 
-                })
-                .catch(err => {
-                    alert("讀取卡牌資料失敗，請確認 tarot-images.json 是否在正確位置。");
-                    console.error(err);
-                });
+            // 執行 Fisher-Yates 洗牌
+            const shuffled = [...tarotData.cards].sort(() => 0.5 - Math.random());
+            
+            // 真正切出前三張（確保牌池不重複）並決定正逆位
+            currentHandData = shuffled.slice(0, 3).map(card => {
+                return {
+                    ...card,
+                    isReversed: Math.random() < 0.5 
+                };
+            });
+            
+            // 觸發洗牌動畫延時，隨後發牌
+            setTimeout(() => {
+                dealCards();
+            }, 1200); 
         }
 
-        // 3. 發牌機制與建構 DOM
+        // 4. 發牌機制與建構 DOM
         function dealCards() {
             const deckDiv = document.getElementById('deck');
             const positions = ["過去 (Past)", "現在 (Present)", "未來 (Future)"];
 
             currentHandData.forEach((card, index) => {
-                const meaning = tarotMeanings[card.name] || tarotMeanings["default"];
-                const cardNameShow = meaning.nameCN !== "未知卡牌" ? `${card.name} (${meaning.nameCN})` : card.name;
-                const explanation = card.isReversed ? meaning.reversed : meaning.upright;
+                // 抓取精細化分類牌意
+                const cardMeaning = tarotMeanings[card.name] || tarotMeanings["default"];
+                const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
+                
+                const cardNameShow = cardMeaning.nameCN !== "未知卡牌" ? `${card.name} (${cardMeaning.nameCN})` : card.name;
+                const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
                 const orientationText = card.isReversed ? "逆位 (Reversed)" : "正位 (Upright)";
                 const orientationClass = card.isReversed ? "reversed-text" : "upright-text";
 
@@ -214,16 +305,18 @@
             // 動態移除洗牌動畫類別，並解鎖「第一張牌」
             setTimeout(() => {
                 for(let i=0; i<3; i++) {
-                    document.getElementById(`card-${i}`).classList.remove('shuffling-left', 'shuffling-right');
+                    const el = document.getElementById(`card-${i}`);
+                    if(el) el.classList.remove('shuffling-left', 'shuffling-right');
                 }
                 unlockNextCard();
             }, 1000);
         }
 
-        // 4. 一張接一張的控制翻牌邏輯
+        // 5. 一張接一張的控制翻牌邏輯
         function unlockNextCard() {
             if (currentFlipIndex < 3) {
-                document.getElementById(`card-${currentFlipIndex}`).classList.add('playable');
+                const targetCard = document.getElementById(`card-${currentFlipIndex}`);
+                if (targetCard) targetCard.classList.add('playable');
                 const posName = currentFlipIndex === 0 ? "過去" : (currentFlipIndex === 1 ? "現在" : "未來");
                 document.getElementById('flow-hint').innerText = `👉 請點擊翻開代表【${posName}】的卡牌`;
             } else {
@@ -234,35 +327,37 @@
 
         function handleCardFlip(index) {
             const cardEl = document.getElementById(`card-${index}`);
-            // 只有當牌是可玩的，且還沒被翻開時才執行
-            if (cardEl.classList.contains('playable') && !cardEl.classList.contains('flipped')) {
+            if (cardEl && cardEl.classList.contains('playable') && !cardEl.classList.contains('flipped')) {
                 cardEl.classList.add('flipped');
-                cardEl.classList.remove('playable'); // 翻開後移除可點擊動畫
+                cardEl.classList.remove('playable'); // 翻開後移除點擊跳動動畫
                 
                 currentFlipIndex++;
-                // 延遲一下再解鎖下一張，讓使用者有時間看牌面
                 setTimeout(() => {
                     unlockNextCard();
                 }, 800);
             }
         }
 
-        // 5. 複製占卜報告功能
+        // 6. 複製精細化占卜報告功能
         function copyReport() {
             const question = document.getElementById('question').value.trim();
+            const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             const positions = ["過去", "現在", "未來"];
+            
             let reportText = `🔮 【線上塔羅占卜報告】\n`;
-            reportText += `💬 占卜問題：${question}\n`;
+            reportText += `💬 占卜問題：${question} (${typeNames[selectedType]})\n`;
             reportText += `───────────────────\n`;
 
             currentHandData.forEach((card, index) => {
-                const meaning = tarotMeanings[card.name] || tarotMeanings["default"];
-                const nameText = meaning.nameCN !== "未知卡牌" ? `${card.name} (${meaning.nameCN})` : card.name;
+                const cardMeaning = tarotMeanings[card.name] || tarotMeanings["default"];
+                const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
+                
+                const nameText = cardMeaning.nameCN !== "未知卡牌" ? `${card.name} (${cardMeaning.nameCN})` : card.name;
                 const oriText = card.isReversed ? "逆位" : "正位";
-                const expText = card.isReversed ? meaning.reversed : meaning.upright;
+                const expText = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
 
                 reportText += `▶ 【${positions[index]}】 ${nameText} - ${oriText}\n`;
-                reportText += `💡 牌意解析：${expText}\n\n`;
+                reportText += `💡 專屬解析：${expText}\n\n`;
             });
             
             reportText += `───────────────────\n*報告產生時間：${new Date().toLocaleString()}*`;
