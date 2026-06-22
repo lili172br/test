@@ -127,7 +127,7 @@
         .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; border-radius: 10px; }
         .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
         
-        /* 結果頁面專用卡片樣式：移除 3D 旋轉衝突 */
+        /* 結果頁面專用卡片樣式 */
         .result-card-static {
             width: 160px; height: 274px; margin-bottom: 15px; opacity: 1; filter: grayscale(0%);
             background-color: #000; border: 1px solid #52525b; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9);
@@ -170,9 +170,39 @@
             border-radius: 16px;
         }
 
-        /* 按鈕風格 */
-        .action-container { margin: 25px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .sub-btn-group { display: flex; gap: 15px; justify-content: center; width: 100%; }
+        /* 核心防溢出控制：優化標題樣式，強制換行防爆界面 */
+        .result-title-node {
+            font-size: 14px; 
+            font-weight: bold; 
+            color: #fff; 
+            margin-bottom: 20px; 
+            border-left: 3px solid #dc2626; 
+            padding-left: 10px; 
+            text-align: left;
+            word-break: break-all;      /* 強制任意字元換行 */
+            white-space: normal;        /* 允許正常換行 */
+            line-height: 1.5;
+        }
+
+        /* 按鈕垂直層級控制 */
+        .action-container { 
+            margin: 30px 0 10px 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        .sub-btn-group { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            width: 100%; 
+        }
+        .btn-wide {
+            width: calc(85% + 24px); /* 寬度稍微拉寬與左右平排對齊，視覺更和諧 */
+            max-width: 335px;
+            box-sizing: border-box;
+        }
         
         button { 
             background-color: #0a0a0a; 
@@ -255,7 +285,7 @@
 
         <div id="divination-view" class="view-node panel-section">
             <label for="question">[ INITIALIZE_INPUT ] 請輸入你的問題並在心中默想3次：</label>
-            <input type="text" id="question" placeholder="輸入你想解構的潛意識流動...">
+            <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
             
             <label for="question-type">[ SELECT_MATRIX_NODE ] 請選擇占卜類別：</label>
             <select id="question-type">
@@ -272,17 +302,16 @@
         </div>
 
         <div id="result-view" class="view-node panel-section">
-            <div class="action-container">
-                <button class="btn-secondary" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
-            </div>
-
+            
             <div id="capture-node">
-                <div id="result-question-title" style="font-size:14px; font-weight:bold; color:#fff; margin-bottom:20px; border-left:3px solid #dc2626; padding-left:10px; text-align:left;"></div>
+                <div id="result-question-title" class="result-title-node"></div>
                 <div id="result-deck-display" class="container"></div>
                 <div id="summary-section" class="summary-box"></div>
             </div>
 
             <div class="action-container">
+                <button class="btn-secondary btn-wide" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
+                
                 <div class="sub-btn-group">
                     <button class="btn-secondary" onclick="switchView('divination-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
                     <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
@@ -323,7 +352,7 @@
             },
             "The High Priestess": {
                 nameCN: "女祭司",
-                general: { upright: "直覺、潛意識、智慧、冷靜。現在是向內探索、傾聽心靈聲音的時刻。", reversed: "膚淺、過度理智、壓抑情感。你可能忽略了隱藏在表象下的神祕真相。" },
+                general: { upright: "直覺、潛意識、智慧、冷靜。現在是向內探索、傾聽心靈聲音的時刻。", reversed: "膚淺、過度理記、壓抑情感。你可能忽略了隱藏在表象下的神祕真相。" },
                 love: { upright: "感情上較為被動、精神交流大於物質。單身者目前享受獨處，對感情抱持審慎觀察。", reversed: "情感壓抑過度導致隔閡，或是過度敏感、猜忌，無法坦率面對自己的真感情。" },
                 work: { upright: "適合從事研究、企劃、分析等靜態工作，靠著精準的直覺與理性分析能做出正確抉擇。", reversed: "面對職場決策時過度猶豫不決，或是資訊不透明導致做出了錯誤的研判。" }
             },
@@ -337,7 +366,7 @@
                 nameCN: "皇帝",
                 general: { upright: "權力、穩定、控制、秩序。擁有堅強的意志力、領導力與清晰的掌控架構。", reversed: "暴政、軟弱、控制狂。容易流於教條僵化，或對局勢逐漸失去掌控力。" },
                 love: { upright: "感情關係穩定、具有安全感，對方可能是一位較有主導權、願意承擔責任的人。", reversed: "感情中一方過於專斷、固執、難以溝通，缺乏浪漫，互動充滿壓迫感。" },
-                work: { upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者，穩定推進權力基礎。", reversed: "職場遇到僵化的體制、遭遇暴君型主管压榨，或自身領導不當導致計畫停滯。" }
+                work: { upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者，穩定推進權力基礎。", reversed: "職場遇到僵化的體制、遭遇暴君型主管壓榨，或自身領導不當導致計畫停滯。" }
             },
             "default": {
                 nameCN: "未知卡牌",
@@ -358,6 +387,7 @@
             document.getElementById(viewId).classList.add('active-node');
         }
 
+        // 修改重置邏輯：限制字數下，維持輸入框空值
         function resetDivinationEngine() {
             document.getElementById('question').value = '';
             document.getElementById('user-question-display').innerText = '';
@@ -450,7 +480,6 @@
             const questionInput = document.getElementById('question').value.trim();
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             
-            // 更換成有神秘感的名詞
             document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
             
             const resultDeckDiv = document.getElementById('result-deck-display');
@@ -466,7 +495,6 @@
 
                 const cardBox = document.createElement('div');
                 cardBox.className = 'card-box';
-                // 核心修復：此處改用靜態的 .result-card-static 排除所有卡背與 3D 遮擋問題，保證 100% 可視
                 cardBox.innerHTML = `
                     <h3>${positions[index]}</h3>
                     <div class="result-card-static">
@@ -511,7 +539,6 @@
             }
 
             const summaryDiv = document.getElementById('summary-section');
-            // 修改為純中文標題
             summaryDiv.innerHTML = `<h2>🔮 [ 綜合矩陣點評 ]</h2><p>${summaryText}</p>`;
         }
 
