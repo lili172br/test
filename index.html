@@ -2,122 +2,167 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 聖三角神祕學塔羅占卜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔮 聖三角神祕學塔羅占卜 // Sub-Node</title>
     <style>
-        /* 基礎神祕學風格視覺 */
+        /* 融合賽博極簡點陣背景與字體 */
         body { 
-            font-family: "Georgia", "Times New Roman", "華康明體", "微軟正黑體", serif; 
-            background: radial-gradient(circle at center, #1b1f38 0%, #0d0f1d 100%);
-            color: #e0e0e0; 
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            background-color: #050505;
+            color: #d1d1d1; 
             text-align: center; 
             padding: 20px;
             margin: 0;
             min-height: 100vh;
+            background-image: radial-gradient(circle at 2px 2px, #161616 1px, transparent 0);
+            background-size: 24px 24px;
+            -webkit-user-select: none;
+            user-select: none;
+            overflow-x: hidden;
         }
-        h1 { color: #f39c12; letter-spacing: 2px; text-shadow: 0 0 10px rgba(243, 156, 18, 0.5); }
+        
+        h1 { 
+            color: #ffffff; 
+            font-weight: 900;
+            letter-spacing: 0.15em; 
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .sys-status {
+            font-size: 9px;
+            color: #dc2626;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
         
         /* 問題輸入區與分類選單 */
         .question-section { 
             margin: 20px auto; 
             max-width: 500px; 
-            background: rgba(44, 62, 80, 0.4); 
+            background: #0a0a0a; 
             padding: 25px; 
             border-radius: 12px; 
-            border: 1px solid rgba(243, 156, 18, 0.3);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
+            border: 1px solid #1f1f1f;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8); 
         }
-        .question-section label { display: block; margin: 12px 0 6px 0; font-size: 16px; color: #f1c40f; font-weight: bold; }
+        .question-section label { display: block; margin: 12px 0 6px 0; font-size: 13px; color: #a1a1aa; tracking: 0.05em; }
         .question-section input, .question-section select { 
-            width: 85%; padding: 12px; font-size: 16px; border: 2px solid #f39c12; border-radius: 6px; 
-            background: #0d0f1d; color: #fff; text-align: center; outline: none; transition: 0.3s; box-sizing: border-box;
+            width: 85%; padding: 12px; font-size: 14px; border: 1px solid #27272a; border-radius: 6px; 
+            background: #050505; color: #fff; text-align: center; outline: none; transition: 0.3s; box-sizing: border-box;
+            font-family: inherit;
         }
-        .question-section input:focus, .question-section select:focus { border-color: #e67e22; box-shadow: 0 0 12px rgba(230, 126, 34, 0.6); }
+        .question-section input:focus, .question-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
         .question-section select { text-align-last: center; cursor: pointer; }
         
         /* 狀態與問題提示 */
-        #user-question-display { font-size: 18px; color: #f1c40f; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
-        #flow-hint { color: #95a5a6; font-style: italic; font-size: 14px; margin-bottom: 20px; }
+        #user-question-display { font-size: 15px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
+        #flow-hint { color: #52525b; font-style: italic; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; tracking: 0.1em; }
 
         /* 牌陣容器 */
         .container { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
         
         /* 單張卡牌外殼 */
         .card-box { width: 160px; text-align: center; }
-        .card-box h3 { color: #f39c12; font-size: 16px; margin-bottom: 12px; }
+        .card-box h3 { color: #71717a; font-size: 11px; margin-bottom: 12px; tracking: 0.1em; text-transform: uppercase; }
         
         /* 卡牌本體與 3D 翻牌效果 */
         .card { 
             width: 160px; height: 274px; perspective: 1000px; margin-bottom: 15px; 
-            pointer-events: none; opacity: 0.3; transition: transform 0.3s, opacity 0.5s;
+            pointer-events: none; opacity: 0.3; transition: transform 0.1s, opacity 0.5s;
         }
         .card.playable { pointer-events: auto; opacity: 1; cursor: pointer; }
-        .card.playable:hover { transform: translateY(-8px); }
+        .card.playable:hover { transform: translateY(-4px); }
         
         .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s; position: relative; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
         
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
-        .card-back { background: linear-gradient(135deg, #1a252f, #000); border: 2px solid #f39c12; display: flex; align-items: center; justify-content: center; color: #f39c12; font-size: 28px; }
-        .card-front { transform: rotateY(180deg); background-color: #000; border: 2px solid rgba(253, 203, 110, 0.5); border-radius: 10px; }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.8); }
+        
+        /* 賽博點陣卡背 */
+        .card-back { 
+            background: #0a0a0a; 
+            border: 1px solid #27272a; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #3f3f46; 
+            font-size: 32px; 
+        }
+        .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #3f3f46; border-radius: 10px; }
         .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
         
         .reversed { transform: rotate(180deg); }
         
         /* 解釋文字區 */
-        .result-info { font-size: 14px; line-height: 1.6; min-height: 120px; padding: 5px; box-sizing: border-box; opacity: 0; visibility: hidden; transition: opacity 0.6s ease; }
+        .result-info { font-size: 13px; line-height: 1.6; min-height: 120px; padding: 5px; box-sizing: border-box; opacity: 0; visibility: hidden; transition: opacity 0.6s ease; color: #a1a1aa; }
         .card.flipped + .result-info { opacity: 1; visibility: visible; }
         
-        .orientation { font-weight: bold; margin: 5px 0; font-size: 13px; }
-        .upright-text { color: #2ecc71; }
-        .reversed-text { color: #e74c3c; }
+        .result-info h4 { color: #ffffff; margin: 10px 0 5px 0; font-size: 14px; }
+        .orientation { font-weight: bold; margin: 5px 0; font-size: 11px; tracking: 0.1em; }
+        .upright-text { color: #10b981; }
+        .reversed-text { color: #ef4444; }
         
-        /* 新增：大師綜合總結區塊樣式（古典羊皮紙神祕感） */
+        /* 大師綜合總結區塊樣式（矩陣控制台面板風格） */
         .summary-box {
             max-width: 600px;
             margin: 40px auto 20px auto;
-            background: linear-gradient(rgba(243, 156, 18, 0.05), rgba(0, 0, 0, 0.4)), #1e1b29;
-            border: 2px dashed #f39c12;
+            background: #0a0a0a;
+            border: 1px dashed #dc2626;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(243, 156, 18, 0.15);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.05);
             text-align: left;
             line-height: 1.8;
-            display: none; /* 預設隱藏，全部翻完才顯示 */
+            display: none; 
         }
-        .summary-box h2 { color: #f1c40f; text-align: center; margin-top: 0; font-size: 20px; letter-spacing: 1px; }
-        .summary-box p { margin: 10px 0 0 0; font-size: 15px; color: #f5f5f5; text-indent: 2em; }
+        .summary-box h2 { color: #ffffff; text-align: center; margin-top: 0; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #1f1f1f; padding-bottom: 10px; }
+        .summary-box p { margin: 15px 0 0 0; font-size: 13px; color: #d1d1d1; text-indent: 2em; }
 
-        /* 功能按鈕 */
+        /* 功能按鈕風格同步 */
         #action-zone { margin-top: 30px; display: none; }
-        button { background-color: #f39c12; color: #000; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; transition: 0.3s; }
-        button:hover { background-color: #e67e22; }
-        .btn-secondary { background-color: #34495e; color: #fff; margin-left: 10px; }
-        .btn-secondary:hover { background-color: #2c3e50; }
+        button { 
+            background-color: #0a0a0a; 
+            color: #d1d1d1; 
+            border: 1px solid #27272a; 
+            padding: 12px 35px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            border-radius: 9999px; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            transition: 0.2s;
+            font-family: inherit;
+            letter-spacing: 0.1em;
+        }
+        button:hover { background-color: #111; border-color: #dc2626; color: #fff; }
+        .btn-secondary { background-color: #050505; border-color: #1f1f1f; color: #71717a; margin-left: 10px; }
+        .btn-secondary:hover { border-color: #52525b; color: #d1d1d1; }
 
         /* 洗牌動畫 */
-        @keyframes shuffleLeft { 0% { transform: translateX(0); } 50% { transform: translateX(-60px) rotate(-10deg); } 100% { transform: translateX(0); } }
-        @keyframes shuffleRight { 0% { transform: translateX(0); } 50% { transform: translateX(60px) rotate(10deg); } 100% { transform: translateX(0); } }
+        @keyframes shuffleLeft { 0% { transform: translateX(0); } 50% { transform: translateX(-60px) rotate(-5deg); } 100% { transform: translateX(0); } }
+        @keyframes shuffleRight { 0% { transform: translateX(0); } 50% { transform: translateX(60px) rotate(5deg); } 100% { transform: translateX(0); } }
         .shuffling-left { animation: shuffleLeft 0.5s ease-in-out 2; }
         .shuffling-right { animation: shuffleRight 0.5s ease-in-out 2; }
     </style>
 </head>
 <body>
 
-    <h1>🔮 線上塔羅神祕學占卜</h1>
+    <h1>🔮 聖三角潛意識矩陣占卜</h1>
+    <div class="sys-status">SYS_STATUS: ACTIVE // NODE_TAROT</div>
     
     <div class="question-section">
-        <label for="question">請在心中默想你的問題，並記錄在下方：</label>
-        <input type="text" id="question" placeholder="例如：我接下來的感情發展合適嗎？">
+        <label for="question">[ INITIALIZE_INPUT ] 請在心中默想你的問題：</label>
+        <input type="text" id="question" placeholder="輸入你想解構的潛意識流動...">
         
-        <label for="question-type">請選擇占卜的類別：</label>
+        <label for="question-type">[ SELECT_MATRIX_NODE ] 請選擇占卜類別：</label>
         <select id="question-type">
-            <option value="general">綜合運勢分析</option>
-            <option value="love">感情桃花發展</option>
-            <option value="work">工作、學業與事業</option>
+            <option value="general">綜合運勢分析 // GENERAL</option>
+            <option value="love">感情桃花發展 // LOVE</option>
+            <option value="work">工作學業事業 // WORK</option>
         </select>
         <br>
-        <button id="draw-btn" onclick="startTarotSession()">開始洗牌占卜</button>
+        <button id="draw-btn" onclick="startTarotSession()">開始洗牌占卜 // RUN</button>
     </div>
 
     <div id="user-question-display"></div>
@@ -126,11 +171,11 @@
     <!-- 牌陣顯示區 -->
     <div id="deck" class="container"></div>
 
-    <!-- 新增：大師綜合解析總結區 -->
+    <!-- 大師綜合解析總結區 -->
     <div id="summary-section" class="summary-box"></div>
 
     <div id="action-zone">
-        <button class="btn-secondary" onclick="copyReport()">📋 複製完整占卜報告</button>
+        <button class="btn-secondary" onclick="copyReport()">📋 複製完整占卜報告 // EXPORT</button>
     </div>
 
     <script>
@@ -188,7 +233,7 @@
         let currentHandData = []; 
         let currentFlipIndex = 0; 
         let selectedType = 'general';
-        let generatedSummary = ""; // 儲存產生的總結文字
+        let generatedSummary = ""; 
 
         function startTarotSession() {
             const questionInput = document.getElementById('question').value.trim();
@@ -200,18 +245,16 @@
             }
 
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
-            document.getElementById('user-question-display').innerText = `［ 占卜主題（${typeNames[selectedType]}）：${questionInput} ］`;
-            document.getElementById('flow-hint').innerText = "🔮 正在為您洗牌中，請靜心等待...";
+            document.getElementById('user-question-display').innerText = `[ MATRIX_TARGET // ${typeNames[selectedType]} : ${questionInput} ]`;
+            document.getElementById('flow-hint').innerText = "INITIALIZING_SHUFFLE_SEQUENCE...";
             document.getElementById('deck').innerHTML = '';
             
-            // 重置總結區與按鈕區
             const summaryDiv = document.getElementById('summary-section');
             summaryDiv.style.display = 'none';
             summaryDiv.innerHTML = '';
             document.getElementById('action-zone').style.display = 'none';
             currentFlipIndex = 0;
 
-            // 洗牌與抽取
             const shuffled = [...tarotData.cards].sort(() => 0.5 - Math.random());
             currentHandData = shuffled.slice(0, 3).map(card => {
                 return { ...card, isReversed: Math.random() < 0.5 };
@@ -222,7 +265,7 @@
 
         function dealCards() {
             const deckDiv = document.getElementById('deck');
-            const positions = ["過去 (Past)", "現在 (Present)", "未來 (Future)"];
+            const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
 
             currentHandData.forEach((card, index) => {
                 const cardMeaning = tarotMeanings[card.name] || tarotMeanings["default"];
@@ -230,7 +273,7 @@
                 
                 const cardNameShow = cardMeaning.nameCN !== "未知卡牌" ? `${card.name} (${cardMeaning.nameCN})` : card.name;
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
-                const orientationText = card.isReversed ? "逆位 (Reversed)" : "正位 (Upright)";
+                const orientationText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 const orientationClass = card.isReversed ? "reversed-text" : "upright-text";
 
                 const cardBox = document.createElement('div');
@@ -241,7 +284,7 @@
                     <h3>${positions[index]}</h3>
                     <div class="card ${animClass}" id="card-${index}" onclick="handleCardFlip(${index})">
                         <div class="card-inner">
-                            <div class="card-back">★</div>
+                            <div class="card-back">⚝</div>
                             <div class="card-front">
                                 <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">
                             </div>
@@ -270,10 +313,10 @@
                 const targetCard = document.getElementById(`card-${currentFlipIndex}`);
                 if (targetCard) targetCard.classList.add('playable');
                 const posName = currentFlipIndex === 0 ? "過去" : (currentFlipIndex === 1 ? "現在" : "未來");
-                document.getElementById('flow-hint').innerText = `👉 請點擊翻開代表【${posName}】的卡牌`;
+                document.getElementById('flow-hint').innerText = `👉 AWAITING_DECRYPT // 請點擊翻開【${posName}】節點`;
             } else {
-                document.getElementById('flow-hint').innerText = "✨ 占卜已完成。大師開示生成中...";
-                generateComprehensiveSummary(); // 💡 觸發智慧總結
+                document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 矩陣分析完成";
+                generateComprehensiveSummary(); 
             }
         }
 
@@ -287,54 +330,43 @@
             }
         }
 
-        // 3. 💡 新增：智慧總結演算法邏輯
         function generateComprehensiveSummary() {
-            // 計算三張牌中「正位」的數量
-            const uprightCount = currentHandData.filter(c => !c.isReversed).count; 
-            const uprights = currentHandData.filter(c => !c.isReversed);
-            const totalUprights = uprights.length; // 計算真正的數量
-            
-            // 抓取未來的牌況
+            const totalUprights = currentHandData.filter(c => !c.isReversed).length; 
             const futureCard = currentHandData[2];
             const isFutureUpright = !futureCard.isReversed;
 
             let typeWord = selectedType === 'love' ? '感情桃花' : (selectedType === 'work' ? '工作事業' : '整體運勢');
             let summaryText = "";
 
-            // 根據正位數量與未來時態建立多分支邏輯判斷
             if (totalUprights === 3) {
                 summaryText = `這是一次非常幸運且和諧的「全正位」聖三角牌陣！從過去的奠基到現在的執行，你都走在完全正確的軌道上。未來發展（${tarotMeanings[futureCard.name]?.nameCN || '新起點'}）更是充滿光明。目前的阻礙極小，請順應你當前的熱情與步調，大膽地向前推進，事情將會迎來圓滿且富足的結果。`;
             } else if (totalUprights === 2) {
                 if (isFutureUpright) {
                     summaryText = `當前的牌陣呈現「倒吃甘蔗」的良性流向。儘管在過去或現在的階段中，你可能經歷了一些不順遂、迷茫或計畫受阻（逆位卡牌所對應的時態），但別擔心！因為代表最終結果的未來牌呈現極佳的正位。這意味著眼前的混亂只是短暫的考驗，只要修正當前的步伐，最終的局勢依然會朝著對你非常有利的方向明朗化。`;
                 } else {
-                    summaryText = `目前的局勢呈現「前順後阻」的現象。你的起步與目前的狀態其實都算穩定或具備優勢（前兩張多為正位），但代表未來的最後一哩路卻出現了干擾或逆位。這是一個重要的警訊！大師建議你，雖然現在看起來沒事，但必須居安思危，提前為未來可能出現的溝通不良、資源匱乏或魯莽決策做好防範準備。`;
+                    summaryText = `目前的局勢呈現「前順後阻」的現象。你的起步與目前的狀態其實都算穩定或具備優勢（前兩張多為正位），但代表未來的最後一哩路卻出現了干擾或逆位。這是一個重要的警訊！建議你，雖然現在看起來沒事，但必須居安思危，提前為未來可能出現的溝通不良、資源匱乏或魯莽決策做好防範準備。`;
                 }
             } else if (totalUprights === 1) {
                 if (isFutureUpright) {
-                    summaryText = `這是一個典型的「逆境重生」牌陣。你在過去與現在承受了極大的壓力、阻礙或混亂（前兩張皆為逆位），可能讓你感到心力交瘁。不過，破曉的曙光就在前方！未來的卡牌以正位之姿降臨，暗示著你即將觸底反彈。只要熬過眼前的瓶頸，並從過去的失敗中吸取教訓，未來將會迎來強烈的新轉機。`;
+                    summaryText = `這是一個典型的「逆境重生」牌陣。你在過去與現在承受了極大的壓力、阻礙或混亂（前兩張皆為逆位），可能讓你感到心力交瘁。不過，破曉的曙光就在前方！未來的卡牌以正位之姿降臨，暗示著你即將觸底反彈。只要熬過眼前的瓶境，並從過去的失敗中吸取教訓，未來將會迎來強烈的新轉機。`;
                 } else {
-                    summaryText = `目前局勢正處於較為艱辛的「調整期」。整個聖三角中逆位偏多，且未來亦受到逆位能量的干擾。這代表你所詢問的這個問題，目前的時機可能尚未成熟，或者前進的方向存在著根本性的盲點。大師強烈建議你：現在不宜盲目加碼或做出重大決定，應先停下腳步、沈澱心情，進行徹底的內部整頓或尋求專業外界協助，方能化解未來的危機。`;
+                    summaryText = `目前局勢正處於較為艱辛的「調整期」。整個聖三角中逆位偏多，且未來亦受到逆位能量的干擾。這代表你所詢問的這個問題，目前的時機可能尚未成熟，或者前進的方向存在著根本性的盲點。強烈建議你：現在不宜盲目加碼或做出重大決定，應先停下腳步、沈澱心情，進行徹底的內部整頓或尋求專業外界協助，方能化解未來的危機。`;
                 }
             } else {
-                // 3張皆為逆位
-                summaryText = `牌面出現了極為罕見的「全逆位」極端星象。這意味著不論是過去的起因、現在的現況還是未來的發展，都充斥著強烈的混亂、停滯或能量受阻。這並不是世界末日，而是宇宙在對你發出強烈的「暫停訊號」。代表你目前想前進的方法、或是問事的心態可能完全偏離了軌道。請立刻停止橫衝直撞，大破大立地全面重新審視這個問題，這才是將逆境轉化為轉機的唯一解藥。`;
+                summaryText = `牌面出現了極為罕見的「全逆位」極端星象。這意味著不論是過去的起因、現在的現況還是未來的發展，都充斥著強烈的混亂、停滯或能量受阻。這並不是世界末日，而是系統在對你發出強烈的「暫停訊號」。代表你目前想前進的方法、或是問事的心態可能完全偏離了軌道。請立刻停止橫衝直撞，全面重新審視這個問題，這才是將逆境轉化為轉機的唯一解藥。`;
             }
 
             generatedSummary = `【大師綜合點評】\n針對您詢問的「${typeWord}」問題，縱觀整個聖三角的時態流向：${summaryText}`;
 
-            // 將結果渲染至畫面上
             const summaryDiv = document.getElementById('summary-section');
-            summaryDiv.innerHTML = `<h2>🔮 大師綜合星象結算</h2><p>${summaryText}</p>`;
+            summaryDiv.innerHTML = `<h2>🔮 [ COMPREHENSIVE_SUMMARY_NODE ]</h2><p>${summaryText}</p>`;
             
-            // 漸顯效果
             setTimeout(() => {
                 summaryDiv.style.display = 'block';
                 document.getElementById('action-zone').style.display = 'block';
             }, 500);
         }
 
-        // 4. 修改後的複製占卜報告（連同大師總結一起複製）
         function copyReport() {
             const question = document.getElementById('question').value.trim();
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
@@ -361,7 +393,7 @@
             reportText += `───────────────────\n*報告產生時間：${new Date().toLocaleString()}*`;
 
             navigator.clipboard.writeText(reportText)
-                .then(() => alert("✨ 包含「大師綜合點評」的完整報告已成功複製！"))
+                .then(() => alert("✨ 報告已成功導出至剪貼簿！"))
                 .catch(err => alert("複製失敗，請手動複製網頁文字。"));
         }
     </script>
