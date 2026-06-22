@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 神祕學塔羅占卜</title>
+    <style>
+        /* 基礎神祕學風格視覺 */
+        body { 
+            font-family: "Georgia", "Times New Roman", "華康明體", "微軟正黑體", serif; 
+            background: radial-gradient(circle at center, #1b1f38 0%, #0d0f1d 100%);
+            color: #e0e0e0; 
+            text-align: center; 
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        h1 { color: #f39c12; letter-spacing: 2px; text-shadow: 0 0 10px rgba(243, 156, 18, 0.5); }
+        
+        /* 問題輸入區 */
+        .question-section { 
+            margin: 20px auto; 
+            max-width: 500px; 
+            background: rgba(44, 62, 80, 0.4); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
+        }
+        .question-section label { display: block; margin-bottom: 12px; font-size: 16px; color: #f1c40f; font-weight: bold; }
+        .question-section input { 
+            width: 85%; padding: 12px; font-size: 16px; border: 2px solid #f39c12; border-radius: 6px; 
+            background: #0d0f1d; color: #fff; text-align: center; outline: none; transition: 0.3s;
+        }
+        .question-section input:focus { border-color: #e67e22; box-shadow: 0 0 12px rgba(230, 126, 34, 0.6); }
+        
+        /* 狀態與問題提示 */
+        #user-question-display { font-size: 18px; color: #f1c40f; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
+        #flow-hint { color: #95a5a6; font-style: italic; font-size: 14px; margin-bottom: 20px; }
+
+        /* 牌陣容器 */
+        .container { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        
+        /* 單張卡牌外殼 */
+        .card-box { width: 160px; text-align: center; }
+        .card-box h3 { color: #f39c12; font-size: 16px; margin-bottom: 12px; }
+        
+        /* 卡牌本體與 3D 翻牌效果 */
+        .card { 
+            width: 160px; height: 274px; perspective: 1000px; margin-bottom: 15px; 
+            pointer-events: none; opacity: 0.5; transition: transform 0.3s, opacity 0.5s;
+        }
+        /* 當牌卡被解鎖時的樣式 */
+        .card.playable { pointer-events: auto; opacity: 1; cursor: pointer; }
+        .card.playable:hover { transform: translateY(-8px); }
+        
+        .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s; position: relative; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
+        
+        /* 牌背視覺 */
+        .card-back { 
+            background: linear-gradient(135deg, #1a252f, #000); border: 2px solid #f39c12; 
+            display: flex; align-items: center; justify-content: center; color: #f39c12; font-size: 28px; 
+        }
+        /* 牌面視覺 */
+        .card-front { transform: rotateY(180deg); background-color: #000; border: 2px solid rgba(253, 203, 110, 0.5); border-radius: 10px; box-shadow: 0 0 15px rgba(243,156,18,0.2); }
+        .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
+        
+        /* 逆位 CSS 翻轉 */
+        .reversed { transform: rotate(180deg); }
+        
+        /* 解釋文字區：翻牌後漸顯 */
+        .result-info { 
+            font-size: 14px; line-height: 1.6; min-height: 100px; padding: 5px;
+            opacity: 0; visibility: hidden; transition: opacity 0.6s ease, visibility 0.6s ease; 
+        }
+        .card.flipped + .result-info { opacity: 1; visibility: visible; }
+        
+        .orientation { font-weight: bold; margin: 5px 0; font-size: 13px; }
+        .upright-text { color: #2ecc71; text-shadow: 0 0 5px rgba(46, 204, 113, 0.3); }
+        .reversed-text { color: #e74c3c; text-shadow: 0 0 5px rgba(231, 76, 60, 0.3); }
+        
+        /* 按鈕與功能按鍵 */
+        button { background-color: #f39c12; color: #000; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; transition: 0.3s; box-shadow: 0 4px 10px rgba(243,156,18,0.3); }
+        button:hover { background-color: #e67e22; box-shadow: 0 6px 15px rgba(230,126,34,0.5); }
+        
+        #action-zone { margin-top: 30px; display: none; }
+        .btn-secondary { background-color: #34495e; color: #fff; margin-left: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn-secondary:hover { background-color: #2c3e50; }
+
+        /* 洗牌動畫特效 */
+        @keyframes shuffleLeft { 0% { transform: translateX(0); } 50% { transform: translateX(-60px) rotate(-10deg); } 100% { transform: translateX(0); } }
+        @keyframes shuffleRight { 0% { transform: translateX(0); } 50% { transform: translateX(60px) rotate(10deg); } 100% { transform: translateX(0); } }
+        .shuffling-left { animation: shuffleLeft 0.5s ease-in-out 2; }
+        .shuffling-right { animation: shuffleRight 0.5s ease-in-out 2; }
+    </style>
+</head>
+<body>
+
+    <h1>🔮 線上塔羅神祕學占卜</h1>
+    
+    <div class="question-section">
+        <label for="question">請在心中默想你的問題，並記錄在下方：</label>
+        <input type="text" id="question" placeholder="例如：我近期在轉職上的運勢發展如何？">
+        <br>
+        <button id="draw-btn" onclick="startTarotSession()">開始洗牌占卜</button>
+    </div>
+
+    <div id="user-question-display"></div>
+    <div id="flow-hint"></div>
+
+    <div id="deck" class="container"></div>
+
+    <div id="action-zone">
+        <button class="btn-secondary" onclick="copyReport()">📋 複製占卜報告</button>
+    </div>
+
+    <script>
+        // 1. 本地中文牌意對映表 (Mapping)
+        // 網頁會根據 json 內的 card.name 去抓取這裡的中文解釋，若無定義則走 default
+        const tarotMeanings = {
+            "The Fool": { nameCN: "愚者", upright: "新的開始、自由、純真、冒險。代表一個不問過去、充滿勇氣的全新旅程。", reversed: "魯莽、輕率、不負責任、停滯不前。警惕缺乏計劃的盲目行動與逃避。" },
+            "The Magician": { nameCN: "魔術師", upright: "創造力、行動力、潛力發揮、自信。萬事俱備，眼前有著無限的資源供你使用。", reversed: "操縱、能力未發揮、缺乏計劃、欺騙。注意身邊可能被巧言令色所矇蔽。" },
+            "The High Priestess": { nameCN: "女祭司", upright: "直覺、潛意識、智慧、冷靜。現在是向內探索、傾聽內心直覺的時刻。", reversed: "膚淺、過度理智、壓抑情感、秘密外洩。你可能忽略了隱藏在表象下的真相。" },
+            "The Empress": { nameCN: "皇后", upright: "豐收、繁榮、孕育、母愛。代表物質與精神生活的富足，處於收穫期。", reversed: "缺乏安全感、過度控制、浪費、創造力受阻。注意不要給予他人過度的情感勒索。" },
+            "The Emperor": { nameCN: "皇帝", upright: "權力、穩定、控制、權威。擁有堅強的意志力、領導力與清晰的秩序架構。", reversed: "暴政、軟弱、缺乏自律、控制狂。容易流於教條僵化或對局勢失去掌控力。" },
+            "default": { nameCN: "未知卡牌", upright: "事情正朝著積極的方向發展，保持信心、專注與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐、審慎評估內外環境。" }
+        };
+
+        let currentHandData = []; // 儲存當前抽出的三張牌數據，供複製報告使用
+        let currentFlipIndex = 0; // 追蹤目前該翻開第幾張牌
+
+        // 2. 核心啟動流程：防呆 -> 洗牌動畫 -> 發牌
+        function startTarotSession() {
+            const questionInput = document.getElementById('question').value.trim();
+            if (questionInput === "") {
+                alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！");
+                return;
+            }
+
+            document.getElementById('user-question-display').innerText = `［ 占卜主題：${questionInput} ］`;
+            document.getElementById('flow-hint').innerText = "🔮 正在為您洗牌中，請靜心等待...";
+            document.getElementById('deck').innerHTML = '';
+            document.getElementById('action-zone').style.display = 'none';
+            currentFlipIndex = 0;
+
+            // 讀取外部資料庫並進行洗牌流程
+            fetch('./tarot-images.json')
+                .then(res => {
+                    if(!res.ok) throw new Error("找不到 tarot-images.json 檔案");
+                    return res.json();
+                })
+                .then(data => {
+                    // 執行 Fisher-Yates 洗牌
+                    const shuffled = [...data.cards].sort(() => 0.5 - Math.random());
+                    // 真正切出前三張（確保牌池不重複）
+                    currentHandData = shuffled.slice(0, 3).map(card => {
+                        return {
+                            ...card,
+                            isReversed: Math.random() < 0.5 // 隨機正逆位
+                        };
+                    });
+                    
+                    // 觸發洗牌視覺特效（對輸入框區塊模擬震動/洗牌感，此處直接進發牌延時）
+                    setTimeout(() => {
+                        dealCards();
+                    }, 1200); 
+                })
+                .catch(err => {
+                    alert("讀取卡牌資料失敗，請確認 tarot-images.json 是否在正確位置。");
+                    console.error(err);
+                });
+        }
+
+        // 3. 發牌機制與建構 DOM
+        function dealCards() {
+            const deckDiv = document.getElementById('deck');
+            const positions = ["過去 (Past)", "現在 (Present)", "未來 (Future)"];
+
+            currentHandData.forEach((card, index) => {
+                const meaning = tarotMeanings[card.name] || tarotMeanings["default"];
+                const cardNameShow = meaning.nameCN !== "未知卡牌" ? `${card.name} (${meaning.nameCN})` : card.name;
+                const explanation = card.isReversed ? meaning.reversed : meaning.upright;
+                const orientationText = card.isReversed ? "逆位 (Reversed)" : "正位 (Upright)";
+                const orientationClass = card.isReversed ? "reversed-text" : "upright-text";
+
+                const cardBox = document.createElement('div');
+                cardBox.className = 'card-box';
+                
+                // 動態給予洗牌偏移動畫類別（1、3張往左右散開再收回）
+                const animClass = index === 0 ? 'shuffling-left' : (index === 2 ? 'shuffling-right' : '');
+
+                cardBox.innerHTML = `
+                    <h3>${positions[index]}</h3>
+                    <div class="card ${animClass}" id="card-${index}" onclick="handleCardFlip(${index})">
+                        <div class="card-inner">
+                            <div class="card-back">★</div>
+                            <div class="card-front">
+                                <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-info">
+                        <h4>${cardNameShow}</h4>
+                        <div class="orientation ${orientationClass}">${orientationText}</div>
+                        <p>${explanation}</p>
+                    </div>
+                `;
+                deckDiv.appendChild(cardBox);
+            });
+
+            // 動態移除洗牌動畫類別，並解鎖「第一張牌」
+            setTimeout(() => {
+                for(let i=0; i<3; i++) {
+                    document.getElementById(`card-${i}`).classList.remove('shuffling-left', 'shuffling-right');
+                }
+                unlockNextCard();
+            }, 1000);
+        }
+
+        // 4. 一張接一張的控制翻牌邏輯
+        function unlockNextCard() {
+            if (currentFlipIndex < 3) {
+                document.getElementById(`card-${currentFlipIndex}`).classList.add('playable');
+                const posName = currentFlipIndex === 0 ? "過去" : (currentFlipIndex === 1 ? "現在" : "未來");
+                document.getElementById('flow-hint').innerText = `👉 請點擊翻開代表【${posName}】的卡牌`;
+            } else {
+                document.getElementById('flow-hint').innerText = "✨ 占卜已完成。願星辰指引你的方向。";
+                document.getElementById('action-zone').style.display = 'block'; // 翻完顯示複製按鈕
+            }
+        }
+
+        function handleCardFlip(index) {
+            const cardEl = document.getElementById(`card-${index}`);
+            // 只有當牌是可玩的，且還沒被翻開時才執行
+            if (cardEl.classList.contains('playable') && !cardEl.classList.contains('flipped')) {
+                cardEl.classList.add('flipped');
+                cardEl.classList.remove('playable'); // 翻開後移除可點擊動畫
+                
+                currentFlipIndex++;
+                // 延遲一下再解鎖下一張，讓使用者有時間看牌面
+                setTimeout(() => {
+                    unlockNextCard();
+                }, 800);
+            }
+        }
+
+        // 5. 複製占卜報告功能
+        function copyReport() {
+            const question = document.getElementById('question').value.trim();
+            const positions = ["過去", "現在", "未來"];
+            let reportText = `🔮 【線上塔羅占卜報告】\n`;
+            reportText += `💬 占卜問題：${question}\n`;
+            reportText += `───────────────────\n`;
+
+            currentHandData.forEach((card, index) => {
+                const meaning = tarotMeanings[card.name] || tarotMeanings["default"];
+                const nameText = meaning.nameCN !== "未知卡牌" ? `${card.name} (${meaning.nameCN})` : card.name;
+                const oriText = card.isReversed ? "逆位" : "正位";
+                const expText = card.isReversed ? meaning.reversed : meaning.upright;
+
+                reportText += `▶ 【${positions[index]}】 ${nameText} - ${oriText}\n`;
+                reportText += `💡 牌意解析：${expText}\n\n`;
+            });
+            
+            reportText += `───────────────────\n*報告產生時間：${new Date().toLocaleString()}*`;
+
+            navigator.clipboard.writeText(reportText)
+                .then(() => alert("✨ 占卜報告已成功複製到剪貼簿！"))
+                .catch(err => alert("複製失敗，請手動複製網頁文字。"));
+        }
+    </script>
+</body>
+</html>
