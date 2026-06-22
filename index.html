@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔮 聖三角神祕學塔羅占卜 // Sub-Node</title>
+    <title>🔮 聖三角潛意識矩陣占卜 // Sub-Node</title>
     <style>
-        /* 融合賽博極簡點陣背景與字體 */
         body { 
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             background-color: #050505;
@@ -36,7 +35,6 @@
             margin-bottom: 25px;
         }
         
-        /* 問題輸入區與分類選單 */
         .question-section { 
             margin: 20px auto; 
             max-width: 500px; 
@@ -53,43 +51,58 @@
             font-family: inherit;
         }
         .question-section input:focus, .question-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
-        .question-section select { text-align-last: center; cursor: pointer; }
         
-        /* 狀態與問題提示 */
         #user-question-display { font-size: 15px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
         #flow-hint { color: #52525b; font-style: italic; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; tracking: 0.1em; }
 
         /* 牌陣容器 */
-        .container { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .container { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 20px; min-height: 380px; }
         
         /* 單張卡牌外殼 */
         .card-box { width: 160px; text-align: center; }
         .card-box h3 { color: #71717a; font-size: 11px; margin-bottom: 12px; tracking: 0.1em; text-transform: uppercase; }
         
-        /* 卡牌本體與 3D 翻牌效果 */
+        /* 卡牌本體與亮度調校 */
         .card { 
             width: 160px; height: 274px; perspective: 1000px; margin-bottom: 15px; 
-            pointer-events: none; opacity: 0.3; transition: transform 0.1s, opacity 0.5s;
+            pointer-events: none; 
+            opacity: 0.5; /* 提高未啟用時的基礎亮度 */
+            transition: transform 0.2s, opacity 0.5s, filter 0.3s;
+            filter: grayscale(30%);
         }
-        .card.playable { pointer-events: auto; opacity: 1; cursor: pointer; }
-        .card.playable:hover { transform: translateY(-4px); }
+        /* 可點擊狀態：高亮、發光、呼吸燈 */
+        .card.playable { 
+            pointer-events: auto; 
+            opacity: 1; 
+            filter: grayscale(0%) drop-shadow(0 0 8px rgba(220, 38, 38, 0.15));
+            cursor: pointer; 
+            animation: cardPulse 2s infinite ease-in-out;
+        }
+        .card.playable:hover { transform: translateY(-6px); filter: grayscale(0%) drop-shadow(0 0 15px rgba(220, 38, 38, 0.3)); }
+        .card.flipped { opacity: 1; filter: grayscale(0%); }
         
-        .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s; position: relative; }
+        @keyframes cardPulse {
+            0%, 100% { filter: grayscale(0%) drop-shadow(0 0 8px rgba(220, 38, 38, 0.15)); }
+            50% { filter: grayscale(0%) drop-shadow(0 0 14px rgba(220, 38, 38, 0.4)); }
+        }
+        
+        .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
         
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.8); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); }
         
-        /* 賽博點陣卡背 */
+        /* 卡背設計修正：提高內部符號亮度 */
         .card-back { 
-            background: #0a0a0a; 
-            border: 1px solid #27272a; 
+            background: #0d0d0d; 
+            border: 1px solid #3f3f46; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            color: #3f3f46; 
-            font-size: 32px; 
+            color: #a1a1aa; 
+            font-size: 36px; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
         }
-        .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #3f3f46; border-radius: 10px; }
+        .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; border-radius: 10px; }
         .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
         
         .reversed { transform: rotate(180deg); }
@@ -98,12 +111,15 @@
         .result-info { font-size: 13px; line-height: 1.6; min-height: 120px; padding: 5px; box-sizing: border-box; opacity: 0; visibility: hidden; transition: opacity 0.6s ease; color: #a1a1aa; }
         .card.flipped + .result-info { opacity: 1; visibility: visible; }
         
-        .result-info h4 { color: #ffffff; margin: 10px 0 5px 0; font-size: 14px; }
+        /* 卡牌名稱強制分行排版 */
+        .card-title-en { display: block; color: #ffffff; font-size: 14px; font-weight: 700; tracking: 0.05em; margin-top: 10px; }
+        .card-title-cn { display: block; color: #a1a1aa; font-size: 12px; font-weight: 500; margin-top: 2px; margin-bottom: 5px; }
+        
         .orientation { font-weight: bold; margin: 5px 0; font-size: 11px; tracking: 0.1em; }
         .upright-text { color: #10b981; }
         .reversed-text { color: #ef4444; }
         
-        /* 大師綜合總結區塊樣式（矩陣控制台面板風格） */
+        /* 大師綜合總結區塊 */
         .summary-box {
             max-width: 600px;
             margin: 40px auto 20px auto;
@@ -119,7 +135,7 @@
         .summary-box h2 { color: #ffffff; text-align: center; margin-top: 0; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #1f1f1f; padding-bottom: 10px; }
         .summary-box p { margin: 15px 0 0 0; font-size: 13px; color: #d1d1d1; text-indent: 2em; }
 
-        /* 功能按鈕風格同步 */
+        /* 按鈕風格 */
         #action-zone { margin-top: 30px; display: none; }
         button { 
             background-color: #0a0a0a; 
@@ -139,11 +155,29 @@
         .btn-secondary { background-color: #050505; border-color: #1f1f1f; color: #71717a; margin-left: 10px; }
         .btn-secondary:hover { border-color: #52525b; color: #d1d1d1; }
 
-        /* 洗牌動畫 */
-        @keyframes shuffleLeft { 0% { transform: translateX(0); } 50% { transform: translateX(-60px) rotate(-5deg); } 100% { transform: translateX(0); } }
-        @keyframes shuffleRight { 0% { transform: translateX(0); } 50% { transform: translateX(60px) rotate(5deg); } 100% { transform: translateX(0); } }
-        .shuffling-left { animation: shuffleLeft 0.5s ease-in-out 2; }
-        .shuffling-right { animation: shuffleRight 0.5s ease-in-out 2; }
+        /* 高級賽博交疊洗牌動畫 (Cyber Shuffle) */
+        .shuffling-0 { animation: cyberShuffleLeft 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+        .shuffling-1 { animation: cyberShuffleCenter 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+        .shuffling-2 { animation: cyberShuffleRight 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        @keyframes cyberShuffleLeft {
+            0% { transform: translateX(0) scale(1); z-index: 1; }
+            30% { transform: translateX(200px) scale(0.9) rotate(8deg); z-index: 5; }
+            60% { transform: translateX(200px) scale(1.05) rotate(-8deg); z-index: 1; }
+            100% { transform: translateX(0) scale(1); z-index: 2; }
+        }
+        @keyframes cyberShuffleCenter {
+            0% { transform: scale(1); z-index: 2; }
+            30% { transform: scale(1.1) rotate(-5deg); z-index: 1; }
+            60% { transform: scale(0.85) rotate(5deg); z-index: 5; }
+            100% { transform: scale(1); z-index: 2; }
+        }
+        @keyframes cyberShuffleRight {
+            0% { transform: translateX(0) scale(1); z-index: 3; }
+            30% { transform: translateX(-200px) scale(1.05) rotate(-8deg); z-index: 2; }
+            60% { transform: translateX(-200px) scale(0.9) rotate(8deg); z-index: 5; }
+            100% { transform: translateX(0) scale(1); z-index: 2; }
+        }
     </style>
 </head>
 <body>
@@ -152,7 +186,8 @@
     <div class="sys-status">SYS_STATUS: ACTIVE // NODE_TAROT</div>
     
     <div class="question-section">
-        <label for="question">[ INITIALIZE_INPUT ] 請在心中默想你的問題：</label>
+        <!-- 修改核心提示文字 -->
+        <label for="question">[ INITIALIZE_INPUT ] 請輸入你的問題並在心中默想3次：</label>
         <input type="text" id="question" placeholder="輸入你想解構的潛意識流動...">
         
         <label for="question-type">[ SELECT_MATRIX_NODE ] 請選擇占卜類別：</label>
@@ -168,10 +203,7 @@
     <div id="user-question-display"></div>
     <div id="flow-hint"></div>
 
-    <!-- 牌陣顯示區 -->
     <div id="deck" class="container"></div>
-
-    <!-- 大師綜合解析總結區 -->
     <div id="summary-section" class="summary-box"></div>
 
     <div id="action-zone">
@@ -179,7 +211,6 @@
     </div>
 
     <script>
-        // 1. 卡牌原始資料
         const tarotData = {
           "cards": [
             { "name": "The Fool", "img": "m00.jpg" },
@@ -190,7 +221,6 @@
           ]
         };
 
-        // 2. 精細化分類牌意資料庫
         const tarotMeanings = {
             "The Fool": {
                 nameCN: "愚者",
@@ -260,7 +290,8 @@
                 return { ...card, isReversed: Math.random() < 0.5 };
             });
             
-            setTimeout(() => { dealCards(); }, 1200); 
+            // 預留高級洗牌動畫時間
+            setTimeout(() => { dealCards(); }, 1400); 
         }
 
         function dealCards() {
@@ -271,18 +302,17 @@
                 const cardMeaning = tarotMeanings[card.name] || tarotMeanings["default"];
                 const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
                 
-                const cardNameShow = cardMeaning.nameCN !== "未知卡牌" ? `${card.name} (${cardMeaning.nameCN})` : card.name;
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
                 const orientationText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 const orientationClass = card.isReversed ? "reversed-text" : "upright-text";
 
                 const cardBox = document.createElement('div');
                 cardBox.className = 'card-box';
-                const animClass = index === 0 ? 'shuffling-left' : (index === 2 ? 'shuffling-right' : '');
 
+                // 套用全新的交疊洗牌動畫樣式
                 cardBox.innerHTML = `
                     <h3>${positions[index]}</h3>
-                    <div class="card ${animClass}" id="card-${index}" onclick="handleCardFlip(${index})">
+                    <div class="card shuffling-${index}" id="card-${index}" onclick="handleCardFlip(${index})">
                         <div class="card-inner">
                             <div class="card-back">⚝</div>
                             <div class="card-front">
@@ -291,7 +321,9 @@
                         </div>
                     </div>
                     <div class="result-info">
-                        <h4>${cardNameShow}</h4>
+                        <!-- 強制拆分英文與中文換行 -->
+                        <span class="card-title-en">${card.name}</span>
+                        <span class="card-title-cn">${cardMeaning.nameCN}</span>
                         <div class="orientation ${orientationClass}">${orientationText}</div>
                         <p>${explanation}</p>
                     </div>
@@ -302,10 +334,10 @@
             setTimeout(() => {
                 for(let i=0; i<3; i++) {
                     const el = document.getElementById(`card-${i}`);
-                    if(el) el.classList.remove('shuffling-left', 'shuffling-right');
+                    if(el) el.classList.remove('shuffling-0', 'shuffling-1', 'shuffling-2');
                 }
                 unlockNextCard();
-            }, 1000);
+            }, 1200);
         }
 
         function unlockNextCard() {
@@ -380,7 +412,7 @@
                 const cardMeaning = tarotMeanings[card.name] || tarotMeanings["default"];
                 const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
                 
-                const nameText = cardMeaning.nameCN !== "未知卡牌" ? `${card.name} (${cardMeaning.nameCN})` : card.name;
+                const nameText = `${card.name} / ${cardMeaning.nameCN}`;
                 const oriText = card.isReversed ? "逆位" : "正位";
                 const expText = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
 
