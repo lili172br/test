@@ -122,8 +122,26 @@
         #user-question-display { font-size: 13px; color: #dc2626; margin: 10px 0 20px 0; font-weight: bold; letter-spacing: 0.05em; line-height: 1.5; }
         #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .swipe-hint-banner { font-size: 9px; color: #52525b; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 20px; animation: pulse-opacity 2s infinite ease-in-out; }
-        @keyframes pulse-opacity { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        /* 超流暢優化後的滑動視覺提示 Banner */
+        .swipe-hint-banner { 
+            font-size: 10px; 
+            color: #a1a1aa; 
+            text-transform: uppercase; 
+            letter-spacing: 0.15em; 
+            margin-bottom: 15px; 
+            background: rgba(28, 28, 30, 0.4);
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid rgba(63, 63, 70, 0.3);
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: pulse-glow 2.5s infinite ease-in-out; 
+            pointer-events: none;
+        }
+        @keyframes pulse-glow { 
+            0%, 100% { opacity: 0.4; transform: scale(0.98); color: #71717a; } 
+            50% { opacity: 0.9; transform: scale(1); color: #dc2626; text-shadow: 0 0 8px rgba(220,38,38,0.3); } 
+        }
 
         /* 槽位區塊 */
         .slots-container { 
@@ -163,7 +181,7 @@
 
         .card { 
             width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
-            transform-origin: center center; transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease, z-index 0.25s;
+            transform-origin: center center; transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease, z-index 0.28s;
         }
         .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .card.selected-fly { opacity: 0 !important; transform: scale(0.2) translateY(-280px) !important; pointer-events: none; z-index: 999 !important; }
@@ -240,6 +258,7 @@
 </head>
 <body>
 
+    <!-- 外層包裹區，確保內容與頁腳不重疊且不拉開異常空隙 -->
     <div class="wrapper">
         <div class="ads-top-buffer">[ CONNECTION_NODE: SECURE_HOST ]</div>
 
@@ -247,7 +266,9 @@
             <h1>🔮 聖三角潛意識矩陣占卜</h1>
             <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
             
+            <!-- 【首頁面節點】 -->
             <div id="home-view" class="view-node active-node panel-section">
+                <!-- 骨架屏結構 -->
                 <div id="init-skeleton" class="skeleton-loader">
                     <div class="skeleton-block" style="height: 12px; width: 40%;"></div>
                     <div class="skeleton-block" style="height: 35px; width: 80%; margin-top: 15px;"></div>
@@ -266,6 +287,7 @@
                 
                 <button class="btn-primary" style="margin-bottom: 25px;" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
 
+                <!-- 1. 塔羅牌由來區塊 -->
                 <div class="academic-block">
                     <div class="academic-title">🔮 關於經典塔羅牌的歷史與本質起源 // TAROT ORIGIN MATRIX</div>
                     <div class="academic-text">
@@ -273,6 +295,7 @@
                     </div>
                 </div>
 
+                <!-- 2. 堆疊式卡片設計78張展開收合卡牌介紹區塊 -->
                 <div class="academic-block">
                     <div class="academic-title">🃏 經典大/小阿爾克那 78 張卡牌架構介紹 // 78 CARDS ACCORDION</div>
                     
@@ -306,6 +329,7 @@
                     </div>
                 </div>
 
+                <!-- 3. 核心方法論：隨機決策論 -->
                 <div class="academic-block">
                     <div class="academic-title">📊 核心方法論：隨機決策論 // DECISION THEORY NODE</div>
                     <div class="academic-text">
@@ -313,6 +337,7 @@
                     </div>
                 </div>
 
+                <!-- 4. 矩陣動態觀察看板 -->
                 <div class="academic-block">
                     <div class="academic-title">📈 矩陣動態觀察看板 // LIVE MATRIX ANALYTICS</div>
                     <div class="analytics-grid">
@@ -335,6 +360,7 @@
                     </div>
                 </div>
 
+                <!-- 5. 矩陣技術解碼區 -->
                 <div class="academic-block">
                     <div class="academic-title">💻 矩陣技術解碼區 // SYSTEM ARCHITECTURE LAB</div>
                     <div class="academic-text" style="font-family: monospace; background: #070707; padding: 10px; border-radius: 4px; font-size: 10px; border: 1px solid #141415;">
@@ -346,6 +372,7 @@
                     </div>
                 </div>
 
+                <!-- 6. 潛意識數據解碼 -->
                 <div class="academic-block">
                     <div class="academic-title">🧬 潛意識數據解碼 // SUBCONSCIOUS FLOW DESERIALIZATION</div>
                     <div class="academic-text">
@@ -358,6 +385,7 @@
                 </div>
             </div>
 
+            <!-- 【問題輸入節點】 -->
             <div id="input-view" class="view-node panel-section">
                 <label for="question">[ INITIALIZE_INPUT ] 請輸入問題並在心中默念3次：</label>
                 <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
@@ -372,10 +400,13 @@
                 <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">開始占卜 // START</button>
             </div>
 
+            <!-- 【洗牌與盲抽滾動節點】 -->
             <div id="shuffle-view" class="view-node panel-section">
                 <div id="user-question-display"></div>
                 <div id="flow-hint"></div>
-                <div id="swipe-hint-banner" class="swipe-hint-banner" style="display: none;">[ ◄ Drag or Swipe to Browse 78 Cards Matrix ► ]</div>
+                
+                <!-- 優化視覺提示元件 -->
+                <div id="swipe-hint-banner" class="swipe-hint-banner" style="display: none;">[ ◄ 左右滑動 / 拖曳瀏覽 78 張卡牌矩陣 ► ]</div>
                 
                 <div id="slots-area" class="slots-container">
                     <div class="slot-box">
@@ -406,6 +437,7 @@
                 </div>
             </div>
 
+            <!-- 【結果解碼展示與截圖節點】 -->
             <div id="result-view" class="view-node panel-section">
                 <div id="capture-node">
                     <div id="result-question-title" class="result-title-node"></div>
@@ -427,6 +459,7 @@
         </div>
     </div>
 
+    <!-- 頁腳免責聲明與流量控制區：移除多餘外邊距，使用乾淨排版 -->
     <footer style="font-size: 11px; color: #444446; border-top: 1px solid #141414; padding: 25px 20px 30px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
         <div style="text-align: center; margin-bottom: 15px; letter-spacing: 0.05em; color: #52525b;">
             © 2026 聖三角潛意識矩陣系統. All Rights Reserved.
@@ -461,7 +494,7 @@
                     獨立性聲明 // LICENSING
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本平台為獨立第三方隨機演算法研究與大眾心理學互動工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。
+                    本平台為獨立第三方隨機演算法研究與大眾心理學互動工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或 any 官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。
                 </p>
             </div>
         </div>
@@ -470,6 +503,7 @@
         </div>
     </footer>
 
+    <!-- 💡 本地完整指令與核心腳本區碼 -->
     <script>
         // 大小阿爾克那完整 78 張對照池
         const tarotCardsPool = [
@@ -578,12 +612,16 @@
         }
 
         let processedDeck = []; let selectedHand = []; let currentSlotIndex = 0; let selectedType = 'general'; let isShuffling = false;
+        let hintTimer = null; // 用於控制提示條淡入淡出的計時器
         
         function resetDivinationEngine() {
             document.getElementById('question').value = '';
             document.getElementById('user-question-display').innerText = '';
             document.getElementById('flow-hint').innerText = '';
-            document.getElementById('swipe-hint-banner').style.display = 'none';
+            const banner = document.getElementById('swipe-hint-banner');
+            banner.style.display = 'none';
+            banner.style.opacity = '1';
+            if(hintTimer) clearTimeout(hintTimer);
             document.getElementById('pile-master').innerHTML = '';
             document.getElementById('pile-master').style.display = 'block';
             document.getElementById('scroller-wrapper').style.display = 'none';
@@ -655,6 +693,23 @@
             return (cardRect.left + (cardRect.width / 2)) - scrollerCenter;
         }
 
+        // 智慧型視覺提示控制模組：滑動時淡出、靜止時浮現
+        function triggerHintInteractivity(isUserMoving) {
+            const banner = document.getElementById('swipe-hint-banner');
+            if(!banner || banner.style.display === 'none') return;
+            
+            if(isUserMoving) {
+                banner.style.opacity = '0';
+                banner.style.transform = 'scale(0.95)';
+                if(hintTimer) clearTimeout(hintTimer);
+                // 停下後若 4 秒無動作，再次召喚視覺提示
+                hintTimer = setTimeout(() => {
+                    banner.style.opacity = '1';
+                    banner.style.transform = 'scale(1)';
+                }, 4000);
+            }
+        }
+
         function spread3DCarouselDeck() {
             document.getElementById('pile-master').style.display = 'none';
             document.getElementById('scroller-wrapper').style.display = 'block';
@@ -666,7 +721,10 @@
             stage.style.display = 'flex';
             
             document.getElementById('flow-hint').innerText = `👉 請左右滑動，點擊中央焦點牌盲抽 【過去 // PAST】`;
-            document.getElementById('swipe-hint-banner').style.display = 'block';
+            
+            const banner = document.getElementById('swipe-hint-banner');
+            banner.style.display = 'inline-block';
+            banner.style.opacity = '1';
 
             processedDeck.forEach((cardData, index) => {
                 const cardEl = document.createElement('div'); 
@@ -694,7 +752,12 @@
             
             setTimeout(() => {
                 stage.style.opacity = '1';
-                scroller.addEventListener('scroll', updateCarouselFocusEffects);
+                
+                scroller.addEventListener('scroll', () => {
+                    updateCarouselFocusEffects();
+                    triggerHintInteractivity(true);
+                });
+                
                 initializeMouseDragScroll(scroller);
                 
                 scroller.style.scrollSnapType = 'none';
@@ -739,6 +802,7 @@
                 scroller.scrollLeft = scrollLeft - walk;
                 if(deltaT > 0) lastVelocityX = (e.pageX - lastX) / deltaT;
                 lastX = e.pageX; lastTimeStamp = currentNow;
+                triggerHintInteractivity(true);
             });
         }
 
@@ -763,6 +827,7 @@
             const cardWidthWithGap = 84 + 15; 
             if (direction === 'left') { scroller.scrollBy({ left: -cardWidthWithGap, behavior: 'smooth' }); } 
             else { scroller.scrollBy({ left: cardWidthWithGap, behavior: 'smooth' }); }
+            triggerHintInteractivity(true);
         }
 
         function updateCarouselFocusEffects() {
@@ -780,16 +845,18 @@
                 const absDistance = Math.abs(distanceFromCenter);
 
                 if (absDistance < 50) {
-                    card.style.transform = `scale(1.1) translateY(-15px) rotate(0deg)`; card.style.opacity = `1`; card.style.zIndex = `100`; card.classList.add('is-focused');
+                    card.style.transform = `scale(1.12) translateY(-15px) rotate(0deg)`; card.style.opacity = `1`; card.style.zIndex = `100`; card.classList.add('is-focused');
                 } else if (absDistance >= 50 && absDistance < 140) {
-                    const direction = distanceFromCenter > 0 ? 8 : -8;
-                    card.style.transform = `scale(0.95) translateY(-5px) rotate(${direction}deg)`; card.style.opacity = `0.9`; card.style.zIndex = `50`; card.classList.remove('is-focused');
+                    const direction = distanceFromCenter > 0 ? 6 : -6;
+                    // 平滑衰減公式：縮放過渡更絲滑
+                    const scaleFactor = 1.12 - ((absDistance - 50) / 90) * 0.17;
+                    card.style.transform = `scale(${scaleFactor}) translateY(${-15 + ((absDistance - 50) / 90) * 10}px) rotate(${direction}deg)`; card.style.opacity = `0.9`; card.style.zIndex = `50`; card.classList.remove('is-focused');
                 } else if (absDistance >= 140 && absDistance < 240) {
-                    const direction = distanceFromCenter > 0 ? 15 : -15;
-                    card.style.transform = `scale(0.8) translateY(8px) rotate(${direction}deg)`; card.style.opacity = `0.4`; card.style.zIndex = `20`; card.classList.remove('is-focused');
+                    const direction = distanceFromCenter > 0 ? 12 : -12;
+                    card.style.transform = `scale(0.82) translateY(5px) rotate(${direction}deg)`; card.style.opacity = `0.4`; card.style.zIndex = `20`; card.classList.remove('is-focused');
                 } else {
-                    const direction = distanceFromCenter > 0 ? 22 : -22;
-                    card.style.transform = `scale(0.6) translateY(20px) rotate(${direction}deg)`; card.style.opacity = `0.02`; card.style.zIndex = `1`; card.classList.remove('is-focused');
+                    const direction = distanceFromCenter > 0 ? 18 : -18;
+                    card.style.transform = `scale(0.65) translateY(18px) rotate(${direction}deg)`; card.style.opacity = `0.02`; card.style.zIndex = `1`; card.classList.remove('is-focused');
                 }
             });
         }
@@ -804,8 +871,8 @@
             targetCard.classList.add('selected-fly');
             
             const currentSlot = document.getElementById(`slot-${currentSlotIndex}`);
-            // 💡 修正：路徑正式改為配合你的資料夾「card/」
-            currentSlot.innerHTML = `<div class="card card-in-slot flipped"><div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div><div class="card-front"><img src="card/${cardData.img}" class="${cardData.isReversed ? 'reversed' : ''}"></div></div></div>`;
+            // 💡 修正：圖片路徑改回 cards/ 
+            currentSlot.innerHTML = `<div class="card card-in-slot flipped"><div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div><div class="card-front"><img src="cards/${cardData.img}" class="${cardData.isReversed ? 'reversed' : ''}"></div></div></div>`;
 
             currentSlotIndex++;
             if (currentSlotIndex === 1) {
@@ -815,6 +882,7 @@
             } else {
                 document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
                 document.getElementById('swipe-hint-banner').style.display = 'none';
+                if(hintTimer) clearTimeout(hintTimer);
                 try { playSound('success'); } catch(e){}
                 setTimeout(() => compileAndShowResultView(), 1000);
             }
@@ -837,11 +905,11 @@
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 
                 const cardBox = document.createElement('div'); cardBox.className = 'result-card-box';
-                // 💡 修正：結果頁路徑同步改為「card/」
+                // 💡 修正：結果頁路徑也同步修正為 cards/
                 cardBox.innerHTML = `
                     <h3>${positions[index]}</h3>
                     <div class="result-card-static">
-                        <img src="card/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
+                        <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
                     </div>
                     <div class="result-info">
                         <span class="card-title-en">${card.name}</span>
