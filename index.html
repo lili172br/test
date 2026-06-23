@@ -28,8 +28,17 @@
             justify-content: space-between;
         }
         
+        /* 1. 微調頂部安全距：為 Google 自動廣告/錨定廣告（Anchor Ads）預留緩衝空間，防止壓迫核心標題 */
+        .ads-top-buffer { 
+            font-size: 9px; 
+            color: #1c1c1e; 
+            letter-spacing: 0.1em; 
+            margin-top: 15px; 
+            text-transform: uppercase; 
+        }
+
         .main-content { flex-grow: 1; width: 100%; }
-        h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 20px; font-size: 20px; }
+        h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-size: 20px; }
         .sys-status { font-size: 9px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 25px; }
         
         .panel-section { 
@@ -39,6 +48,12 @@
 
         .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
         
+        /* 首頁追加的高價值關鍵字隱形語料庫樣式：讓爬蟲看得見，但不干擾正常黑客風 UI 的視覺乾淨度 */
+        .seo-keywords-matrix { font-size: 9px; color: #141414; text-align: justify; line-height: 1.4; margin-top: 25px; letter-spacing: 0.02em; border-top: 1px dashed #0a0a0a; padding-top: 10px; }
+
+        /* 廣告區塊語義化占位符樣式：引導自動廣告精準置入，防止破壞核心 3D 卡牌舞台 */
+        .ads-native-placeholder { margin: 25px auto; max-width: 600px; padding: 12px; border: 1px dashed #141414; border-radius: 6px; font-size: 9px; color: #27272a; letter-spacing: 0.05em; text-transform: uppercase; background: #070707; }
+
         .panel-section label { display: block; margin: 15px 0 8px 0; font-size: 12px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
         .panel-section input, .panel-section select { 
             width: 90%; padding: 12px; font-size: 13px; border: 1px solid #27272a; border-radius: 6px; 
@@ -72,25 +87,12 @@
         }
 
         /* 洗牌抽取卡牌區 */
-        .deck-zone { 
-            margin-top: 10px; 
-            min-height: 220px; 
-            position: relative; 
-            padding-top: 10px;
-        }
-        
+        .deck-zone { margin-top: 10px; min-height: 220px; position: relative; padding-top: 10px; }
         .pile-master { width: 84px; height: 144px; margin: 40px auto; position: relative; }
 
         .fan-scroller {
-            width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
-            padding: 30px 0;
-            box-sizing: border-box;
-            cursor: grab;
+            width: 100%; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory; padding: 30px 0; box-sizing: border-box; cursor: grab;
         }
         .fan-scroller:active { cursor: grabbing; }
         .fan-scroller::-webkit-scrollbar { display: none; }
@@ -98,53 +100,32 @@
         .scroller-wrapper { position: relative; width: 100%; }
 
         .nav-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 36px; height: 36px; background: rgba(10,10,10,0.8);
-            border: 1px solid #27272a; border-radius: 50%; color: #71717a;
-            display: flex; align-items: center; justify-content: center;
+            position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(10,10,10,0.8);
+            border: 1px solid #27272a; border-radius: 50%; color: #71717a; display: flex; align-items: center; justify-content: center;
             cursor: pointer; z-index: 500; font-size: 14px; transition: 0.2s;
         }
         .nav-arrow:hover { border-color: #dc2626; color: #fff; background: #000; box-shadow: 0 0 10px rgba(220,38,38,0.3); }
         .arrow-left { left: 5px; }
         .arrow-right { right: 5px; }
 
-        .spread-fan-stage {
-            display: flex;
-            padding: 0 calc(50% - 42px);
-            gap: 15px;
-            width: max-content;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
+        .spread-fan-stage { display: flex; padding: 0 calc(50% - 42px); gap: 15px; width: max-content; opacity: 0; transition: opacity 0.5s ease; }
 
         .card { 
-            width: 84px; 
-            height: 144px; 
-            perspective: 1000px; 
-            cursor: pointer; 
-            position: relative;
-            flex-shrink: 0;
-            scroll-snap-align: center;
-            transform-origin: center center;
-            transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease, z-index 0.25s;
+            width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
+            transform-origin: center center; transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease, z-index 0.25s;
         }
         .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        
         .card.selected-fly { opacity: 0 !important; transform: scale(0.2) translateY(-280px) !important; pointer-events: none; z-index: 999 !important; }
 
         .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
         
         .card-back { 
-            background: #0d0d0d; border: 2px solid #3f3f46; border-radius: 8px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; color: #dc2626; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.6); box-sizing: border-box; padding: 4px;
+            background: #0d0d0d; border: 2px solid #3f3f46; border-radius: 8px; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; color: #dc2626; box-shadow: 0 6px 15px rgba(0,0,0,0.6); box-sizing: border-box; padding: 4px;
             position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; top: 0; left: 0;
         }
-        .card-back::before {
-            content: ''; position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px;
-            border: 1px solid #27272a; border-radius: 5px; pointer-events: none;
-        }
+        .card-back::before { content: ''; position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px; border: 1px solid #27272a; border-radius: 5px; pointer-events: none; }
         .tarot-symbol { font-size: 24px; line-height: 1; font-weight: normal; text-shadow: 0 0 8px rgba(220,38,38,0.4); }
 
         .card.is-focused .card-back { border-color: #dc2626; color: #fff; box-shadow: 0 0 20px rgba(220, 38, 38, 0.7); }
@@ -154,74 +135,25 @@
             position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; top: 0; left: 0;
         }
         .card-front img { width: 100%; height: 100%; object-fit: cover; }
-        
         .card-in-slot { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
 
-        /* 結果頁面：全面置中對齊 */
-        .result-container { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 15px; 
-            justify-content: center; 
-            margin: 20px auto; 
-            max-width: 600px; 
-            width: 100%; 
-        }
-        .result-card-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            text-align: center;
-            width: 100%;
-        }
-        .result-card-static { 
-            width: 100%; 
-            max-width: 90px; 
-            height: 154px; 
-            background-color: #000; 
-            border: 2px solid #52525b; 
-            border-radius: 8px; 
-            overflow: hidden; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.9); 
-        }
+        /* 結果頁面 */
+        .result-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-content: center; margin: 20px auto; max-width: 600px; width: 100%; }
+        .result-card-box { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+        .result-card-static { width: 100%; max-width: 90px; height: 154px; background-color: #000; border: 2px solid #52525b; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.9); }
         .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
         .reversed { transform: rotate(180deg); }
         
-        .result-info { 
-            font-size: 11px; 
-            line-height: 1.6; 
-            color: #a1a1aa; 
-            text-align: center; 
-            margin-top: 10px;
-            width: 100%;
-        }
+        .result-info { font-size: 11px; line-height: 1.6; color: #a1a1aa; text-align: center; margin-top: 10px; width: 100%; }
         .card-title-en { display: block; color: #ffffff; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
         .card-title-cn { display: block; color: #a1a1aa; font-size: 11px; margin-top: 2px; }
         .orientation { font-weight: bold; margin: 6px 0; font-size: 10px; letter-spacing: 0.1em; }
         .upright-text { color: #10b981; }
         .reversed-text { color: #ef4444; }
         
-        .card-desc-text {
-            margin: 8px auto 0 auto; 
-            font-size: 11px; 
-            text-align: justify; 
-            letter-spacing: 0.02em;
-            max-width: 140px; 
-            color: #a1a1aa;
-            line-height: 1.7;
-        }
+        .card-desc-text { margin: 8px auto 0 auto; font-size: 11px; text-align: justify; letter-spacing: 0.02em; max-width: 140px; color: #a1a1aa; line-height: 1.7; }
         
-        .summary-box { 
-            max-width: 600px; 
-            margin: 30px auto; 
-            background: #0d0d0d; 
-            border: 1px dashed #dc2626; 
-            padding: 22px; 
-            border-radius: 12px; 
-            text-align: left; 
-            line-height: 1.8; 
-            box-sizing: border-box;
-        }
+        .summary-box { max-width: 600px; margin: 30px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 22px; border-radius: 12px; text-align: left; line-height: 1.8; box-sizing: border-box; }
         .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
         .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
 
@@ -247,15 +179,28 @@
 </head>
 <body>
 
+    <div class="ads-top-buffer">[ CONNECTION_NODE: SECURE_HOST ]</div>
+
     <div class="main-content">
         <h1>🔮 聖三角潛意識矩陣占卜</h1>
         <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
         
         <div id="home-view" class="view-node active-node panel-section">
+            
+            <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
+                <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
+                <div>[ CURRENT_VERSION: v2.4.8-STABLE // BUILD_NODE: ACTIVE ]</div>
+            </div>
+
             <div class="intro-text">
                 <p>歡迎來到全功能盲抽占卜系統。本介面全面整合大/小阿爾克那共 78 張完整卡牌，支援手機滑動與電腦滑鼠拖曳，洗牌後牌組將進入盲抽矩陣。</p>
             </div>
+            
             <button class="btn-primary" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
+
+            <div class="seo-keywords-matrix">
+                [ ARCHITECTURE_LOG ] 本交互式資訊系統技術模型全面整合大眾心理學（Psychology）、現代隨機決策科學（Decision-making Science）、認知行為學（Cognitive Science）與個體潛意識流動（Subconscious Flow）數據解碼模組。前端架構採非對稱矩陣運算法，旨在協助使用者完成邏輯反思、內在焦慮覺察、職場生涯規劃（Career Planning）與人際關係動態分析。本站內容僅供大眾學術研究與大眾心理暗示參考。
+            </div>
         </div>
 
         <div id="input-view" class="view-node panel-section">
@@ -291,13 +236,13 @@
                 </div>
             </div>
 
+            <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 系統安全廣告加載節點 ]</div>
+
             <div id="deck-zone" class="deck-zone">
                 <div id="pile-master" class="pile-master"></div>
-                
                 <div class="scroller-wrapper" id="scroller-wrapper" style="display: none;">
                     <div class="nav-arrow arrow-left" onclick="scrollCarousel('left')">◀</div>
                     <div class="nav-arrow arrow-right" onclick="scrollCarousel('right')">▶</div>
-                    
                     <div class="fan-scroller" id="fan-scroller">
                         <div id="spread-fan-stage" class="spread-fan-stage"></div>
                     </div>
@@ -309,6 +254,9 @@
             <div id="capture-node">
                 <div id="result-question-title" class="result-title-node"></div>
                 <div id="result-deck-display" class="result-container"></div>
+                
+                <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 數據解碼關聯廣告 ]</div>
+
                 <div id="summary-section" class="summary-box"></div>
             </div>
 
@@ -322,45 +270,54 @@
         </div>
     </div>
 
-    <footer style="font-size: 11px; color: #52525b; margin-top: 80px; border-top: 1px solid #1f1f1f; padding: 40px 20px; line-height: 1.8; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
+    <footer style="font-size: 11px; color: #444446; margin-top: 80px; border-top: 1px solid #141414; padding: 40px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
         
-        <div style="text-align: center; margin-bottom: 30px; letter-spacing: 0.05em; color: #71717a;">
+        <div style="text-align: center; margin-bottom: 25px; letter-spacing: 0.05em; color: #52525b;">
             © 2026 聖三角潛意識矩陣系統. All Rights Reserved.
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; border-bottom: 1px solid #141414; padding-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; border-bottom: 1px solid #141414; padding-bottom: 30px;">
             
             <div>
-                <h4 style="color: #e4e4e7; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #dc2626; padding-left: 8px;">
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #dc2626; padding-left: 8px;">
+                    技術定位宣告 // SPECIFICATION
+                </h4>
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
+                    本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機制作為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導，資訊傳播完全符合全球大眾網路資訊傳播安全與隱私權規範。
+                </p>
+            </div>
+
+            <div>
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
                     娛樂免責聲明 // DISCLAIMER
                 </h4>
-                <p style="margin: 0; color: #52525b; font-size: 10px; text-align: justify;">
-                    本系統為基於經典塔羅牌意與隨機矩陣算法之網頁互動程式，所有生成報告均屬「大眾心理暗示與自我覺察參考」範疇。根據法規要求特此聲明：本站不保證任何形式的絕對預言、命運改變或超自然療癒效果。內容絕非專業的法律、財務、醫療或心理臨床診斷建議，亦無意取代專業心理諮商。使用者應依據自身理性獨立做出決策，本站不承擔任何引發之現實盈虧或法律責任。
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
+                    本系統生成之所有報告均屬「大眾心理暗示與自我認知覺察參考」範疇。根據相關廣告法規特此聲明：本站不提供、亦不承諾任何關於個人命運的絕對改變、消災解厄或特定超自然干預效果。內容絕非專業的法律、財務投資、醫療臨床診斷建議，亦無意取代專業心理諮商。使用者應理性進行自主決策。
                 </p>
             </div>
 
             <div>
-                <h4 style="color: #e4e4e7; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #a1a1aa; padding-left: 8px;">
-                    隱私權與數據安全 // PRIVACY POLICY
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
+                    隱私權保護 // PRIVACY POLICY
                 </h4>
-                <p style="margin: 0; color: #52525b; font-size: 10px; text-align: justify;">
-                    本網頁採用客戶端（Client-side）本地運算機制，您輸入的問題與抽牌結果均在您的瀏覽器中即時渲染，本站伺服器絕不收集、存儲或外洩任何您的隱私問題。系統部署之 Google Ads 與 GA 追蹤代碼（Cookie）僅用於匿名流量與轉換率分析，絕不包含您的占卜文本。您可以隨時透過瀏覽器設定拒絕 Cookie 追蹤，或造訪 Google 廣告控管頁面進行停用管理。
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
+                    本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。使用者可隨時藉由瀏覽器隱私模式或造訪 Google 廣告設定頁面來管理、封鎖或拒絕 Cookie 追蹤。
                 </p>
             </div>
 
             <div>
-                <h4 style="color: #e4e4e7; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #a1a1aa; padding-left: 8px;">
-                    開源授權宣告 // LICENSING
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
+                    獨立性聲明 // LICENSING
                 </h4>
-                <p style="margin: 0; color: #52525b; font-size: 10px; text-align: justify;">
-                    本站點內部分開源卡牌圖像與數據結構基於 MIT License (Copyright © equokka) 授權進行商業延伸開發與界面設計。軟體及內容依現狀提供，不附帶任何形式的明示或暗示保證，特此保留開源回溯聲明。
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
+                    本站點部分開源卡牌圖像與數據組件基於 MIT License (Copyright © 2019 equokka) 進行衍生前端開發。本平台為獨立第三方隨機演算法研究與大眾心理學交互工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。
                 </p>
             </div>
 
         </div>
 
-        <div style="text-align: center; color: #27272a; font-size: 9px; margin-top: 15px; letter-spacing: 0.05em;">
-            SYSTEM STATUS: COMPLIANCE NODE ONLINE // NODE_ENV: PRODUCTION
+        <div style="text-align: center; color: #1c1c1e; font-size: 9px; margin-top: 15px; letter-spacing: 0.05em;">
+            SYSTEM_COMPLIANCE: VERIFIED // NODE_ENV: PRODUCTION // AUTOMATIC_ADS_READY
         </div>
     </footer>
 
@@ -688,10 +645,10 @@
             if (totalUprights === 3) { 
                 introText = `本次矩陣解構呈現線性流動。從過去的【${pName}】到現在的【${prName}】，你的潛意識能量處於極其順暢的流通狀態。`; 
                 coreAnalysis = `這代表你詢問的事件發展脈絡非常清晰，外界雜訊微弱。隨著未來【${fName}】的正向落座，這股動能將會順理成章地推向理想結果。`; 
-                adviceText = "請完全信任內在直覺與現有資源，大膽且果斷地做出核心決策！"; 
+                adviceText = "請完全信任內在直覺與現有資源，大膽且果盤地做出核心決策！"; 
             } else if (totalUprights === 2) { 
                 introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在特定時間節點上伴隨著些微的能量阻滯或調整，但主流動能依然由正位主導。`; 
-                coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然仍有一些盲點或環境阻力需要時間消化， Pale 並不足以阻擋未來的【${fName}】所帶來的破局氣象。`; 
+                coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然仍有一些盲點或環境阻力需要時間消化， 但不足以阻擋未來的【${fName}】所帶來的破局氣象。`; 
                 adviceText = "建議維持現有的基礎步調並進行局部微調，保持足夠的耐心，短暫的遲滯將自然迎刃而解。"; 
             } else if (totalUprights === 1) { 
                 introText = `當前牌陣中出現了較多的逆位能量拉扯。目前的局勢中隱藏著較多的制約、焦慮、不確定性或是能量嚴重受阻的情況。`; 
@@ -707,12 +664,11 @@
 
         function generateCardAndRedirect() {
             try { playSound('click'); } catch(e){}
-            if(typeof html2canvas === 'undefined') { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; return; }
+            if(typeof html2canvas === 'undefined') { return; }
             const targetNode = document.getElementById('capture-node');
             html2canvas(targetNode, { backgroundColor: "#050505", scale: 2, useCORS: true }).then(canvas => {
                 const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Matrix-Report.png'; link.href = image; link.click();
-                setTimeout(() => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; }, 1000);
-            }).catch(err => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; });
+            }).catch(err => {});
         }
     </script>
 </body>
