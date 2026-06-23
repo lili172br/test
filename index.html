@@ -46,21 +46,16 @@
         #user-question-display { font-size: 15px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
         #flow-hint { color: #52525b; font-style: italic; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; tracking: 0.1em; }
 
-        /* 修正後的穩定容器：確保寬度絕對不跑擺 */
         .container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; min-height: 340px; width: 100%; box-sizing: border-box; }
         .card-box { width: 160px; text-align: center; box-sizing: border-box; }
         .card-box h3 { color: #71717a; font-size: 11px; margin-bottom: 12px; tracking: 0.1em; text-transform: uppercase; }
         
-        /* 基礎卡牌樣式 */
         .card { 
             width: 160px; height: 274px; perspective: 1000px; margin: 0 auto 15px auto; 
             pointer-events: none; opacity: 0.2; transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s; box-sizing: border-box;
         }
         
-        /* 修正排版：移除了會影響版面的 scale(1.03) */
-        .card.scanning {
-            opacity: 0.9;
-        }
+        .card.scanning { opacity: 0.9; }
         
         .card.playable { 
             pointer-events: auto; opacity: 1; cursor: pointer;
@@ -81,7 +76,6 @@
         .card-back { 
             background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-size: 36px;
         }
-        /* 洗牌時的亮紅邊框，不影響尺寸 */
         .card.scanning .card-back {
             border-color: #dc2626;
             color: #fff;
@@ -196,7 +190,7 @@
             if (AudioEngine.state === 'suspended') { AudioEngine.resume(); }
             const now = AudioEngine.currentTime;
             
-            // 【修復找回】：原本清脆、好聽的按鈕專屬點擊音效
+            // 原本清脆、好聽的按鈕專屬點擊音效
             if (type === 'click') {
                 const osc = AudioEngine.createOscillator();
                 const gain = AudioEngine.createGain();
@@ -347,7 +341,7 @@
                 return;
             }
 
-            playSound('click'); // 執行原本按鈕音
+            playSound('click'); 
 
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ MATRIX_TARGET // ${typeNames[selectedType]} : ${questionInput} ]`;
@@ -476,13 +470,49 @@
             switchView('result-view');
         }
 
+        // ==================== 【修復重點】：還原深度綜合分析結論邏輯 ====================
         function generateComprehensiveSummary() {
+            // 1. 提取抽到的三張牌與其正逆位狀態
+            const pCard = currentHandData[0];
+            const prCard = currentHandData[1];
+            const fCard = currentHandData[2];
+
+            const pName = (tarotMeanings[pCard.name] || tarotMeanings["default"]).nameCN + (pCard.isReversed ? "逆位" : "正位");
+            const prName = (tarotMeanings[prCard.name] || tarotMeanings["default"]).nameCN + (prCard.isReversed ? "逆位" : "正位");
+            const fName = (tarotMeanings[fCard.name] || tarotMeanings["default"]).nameCN + (fCard.isReversed ? "逆位" : "正位");
+
+            // 2. 計算總體正位率來決定大方向基調
             const totalUprights = currentHandData.filter(c => !c.isReversed).length; 
-            let summaryText = "當前的牌陣呈現穩定發展的流向。請順應你當前的熱情與步調，大膽地向前推進。";
-            if (totalUprights === 0) summaryText = "牌面出現較多逆位。目前不宜盲目推展，建議先停下腳步沉澱心情，徹底進行內部整頓。";
+            
+            let introText = "";
+            let coreAnalysis = "";
+            let adviceText = "";
+
+            if (totalUprights === 3) {
+                introText = `本次矩陣解構呈現極為罕見且強大的全正位線性流動。從過去的【${pName}】到現在的【${prName}】，你的潛意識能量一直處於高速擴張的狀態。`;
+                coreAnalysis = `這代表你當前詢問的事情，脈絡極其清晰，外界的干擾非常微弱。隨著未來的【${fName}】落座，這股正向動能將會順理成章地推向高潮。`;
+                adviceText = "此時不需要任何一絲猶豫。信任你的直覺，配合你現有的資源與行動力，大膽地向前推進，果斷做出決策。";
+            } else if (totalUprights === 2) {
+                introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在時間軸的某個節點上伴隨著些微的遲滯或調整，但主流能量仍由正位牌主導。`;
+                coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然有一些盲點或過去殘留的課題需要消化，但並不足以阻擋未來的【${fName}】所帶來的全新氣象。`;
+                adviceText = "建議保持現有的步調，並對目前的計劃進行微調。不需要大刀闊斧的改變，只需要保持耐心，當前的微小阻礙自然會迎刃而解。";
+            } else if (totalUprights === 1) {
+                introText = `當前牌陣中出現了較多的逆位能量，這是一份來自潛意識的深度提醒。目前的局勢中隱藏著較多的制約、焦慮或是能量受阻的情況。`;
+                coreAnalysis = `雖然有【${pName}】或【${prName}】其中一者試圖提供支撐，但從整體時間軸來看，逆位的張力壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於高峰期。`;
+                adviceText = "目前不宜盲目推展與強求結果。建議先將焦點從外在轉回內心，停下腳步沉澱情緒。徹底找出當前的核心盲點進行整頓，才是突破僵局的唯一解法。";
+            } else {
+                introText = `三數據節點全數呈現逆位（【${pName}】➔【${prName}】➔【${fName}】）。這意味著當前的潛意識矩陣正經歷著一場徹底的重組與能量低潮。`;
+                coreAnalysis = `這並非全然的壞事，而是局勢在強烈暗示：你過去習慣的應對模式或思考方向已經完全行不通了。內在的壓抑、混亂或是外界的巨大阻力此時正交織在一起。`;
+                adviceText = "這是最需要徹底放手與臣服的時刻。請立刻停止所有高風險的試探或勉強的行動，給自己充足的時間進行內部大掃除，等待矩陣能量重新自我修復。";
+            }
             
             const summaryDiv = document.getElementById('summary-section');
-            summaryDiv.innerHTML = `<h2>🔮 [ 綜合矩陣點評 ]</h2><p>${summaryText}</p>`;
+            summaryDiv.innerHTML = `
+                <h2>🔮 [ 綜合矩陣點評 ]</h2>
+                <p>${introText}</p>
+                <p>${coreAnalysis}</p>
+                <p>${adviceText}</p>
+            `;
         }
 
         function generateCardAndRedirect() {
