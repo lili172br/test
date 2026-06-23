@@ -153,24 +153,79 @@
         
         .card-in-slot { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
 
-        .result-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; margin: 20px auto; max-width: 600px; width: 100%; }
-        .result-card-static { width: 100%; max-width: 100px; height: 171px; background-color: #000; border: 2px solid #52525b; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.9); }
+        /* 結果頁面：修正卡牌與內容偏左問題，全面置中對齊 */
+        .result-container { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px; 
+            justify-content: center; 
+            margin: 20px auto; 
+            max-width: 600px; 
+            width: 100%; 
+        }
+        .result-card-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 確保內容物件在直線上置中 */
+            text-align: center;
+            width: 100%;
+        }
+        .result-card-static { 
+            width: 100%; 
+            max-width: 90px; 
+            height: 154px; 
+            background-color: #000; 
+            border: 2px solid #52525b; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.9); 
+        }
         .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
         .reversed { transform: rotate(180deg); }
         
-        .result-info { font-size: 11px; line-height: 1.6; color: #a1a1aa; text-align: left; margin-top: 8px; }
-        .card-title-en { display: block; color: #ffffff; font-size: 12px; font-weight: 700; }
-        .card-title-cn { display: block; color: #a1a1aa; font-size: 11px; }
-        .orientation { font-weight: bold; margin: 4px 0; font-size: 10px; }
+        /* 修正文字偏左問題 */
+        .result-info { 
+            font-size: 11px; 
+            line-height: 1.6; 
+            color: #a1a1aa; 
+            text-align: center; /* 名稱與正逆位居中 */
+            margin-top: 10px;
+            width: 100%;
+        }
+        .card-title-en { display: block; color: #ffffff; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+        .card-title-cn { display: block; color: #a1a1aa; font-size: 11px; margin-top: 2px; }
+        .orientation { font-weight: bold; margin: 6px 0; font-size: 10px; letter-spacing: 0.1em; }
         .upright-text { color: #10b981; }
         .reversed-text { color: #ef4444; }
         
-        .summary-box { max-width: 600px; margin: 25px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 20px; border-radius: 12px; text-align: left; line-height: 1.8; }
-        .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 10px; margin-top: 0; }
-        .summary-box p { margin: 12px 0 0 0; font-size: 12px; text-indent: 2em; text-align: justify; }
+        /* 卡牌詳細解說微調為精緻對齊 */
+        .card-desc-text {
+            margin: 8px auto 0 auto; 
+            font-size: 11px; 
+            text-align: justify; 
+            letter-spacing: 0.02em;
+            max-width: 140px; /* 限制寬度讓排版更凝聚不發散 */
+            color: #a1a1aa;
+            line-height: 1.7;
+        }
+        
+        /* 結論排版優化 */
+        .summary-box { 
+            max-width: 600px; 
+            margin: 30px auto; 
+            background: #0d0d0d; 
+            border: 1px dashed #dc2626; 
+            padding: 22px; 
+            border-radius: 12px; 
+            text-align: left; 
+            line-height: 1.8; 
+            box-sizing: border-box;
+        }
+        .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
+        .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
 
-        #capture-node { padding: 10px; background: #050505; border-radius: 16px; }
-        .result-title-node { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 20px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; }
+        #capture-node { padding: 15px; background: #050505; border-radius: 16px; }
+        .result-title-node { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 25px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; }
 
         .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 420px; width: 100%; }
         .sub-btn-group { display: flex; gap: 12px; justify-content: center; width: 100%; }
@@ -204,9 +259,10 @@
             <button class="btn-primary" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
         </div>
 
-        <!-- 🎯 視圖2：輸入問題、類別、開始洗牌 -->
+        <!-- 🎯 視圖2：輸入問題、類別、開始占卜 -->
         <div id="input-view" class="view-node panel-section">
-            <label for="question">[ INITIALIZE_INPUT ] 請輸入你的問題：</label>
+            <!-- 🎯 已修正：新增心中默念引導文字 -->
+            <label for="question">[ INITIALIZE_INPUT ] 請輸入問題並在心中默念3次：</label>
             <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
             
             <label for="question-type">( SELECT_MATRIX_NODE ) 請選擇占卜類別：</label>
@@ -216,7 +272,8 @@
                 <option value="work">工作學業事業 // WORK</option>
             </select>
             <br><br>
-            <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">啟動全面洗牌 // SHUFFLE</button>
+            <!-- 🎯 已修正：按鈕文字改為 開始占卜 -->
+            <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">開始占卜 // START</button>
         </div>
 
         <!-- 🎯 視圖3：洗牌畫面、抽取卡牌 -->
@@ -373,7 +430,7 @@
             
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ 矩陣目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
-            document.getElementById('flow-hint').innerText = "⚡ 潛意識矩陣清洗中 (CORE_SHUFFLING)...";
+            document.getElementById('flow-hint').innerText = "⚡ 正在串聯潛意識能量節點...";
             
             document.getElementById('pile-master').style.display = 'block';
             document.getElementById('scroller-wrapper').style.display = 'none';
@@ -389,25 +446,29 @@
             let poolCopy = [...tarotCardsPool].sort(() => 0.5 - Math.random());
             processedDeck = poolCopy.map(c => ({ ...c, isReversed: Math.random() < 0.5 }));
 
-            let startTime = performance.now(); let duration = 1800; let lastTick = 0;
-            const pileCards = pile.querySelectorAll('.card');
+            // 🎯 已修正：延遲 600ms 後再啟動物理洗牌動畫，優化過度突兀問題
+            setTimeout(() => {
+                document.getElementById('flow-hint').innerText = "⚡ 潛意識矩陣清洗中 (CORE_SHUFFLING)...";
+                let startTime = performance.now(); let duration = 1800; let lastTick = 0;
+                const pileCards = pile.querySelectorAll('.card');
 
-            function physicsShuffle(now) {
-                let elapsed = now - startTime;
-                if(elapsed < duration) {
-                    if (now - lastTick > 90) { try { playSound('shuffle_tick'); } catch(e){} lastTick = now; }
-                    pileCards.forEach((c, idx) => {
-                        let offsetX = 30 * Math.sin(now * 0.02 + idx);
-                        let offsetY = (idx * -1.5) + (10 * Math.cos(now * 0.015 + idx));
-                        c.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${8 * Math.sin(now * 0.01 + idx)}deg)`;
-                    });
-                    requestAnimationFrame(physicsShuffle);
-                } else {
-                    pileCards.forEach((c, idx) => c.style.transform = `translate(0px, -${idx * 1.5}px) rotate(0deg)`);
-                    setTimeout(() => spread3DCarouselDeck(), 300);
+                function physicsShuffle(now) {
+                    let elapsed = now - startTime;
+                    if(elapsed < duration) {
+                        if (now - lastTick > 90) { try { playSound('shuffle_tick'); } catch(e){} lastTick = now; }
+                        pileCards.forEach((c, idx) => {
+                            let offsetX = 30 * Math.sin(now * 0.02 + idx);
+                            let offsetY = (idx * -1.5) + (10 * Math.cos(now * 0.015 + idx));
+                            c.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${8 * Math.sin(now * 0.01 + idx)}deg)`;
+                        });
+                        requestAnimationFrame(physicsShuffle);
+                    } else {
+                        pileCards.forEach((c, idx) => c.style.transform = `translate(0px, -${idx * 1.5}px) rotate(0deg)`);
+                        setTimeout(() => spread3DCarouselDeck(), 300);
+                    }
                 }
-            }
-            requestAnimationFrame(physicsShuffle);
+                requestAnimationFrame(physicsShuffle);
+            }, 600);
         }
 
         function getCardOffsetFromCenter(card) {
@@ -598,8 +659,19 @@
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 
-                const cardBox = document.createElement('div'); cardBox.className = 'card-box';
-                cardBox.innerHTML = `<h3>${positions[index]}</h3><div class="result-card-static"><img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}"></div><div class="result-info"><span class="card-title-en">${card.name}</span><span class="card-title-cn">${cardMeaning.nameCN}</span><div class="orientation ${card.isReversed ? 'reversed-text' : 'upright-text'}">${oriText}</div><p style="margin:5px 0; font-size:11px; text-align:justify; letter-spacing:0.02em;">${explanation}</p></div>`;
+                // 🎯 已修正：重構結構並導入專屬居中排版樣式類名
+                const cardBox = document.createElement('div'); cardBox.className = 'result-card-box';
+                cardBox.innerHTML = `
+                    <h3>${positions[index]}</h3>
+                    <div class="result-card-static">
+                        <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
+                    </div>
+                    <div class="result-info">
+                        <span class="card-title-en">${card.name}</span>
+                        <span class="card-title-cn">${cardMeaning.nameCN}</span>
+                        <div class="orientation ${card.isReversed ? 'reversed-text' : 'upright-text'}">${oriText}</div>
+                        <p class="card-desc-text">${explanation}</p>
+                    </div>`;
                 resultDeckDiv.appendChild(cardBox);
             });
             generateComprehensiveSummary(meaningsPool); 
@@ -626,13 +698,14 @@
                 adviceText = "建議你維持現有的基礎步調，並對目前的執行計劃進行局部的精密微調。只需要保持足夠的耐心，當前的微小阻礙自然會在流動中迎痕而解。"; 
             } else if (totalUprights === 1) { 
                 introText = `當前牌陣中出現了較多的逆位能量拉扯，這是一份來自潛意識矩陣深處的嚴肅警訊。目前的局勢中隱藏著較多的制約、焦慮、資訊不對稱或是能量嚴重受阻的情況。`; 
-                coreAnalysis = `雖然有部分節點試圖提供底層支撐，但從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於爆發高峰期。`; 
+                coreAnalysis = `雖然有部分節點試圖提供底層支撐，打從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於爆發高峰期。`; 
                 adviceText = "目前時機尚未成熟，不宜盲目推展與求任何實質結果。建議先將焦點從外在的追求轉回內心，停下腳步沉澱情緒，徹底找出當前的核心系統盲點進行整頓。"; 
             } else { 
                 introText = `三數據節點全數呈現逆位（【${pName}】 ➔ 【${prName}】 ➔ 【${fName}】）。這意味著當前的潛意識矩陣正經歷著一場徹底的底層架構重組、代碼崩潰與能量低潮期。`; 
                 coreAnalysis = `這並非全無益處，而是局勢在強烈暗示：你過去習慣的應對模式、思考方向或執念已經完全行不通了。內在的壓抑、混亂與外界的巨大阻力此時正交織在一起。`; 
                 adviceText = "這是最需要徹底放手與臣服的時刻。請立刻停止所有高風險的試探、強求或勉強的擴張行動。給自己充足的時間進行內心的全面大掃除，靜靜等待矩陣能量重新完成自我修復。"; 
             }
+            // 🎯 已修正：移除段落多餘的開頭空白，使其乾淨靠左兩端對齊
             document.getElementById('summary-section').innerHTML = `<h2>🔮 [ 綜合點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
         }
 
@@ -654,19 +727,19 @@
                 "The Empress": { nameCN: "皇后", general: { upright: "代表豐收、繁榮與物質富足。無論是生活還是計畫，都將迎來豐碩回報。", reversed: "目前可能感到缺乏安全感，或對環境有過度的控制慾。創造力受到阻塞。" }, love: { upright: "感情生活充滿甜蜜與溫馨，彼此包容與支持。近期桃花能量強勁。", reversed: "關係中表現得過度控制或佔有慾過強。注意物質問題可能導致摩擦。" }, work: { upright: "職場發展順遂，努力將迎來實質回報。團隊氛圍和諧。", reversed: "工作流於安逸、怠惰，缺乏前進的積極度。注意職場上不要過於感情用事。" } },
                 "The Emperor": { nameCN: "皇帝", general: { upright: "掌握著秩序與權力。擁有堅強意志力與清晰掌控架構。穩定與紀律是成功的關鍵。", reversed: "注意不要流於專橫霸道。當前架構可能過於僵化，或逐漸失去掌控。" }, love: { upright: "關係穩定、具安全感。以責任感與忠誠為基石，非常可靠。", reversed: "一方過於專斷、固執、難以溝通. 互動充滿壓迫感。" }, work: { upright: "有望晉升主管職、建立制度。專注於架構優化，成功將近在咫尺。", reversed: "職場遇到僵化的體制或過於守舊，不願接受新技術，會讓進度卡關。" } },
                 "The Lovers": { nameCN: "戀人", general: { upright: "象徵完美的和諧、吸引力與核心選擇。聆聽內心最真實的熱情做出決定。", reversed: "暗示內在能量產生了失衡，或當前面臨誘惑與錯誤抉擇。混亂內耗中。" }, love: { upright: "感情運勢極佳，彼此之間充滿強大吸引力。單身者將遇到靈魂同步對象。", reversed: "情感中出現不信任、多疑。需注意外界的野桃花誘惑。" }, work: { upright: "職場上迎來極佳合作機會，團隊默契十足。順應熱情就能做出正確決定。", reversed: "團隊內部出現拉扯或合作破裂。現階段抉擇可能只是出於短視近利。" } },
-                "The Chariot": { nameCN: "戰車", general: { upright: "代表意志力、勝利與克服障礙。此時擁有極強專注力，勢不可擋。", reversed: "警告可能正逐漸失去掌控力，或前進方向發生嚴重偏離。盲目會演變成魯莽。" }, love: { upright: "感情上採取積極進攻姿態。有能力克服任何空間、背景或環境阻礙。", reversed: "感情中出現嚴重權力爭奪，互不相讓，遇到挫折容易衝動說出傷害彼此的話。" }, work: { upright: "事業上展現出強大競爭力，適合開拓新市場、接手高難度專案。", reversed: "專案進度面臨方向混亂窘境。情緒壓力已達臨界點，容易因衝動做錯決策。" } },
+                "The Chariot": { nameCN: "戰車", general: { upright: "代表意志力、勝利與克服障礙。此時擁有極強專注力，勢不可擋。", reversed: "警告可能正逐漸失去掌控力，或前進方向發生嚴重偏離。盲目會演變成魯魯。" }, love: { upright: "感情上採取積極進攻姿態。有能力克服任何空間、背景或環境阻礙。", reversed: "感情中出現嚴重權力爭奪，互不相讓，遇到挫折容易衝動說出傷害彼此的話。" }, work: { upright: "事業上展現出強大競爭力，適合開拓新市場、接手高難度專案。", reversed: "專案進度面臨方向混亂窘境。情緒壓力已達臨界點，容易因衝動做錯決策。" } },
                 "Strength": { nameCN: "力量", general: { upright: "內心堅韌與溫柔控制力達到完美平衡。憑藉無比耐心就能感化困難。", reversed: "暗示當前陷入自我懷疑，或是被內心的焦慮與恐懼所吞噬。" }, love: { upright: "在感情中展現高情商。能用溫柔與包容化解對方的壞脾氣與不安。", reversed: "關係中感到無力與疲憊，佔有慾失控。不對等的張力會消磨愛意。" }, work: { upright: "面對危機展現臨危不亂的沉著智慧。抗壓性獲得高度肯定。", reversed: "面臨巨大精神內耗。容易因自信不足而選擇退縮，把局勢搞砸。" } },
                 "The Hermit": { nameCN: "隱士", general: { upright: "向內探索、尋求內在智慧的沉澱期。在潛意識深處點亮一盞指路明燈。", reversed: "警告可能過度與世隔絕，演變成逃避現實。陷入無意義的偏執。" }, love: { upright: "進入精神層次審視期。有伴者傾向給予彼此尊重空間，追求靈魂共鳴。", reversed: "彼此構築起高牆，溝通陷入名存實亡的冷淡狀態。一方可能在施展冷暴力。" }, work: { upright: "適合傾注於深度思考、技術研發或幕後顧問工作。沉穩積蓄核心知識。", reversed: "在職場上顯得與團隊格格不入。過於固執己見導致研發與現實脫節。" } },
                 "Wheel of Fortune": { nameCN: "命運之輪", general: { upright: "不可抗拒的命運齒輪加速轉動。轉折點即將到來，局勢將朝有利方向發展。", reversed: "暗示處於運勢波動低谷期，容易遇到突如來來的阻礙，建議保持彈性。" }, love: { upright: "感情上迎來宿命般的緣分。單身者極易遇見一見鍾情的對象。", reversed: "發展面臨外部不可抗力干擾，陷入重複同一個矛盾的惡性循環。" }, work: { upright: "職場運勢迎來大洗牌轉機，順應潮流做出的變革將迎來翻倍回報。", reversed: "出現意料之外的變故。目前環境對你較不利，不建議盲目做重大投資。" } },
                 "Justice": { nameCN: "正義", general: { upright: "代表公平、理性與因果律。過去種下的因，此時將迎來公正的果。", reversed: "局勢出現失衡、偏見或是遭受不公正對待。需小心因果迴力鏢。" }, love: { upright: "互動講求絕對公平與互相尊重。彼此坦誠相對，沒有隱瞞。", reversed: "關係出現嚴重失衡，雙方計較得失的張力拉滿，充滿無休止爭吵。" }, work: { upright: "適合處理契約簽署。只要秉持誠信，正義將會為你劈開謠言。", reversed: "職場遭遇不公平對待。注意此時不宜進行灰色操作，否則面臨查殺。" } },
-                "The Hanged Man": { nameCN: "倒吊人", general: { upright: "雖然當前處於被動受限狀態，但只要換個角度看世界，這是為了更高成就的犧犧。", reversed: "暗示正在進行無謂掙扎，或者你的犧牲並沒有得到應有價值。" }, love: { upright: "甘願為對方付出與等待。此時按兵不動是在深耕基礎默契。", reversed: "出現了單方面無底線的委曲求全，退讓只換來對方的得寸進尺。" }, work: { upright: "面臨過渡期。適合退居幕後默默耕耘、沉澱技術，大動作開拓無效。", reversed: "陷入無意義的瞎忙與盲目內耗。需要立刻停止無謂奉獻，重新審視。" } },
+                "The Hanged Man": { nameCN: "倒吊人", general: { upright: "雖然當前處於被動受限狀態，但只要換個角度看世界，這是為了更高成就的犧牲。", reversed: "暗示正在進行無謂掙扎，或者你的犧牲並沒有得到應有價值。" }, love: { upright: "甘願為對方付出與等待。此時按兵不動是在深耕基礎默契。", reversed: "出現了單方面無底線的委曲求全，退讓只換來對方的得寸進尺。" }, work: { upright: "面臨過渡期。適合退居幕後默默耕耘、沉澱技術，大動作開拓無效。", reversed: "陷入無意義的瞎忙與盲目內耗。需要立刻停止無謂奉獻，重新審視。" } },
                 "Death": { nameCN: "死神", general: { upright: "徹底的終結與隨之而來的偉大新生。唯有清理掉冗餘，新代碼才能載入。", reversed: "死死抓著已經腐爛的過去不肯放手，拒絕接受改變。無限延長痛苦。" }, love: { upright: "不健康的關係將迎來徹底終結。空出雙手，新的人際矩陣才能成立。", reversed: "感情走到了冰點，因為恐懼孤單而選擇拖延，嚴重消耗能量。" }, work: { upright: "職場上面臨重大洗牌，劇變正是你建立全新王國的起點。", reversed: "事業發展面臨苟延殘喘，明知沒有前景依舊抱持幻想，錯失重生窗口." } },
                 "Temperance": { nameCN: "節制", general: { upright: "象徵完美的淨化與跨界融合。在動態平衡中創造出治癒能量。", reversed: "內在能量失去平衡，生活或人際關係出現溝通不良。" }, love: { upright: "交流達到精神完美契合。極具治癒感、細水長流的健康戀情。", reversed: "雙方溝通頻率完全不對盤。缺乏體貼與耐性，感情在瑣事中消磨。" }, work: { upright: "適合進行跨部門溝通或跨領域合作. 強大協調能力能完美平衡衝突。", reversed: "職場人際關係失調，協作卡關。可能在時間分配上出現嚴重失衡。" } },
                 "The Devil": { nameCN: "惡魔", general: { upright: "暗示正被強烈物質慾望、執念 or 不健康依賴關係束縛。直面陰暗面是關鍵。", reversed: "偉大的覺醒時刻。開始看清虛幻誘惑，潛意識自由代碼重新編寫。" }, love: { upright: "一段充滿致命肉體吸引力，但也伴隨強烈控制與嫉妒的關係。", reversed: "終於從充滿控制、冷暴力的虐戀中清醒。找回自主界線，勇敢抽身。" }, work: { upright: "能獲得巨大物質回報，但背後可能隱藏權謀鬥爭，高風險博弈。", reversed: "拒絕職場上的不正當誘惑或壓榨條款。決定離開血汗環境，奪回自主權。" } },
                 "The Tower": { nameCN: "高塔", general: { upright: "警告！一場突如來、無法抗拒的毀滅性劇變即將震撼生活。強行系統重塑。", reversed: "危機雖然即將爆發，但衝擊已被降到最低；或代表粉飾太平。" }, love: { upright: "感情面臨毫無預警的重大衝擊，隱藏的秘密曝光，關係瞬間分崩離析。", reversed: "矛盾到了隨時爆炸邊緣，勉強維持表面和平更讓人折磨。" }, work: { upright: "職場上面臨突發性災難。不要試圖挽救，強迫你徹底更換全新賽道。", reversed: "工作中雷聲大雨點小，危機擦身而過，根本漏洞未解決，下次更致命。" } },
-                "The Star": { nameCN: "星星", general: { upright: "風暴過後，亮起了代表希望與療癒的星光。內心焦慮平息，光明在望。", reversed: "正被失望與悲觀情緒籠罩。可能設定了過於虛無飄渺、不切實際的目標。" }, love: { upright: "意來一段充滿精神共鳴、純潔且具高度治癒感的戀情。", reversed: "對感情抱持過於脫離現實的完美幻想，對伴侶產生無謂的挑剔。" }, work: { upright: "靈感爆發黃金期，利於藝術創作、設計或品牌建立。才華吸引目光。", reversed: "計劃流於紙上談兵，缺乏執行可行性。高估資源、低估市場。" } },
+                "The Star": { nameCN: "星星", general: { upright: "風暴過後，亮起了代表希望與療癒的星光。內心焦慮平息，光明在望。", reversed: "正被失望與悲觀情緒籠罩。可能設定了過於虛無飄渺、不切實際的目標。" }, love: { upright: "一見鍾情一段充滿精神共鳴、純潔且具高度治癒感的戀情。", reversed: "對感情抱持過於脫離現實的完美幻想，對伴侶產生無謂的挑剔。" }, work: { upright: "靈感爆發黃金期，利於藝術創作、設計或品牌建立。才華吸引目光。", reversed: "計劃流於紙上談兵，缺乏執行可行性。高估資源、低估市場。" } },
                 "The Moon": { nameCN: "月亮", general: { upright: "進入充滿迷霧、焦慮與未知恐懼的幽暗海域。資訊不透明，勿盲目決策。", reversed: "恐懼與焦慮開始逐漸消散。那些誤解與秘密即將水落石出。" }, love: { upright: "充滿不安、猜忌與情緒起伏的曖昧期。信任基礎極其脆弱。", reversed: "誤會與謊言即將被拆穿，不再逃避問題。隱藏的不安正逐步退場。" }, work: { upright: "環境充滿爾虞我詐。現階段專案合約細節極不透明，暗藏陷阱。", reversed: "原本混亂、拉扯不清的人事糾紛落幕。終於看清專案真實走向。" } },
-                "The Sun": { nameCN: "太陽", general: { upright: "象徵極致成功、榮耀、活力與純粹快樂。萬事大吉的至尊王牌。", reversed: "整體運勢依舊保持水準，但光芒可能被短暫烏雲遮蔽。成功只會遲到。" }, love: { upright: "感情運勢爆棚！互動充滿陽光、熱情與坦率。極度受人羨慕。", reversed: "依舊溫慢，但少了一點剛開始的激情。注意不要因為小脾氣消磨熱情。" }, work: { upright: "事業迎來大光明鼎盛時期。求職、創業或升遷都將獲得成功。", reversed: "專案雖能成功，但過程花費比預期多的時間。職場注意不要功高震主。" } },
+                "The Sun": { nameCN: "太陽", general: { upright: "象徵極致成功、榮耀、活力與純粹快樂。萬事大吉的至尊王牌。", reversed: "整體運勢依舊保持水準，但光芒可能被短暫烏雲遮蔽。成功只會遲到。" }, love: { upright: "感情運勢爆棚！互動充滿陽光、熱情與坦率。極度受人羨慕。", reversed: "依舊溫馨，但少了一點剛開始的激情。注意不要因為小脾氣消磨熱情。" }, work: { upright: "事業迎來大光明鼎盛時期。求職、創業或升遷都將獲得成功。", reversed: "專案雖能成功，但過程花費比預期多的時間。職場注意不要功高震主。" } },
                 "Judgement": { nameCN: "審判", general: { upright: "命運號角吹響，迎來重大覺醒與因果了結。做出改變一生的重大決定。", reversed: "處於逃避狀態。害怕跨出舒適圈而選擇拖延，錯失系統升級機會。" }, love: { upright: "感情上迎來破鏡重圓，或關係面臨重大昇華。走向命運交織的轉折。", reversed: "面對重複發生的致命問題依舊拒絕理智了斷。無意義地內耗。" }, work: { upright: "面臨關鍵裁決或重大轉機，迎來翻轉職業生涯的黃金職缺。", reversed: "因為猶豫不決錯失跳槽或晉升黃金期。過往失誤缺乏承擔勇氣。" } },
                 "The World": { nameCN: "世界", general: { upright: "恭喜！本階段旅程已達到完美終點與大圓滿。代表成功與內心和諧。", reversed: "距離最後成功只剩最後一哩路，千萬不要在此時鬆懈，咬緊牙關完成。" }, love: { upright: "感情迎來最完美大結局。彼此靈魂達到天衣無縫的融合，最高規格祝福。", reversed: "大體上穩定幸福，但心中總覺得缺少臨門一腳的極致激情。" }, work: { upright: "事業達到顛峰狀態！交出無可挑剔的完美成績單。享受收穫期。", reversed: "專案已完成 99%，卻在最後驗收階段卡在繁瑣流程上。保持耐性。" } }
             };
