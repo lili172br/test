@@ -24,7 +24,7 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start; /* 修正：避免過度拉伸上下空間 */
         }
         
         /* 頂部安全距：為 Google 自動廣告預留緩衝空間 */
@@ -32,11 +32,11 @@
             font-size: 9px; 
             color: #1c1c1e; 
             letter-spacing: 0.1em; 
-            margin-top: 15px; 
+            margin-top: 5px; 
             text-transform: uppercase; 
         }
 
-        .main-content { flex-grow: 1; width: 100%; }
+        .main-content { width: 100%; }
         h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-size: 20px; }
         .sys-status { font-size: 9px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 25px; }
         
@@ -219,6 +219,9 @@
 
         /* 截圖安全補償 */
         .html2canvas-screenshot-mode { padding: 30px 25px !important; background-color: #050505 !important; }
+        
+        /* 額外優化：讓 SEO 文字排版更緊湊 */
+        .seo-keywords-matrix { font-size: 10px; color: #3a3a3c; text-align: justify; line-height: 1.5; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -229,7 +232,9 @@
         <h1>🔮 聖三角潛意識矩陣占卜</h1>
         <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
         
+        <!-- 【首頁面節點】 -->
         <div id="home-view" class="view-node active-node panel-section">
+            <!-- 骨架屏結構 -->
             <div id="init-skeleton" class="skeleton-loader">
                 <div class="skeleton-block" style="height: 12px; width: 40%;"></div>
                 <div class="skeleton-block" style="height: 35px; width: 80%; margin-top: 15px;"></div>
@@ -248,13 +253,15 @@
             
             <button class="btn-primary" style="margin-bottom: 25px;" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
 
+            <!-- 1. 塔羅牌由來區塊 -->
             <div class="academic-block">
                 <div class="academic-title">🔮 關於經典塔羅牌的歷史與本質起源 // TAROT ORIGIN MATRIX</div>
                 <div class="academic-text">
-                    塔羅牌（Tarot）的歷史最早可追溯至15世紀中葉的歐洲（義大利北部），最初作為貴族階層的紙牌遊戲（Tarocchi）。隨著18世紀末期神祕學家對其符號系統的深度考證，塔羅牌逐漸被賦予了對個體命運探討與心理投射的媒介性質。現代心理學大師榮格（Carl Jung）指出，塔羅牌本質上是人類「集體潛意識」與「原型（Archetypes）」的視覺化載體。它並非超自然的神明預知，而是透過象徵性的圖面符號，將主觀個體內部那些被壓抑、忽視或無法言說的隱性動能拉上意識層面。當前系統將此古典系統數字化，透過動態演算法，模擬潛意識流動的非隨機性相應。
+                    塔羅牌（Tarot）的歷史最早可跨越至15世紀中葉的歐洲（義大利北部），最初作為貴族階層的紙牌遊戲（Tarocchi）。隨著18世紀末期神祕學家對其符號系統的深度考證，塔羅牌逐漸被賦予了對個體命運探討與心理投射的媒介性質。現代心理學大師榮格（Carl Jung）指出，塔羅牌本質上是人類「集體潛意識」與「原型（Archetypes）」的視覺化載體。它並非超自然的神明預知，而是透過象徵性的圖面符號，將主觀個體內部那些被壓抑、忽視或無法言說的隱性動能拉上意識層面。當前系統將此古典系統數字化，透過動態演算法，模擬潛意識流動的非隨機性相應。
                 </div>
             </div>
 
+            <!-- 2. 堆疊式卡片設計78張展開收合卡牌介紹區塊 -->
             <div class="academic-block">
                 <div class="academic-title">🃏 經典大/小阿爾克那 78 張卡牌架構介紹 // 78 CARDS ACCORDION</div>
                 
@@ -288,6 +295,7 @@
                 </div>
             </div>
 
+            <!-- 3. 核心方法論：隨機決策論 -->
             <div class="academic-block">
                 <div class="academic-title">📊 核心方法論：隨機決策論 // DECISION THEORY NODE</div>
                 <div class="academic-text">
@@ -295,6 +303,7 @@
                 </div>
             </div>
 
+            <!-- 4. 矩陣動態觀察看板 -->
             <div class="academic-block">
                 <div class="academic-title">📈 矩陣動態觀察看板 // LIVE MATRIX ANALYTICS</div>
                 <div class="analytics-grid">
@@ -304,7 +313,7 @@
                     </div>
                     <div class="analytics-card">
                         <div class="analytics-value">78 / 78</div>
-                        <div class="analytics-label">卡牌語料編譯庫 (Pool)</div>
+                        <div class="analytics-label">卡牌語料編编译庫 (Pool)</div>
                     </div>
                     <div class="analytics-card">
                         <div class="analytics-value" id="matrix-entropy">0.9842</div>
@@ -317,6 +326,7 @@
                 </div>
             </div>
 
+            <!-- 5. 矩陣技術解碼區 -->
             <div class="academic-block">
                 <div class="academic-title">💻 矩陣技術解碼區 // SYSTEM ARCHITECTURE LAB</div>
                 <div class="academic-text" style="font-family: monospace; background: #070707; padding: 10px; border-radius: 4px; font-size: 10px; border: 1px solid #141415;">
@@ -328,8 +338,9 @@
                 </div>
             </div>
 
+            <!-- 6. 潛意識數據解碼 -->
             <div class="academic-block">
-                <div class="academic-title">🧬 潛意識數據解碼 // SUBCONSCIOUS flow DESERIALIZATION</div>
+                <div class="academic-title">🧬 潛意識數據解碼 // SUBCONSCIOUS FLOW DESERIALIZATION</div>
                 <div class="academic-text">
                     當使用者在盲抽介面完成對「過去（Past）」、「現在（Present）」與「未來（Future）」三張焦點牌組的點擊鎖定後，系統將自動啟動反序列化（Deserialization）解碼程序。這項技術模型藉由追蹤卡牌正逆位在聖三角矩陣中的對稱張力，將隱形心理學變數轉化為視覺、文字雙重複合報告。透過對個體潛意識數據的符號解構，網頁能以高精確度的結構化文本點評，直擊個體面臨感情、事業或運勢困境時的底層認知盲區，實現深度的個體反思與自我覺察。
                 </div>
@@ -340,6 +351,7 @@
             </div>
         </div>
 
+        <!-- 【問題輸入節點】 -->
         <div id="input-view" class="view-node panel-section">
             <label for="question">[ INITIALIZE_INPUT ] 請輸入問題並在心中默念3次：</label>
             <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
@@ -354,6 +366,7 @@
             <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">開始占卜 // START</button>
         </div>
 
+        <!-- 【洗牌與盲抽滾動節點】 -->
         <div id="shuffle-view" class="view-node panel-section">
             <div id="user-question-display"></div>
             <div id="flow-hint"></div>
@@ -388,6 +401,7 @@
             </div>
         </div>
 
+        <!-- 【結果解碼展示與截圖節點】 -->
         <div id="result-view" class="view-node panel-section">
             <div id="capture-node">
                 <div id="result-question-title" class="result-title-node"></div>
@@ -408,11 +422,12 @@
         </div>
     </div>
 
-    <footer style="font-size: 11px; color: #444446; margin-top: 80px; border-top: 1px solid #141414; padding: 40px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
-        <div style="text-align: center; margin-bottom: 25px; letter-spacing: 0.05em; color: #52525b;">
+    <!-- 頁腳免責聲明與流量控制區：修正縮減了上下間距邊距，解決大空隙問題 -->
+    <footer style="font-size: 11px; color: #444446; margin-top: 30px; border-top: 1px solid #141414; padding: 20px 20px 30px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
+        <div style="text-align: center; margin-bottom: 15px; letter-spacing: 0.05em; color: #52525b;">
             © 2026 聖三角潛意識矩陣系統. All Rights Reserved.
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; border-bottom: 1px solid #141414; padding-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; border-bottom: 1px solid #141414; padding-bottom: 20px;">
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #dc2626; padding-left: 8px;">
                     技術定位宣告 // SPECIFICATION
@@ -451,6 +466,7 @@
         </div>
     </footer>
 
+    <!-- 💡 本地完整指令與核心腳本區碼 -->
     <script>
         // 大小阿爾克那完整 78 張對照池
         const tarotCardsPool = [
@@ -785,7 +801,8 @@
             targetCard.classList.add('selected-fly');
             
             const currentSlot = document.getElementById(`slot-${currentSlotIndex}`);
-            currentSlot.innerHTML = `<div class="card card-in-slot flipped"><div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div><div class="card-front"><img src="cards/${cardData.img}" class="${cardData.isReversed ? 'reversed' : ''}"></div></div></div>`;
+            // 修正：移除 src 路徑中的 cards/ 前綴
+            currentSlot.innerHTML = `<div class="card card-in-slot flipped"><div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div><div class="card-front"><img src="${cardData.img}" class="${cardData.isReversed ? 'reversed' : ''}"></div></div></div>`;
 
             currentSlotIndex++;
             if (currentSlotIndex === 1) {
@@ -817,10 +834,11 @@
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 
                 const cardBox = document.createElement('div'); cardBox.className = 'result-card-box';
+                // 修正：同樣移除結果展示頁面的 src 前綴 cards/
                 cardBox.innerHTML = `
                     <h3>${positions[index]}</h3>
                     <div class="result-card-static">
-                        <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
+                        <img src="${card.img}" class="${card.isReversed ? 'reversed' : ''}">
                     </div>
                     <div class="result-info">
                         <span class="card-title-en">${card.name}</span>
