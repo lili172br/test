@@ -28,6 +28,7 @@
             justify-content: space-between;
         }
         
+        /* 1. 頂部安全距：為 Google 自動廣告/錨定廣告預留緩衝空間 */
         .ads-top-buffer { 
             font-size: 9px; 
             color: #1c1c1e; 
@@ -43,12 +44,32 @@
         .panel-section { 
             margin: 20px auto; max-width: 650px; background: #0a0a0a; padding: 25px 20px; 
             border-radius: 12px; border: 1px solid #1f1f1f; box-shadow: 0 8px 32px rgba(0,0,0,0.8); box-sizing: border-box;
+            position: relative;
+        }
+
+        /* 4. 骨架屏：首頁加載時的動態骨架屏，防止資源未就緒前出現排版塌陷 */
+        .skeleton-loader {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0a0a0a; border-radius: 12px; z-index: 1000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            box-sizing: border-box; padding: 25px 20px;
+        }
+        .skeleton-block {
+            background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+            background-size: 200% 100%; animation: skeleton-shimmer 1.5s infinite linear;
+            border-radius: 4px; margin-bottom: 15px; width: 100%;
+        }
+        @keyframes skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
         
+        /* 追加的高價值關鍵字隱形語料庫樣式 */
         .seo-keywords-matrix { font-size: 9px; color: #141414; text-align: justify; line-height: 1.4; margin-top: 25px; letter-spacing: 0.02em; border-top: 1px dashed #0a0a0a; padding-top: 10px; }
 
+        /* 廣告區塊語義化占位符樣式 */
         .ads-native-placeholder { margin: 25px auto; max-width: 600px; padding: 12px; border: 1px dashed #141414; border-radius: 6px; font-size: 9px; color: #27272a; letter-spacing: 0.05em; text-transform: uppercase; background: #070707; }
 
         .panel-section label { display: block; margin: 15px 0 8px 0; font-size: 12px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -60,7 +81,17 @@
         .panel-section input:focus, .panel-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
         
         #user-question-display { font-size: 13px; color: #dc2626; margin: 10px 0 20px 0; font-weight: bold; letter-spacing: 0.05em; line-height: 1.5; }
-        #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+        #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* 1. 盲抽橫向滑動提示樣式 */
+        .swipe-hint-banner {
+            font-size: 9px; color: #52525b; text-transform: uppercase; letter-spacing: 0.15em;
+            margin-bottom: 20px; animation: pulse-opacity 2s infinite ease-in-out;
+        }
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
 
         /* 槽位區塊 */
         .slots-container { 
@@ -154,7 +185,7 @@
         .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
         .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
 
-        #capture-node { padding: 15px; background: #050505; border-radius: 16px; }
+        #capture-node { padding: 15px; background: #050505; border-radius: 16px; box-sizing: border-box; width: 100%; }
         .result-title-node { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 25px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; }
 
         .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 420px; width: 100%; }
@@ -170,23 +201,14 @@
         .btn-primary:hover { background-color: #b91c1c; border-color: #b91c1c; }
         .btn-secondary { background-color: #050505; border-color: #3f3f46; color: #a1a1aa; }
 
-        /* 新增：堆疊式卡片 UI 樣式組 */
-        .info-header { font-size: 11px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; border-left: 2px solid #dc2626; padding-left: 10px; font-weight: bold; }
-        .info-body { font-size: 12px; line-height: 1.8; color: #a1a1aa; text-align: justify; margin-bottom: 20px; }
-        .info-body strong { color: #ffffff; }
-        
-        .accordion-container { margin: 15px 0; border: 1px solid #1f1f1f; border-radius: 8px; overflow: hidden; background: #070707; }
-        details.tarot-details { border-bottom: 1px solid #1f1f1f; transition: background 0.3s; }
-        details.tarot-details:last-child { border-bottom: none; }
-        details.tarot-details[open] { background: #0c0c0c; }
-        summary.tarot-summary { padding: 14px 16px; font-size: 12px; font-weight: bold; color: #e4e4e7; cursor: pointer; user-select: none; outline: none; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-        summary.tarot-summary::-webkit-details-marker { display: none; }
-        summary.tarot-summary::after { content: '＋'; color: #71717a; font-size: 11px; transition: transform 0.3s; }
-        details.tarot-details[open] summary.tarot-summary::after { content: '－'; color: #dc2626; }
-        .details-content { padding: 0 16px 16px 16px; font-size: 12px; line-height: 1.8; color: #a1a1aa; text-align: justify; border-top: 1px dashed #141414; padding-top: 12px; }
-
         .view-node { display: none; }
         .view-node.active-node { display: block; }
+
+        /* 3. html2canvas 截圖專用類：在生成 canvas 的一瞬間動態賦予安全邊距，防止邊緣截斷 */
+        .html2canvas-screenshot-mode {
+            padding: 30px 25px !important;
+            background-color: #050505 !important;
+        }
     </style>
 </head>
 <body>
@@ -198,86 +220,23 @@
         <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
         
         <div id="home-view" class="view-node active-node panel-section">
-            
+            <div id="init-skeleton" class="skeleton-loader">
+                <div class="skeleton-block" style="height: 12px; width: 40%;"></div>
+                <div class="skeleton-block" style="height: 35px; width: 80%; margin-top: 15px;"></div>
+                <div class="skeleton-block" style="height: 60px; width: 100%; margin-top: 15px;"></div>
+                <div class="skeleton-block" style="height: 45px; width: 50%; border-radius: 999px; margin-top: 20px;"></div>
+            </div>
+
             <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
                 <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
                 <div>[ CURRENT_VERSION: v2.4.8-STABLE // BUILD_NODE: ACTIVE ]</div>
             </div>
 
             <div class="intro-text">
-                <p>歡迎來到全功能盲抽占卜系統。本介面全面整合大/小阿爾克那共 78 張完整卡牌，支援手機滑動與電腦滑術拖曳，洗牌後牌組將進入盲抽矩陣。</p>
+                <p>歡迎來到全功能盲抽占卜系統。本介面全面整合大/小阿爾克那共 78 張完整卡牌，支援手機滑動與電腦滑鼠拖曳，洗牌後牌組將進入盲抽矩陣。</p>
             </div>
             
-            <button class="btn-primary" style="margin-bottom: 30px;" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
-
-            <div style="background: #070707; border: 1px solid #141414; padding: 15px; border-radius: 8px; margin-bottom: 25px; font-family: inherit;">
-                <div class="info-header">[ LIVE_MATRIX_ANALYTICS // 矩陣動態觀察看板 ]</div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 11px; text-align: left;">
-                    <div style="color: #71717a;">當前數據流通狀態: <span style="color: #10b981; font-weight: bold;">ACTIVE</span></div>
-                    <div style="color: #71717a;">非對稱洗牌延遲: <span style="color: #fff;" id="live-latency">12ms</span></div>
-                    <div style="color: #71717a;">潛意識共振頻率: <span style="color: #fff;" id="live-frequency">94.32 MHz</span></div>
-                    <div style="color: #71717a;">全卡牌解碼器節點: <span style="color: #dc2626; font-weight: bold;">78 / 78 LOADED</span></div>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <div class="info-header">[ METHODOLOGY // 核心方法論：隨機決策論 (Decision Theory Node) ]</div>
-                <div class="info-body">
-                    本系統揚棄傳統命定論，引入<strong>現代隨機決策科學 (Decision Theory Node)</strong> 與認知心理學模型。我們將 78 張塔羅牌組視為一組具備特定符號學權重的潛意識數據矩陣。透過非線性亂數清洗，系統協助使用者將混亂的外部雜訊（如職場焦慮、情感盲點）映射至特定的原型符號上，進而完成深度自我覺察與理性決策路徑優化。
-                </div>
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <div class="info-header">[ HISTORICAL_ARCHIVE // 塔羅牌由來 ]</div>
-                <div class="info-body">
-                    塔羅牌（Tarot）歷史可追溯至15世紀中葉的歐洲，最初作為宮廷文藝復興時期的紙牌遊戲，隨後演變為一套嚴密的西方神祕學符號系統。其大阿爾克那（Major Arcana）22張牌描繪了個體靈魂覺醒的「愚人之旅」，而小阿爾克那（Minor Arcana）56張牌則細緻刻畫了日常生活中土、水、風、火四元素數據環境流動。它是人類集體潛意識原型的結晶結晶。
-                </div>
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <div class="info-header">[ TECH_LAB // 矩陣技術解碼區 (System Architecture Lab) ]</div>
-                <div class="info-body">
-                    在 <strong>System Architecture Lab</strong> 中，我們採用純前端非對稱置換矩陣演算法。當使用者默念問題時，即是在微觀層面確立觀測目標。系統隨後執行的 <strong>潛意識數據解碼</strong> 模組，會在本地瀏覽器沙盒中，將三組空間維度（過去、現在、未來）的隱式狀態（Hidden States）進行重排。所有語料分析均在本地進行，全面保護您的數據隱私。
-                </div>
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <div class="info-header">[ DATABASE // 78張展開收合卡牌潛意識節點介紹 ]</div>
-                <div class="info-body" style="margin-bottom: 10px;">點擊下方各組數據堆疊結構，可直接展開檢視 78 張卡牌原型的底層邏輯映射分類：</div>
-                
-                <div class="accordion-container">
-                    <details class="tarot-details">
-                        <summary class="tarot-summary">大阿爾克那節點群 (Major Arcana // 0 - 21)</summary>
-                        <div class="details-content">
-                            包含從【愚人】到【世界】共 22 張核心靈魂原型節點。代表個體生命週期中的重大精神轉折、核心認知重塑以及無可迴避的環境張力變數。正位引導核心流動順暢，逆位則提示系統內部存在尚未解除的認知偏誤與心理防衛機制。
-                        </div>
-                    </details>
-                    <details class="tarot-details">
-                        <summary class="tarot-summary">權杖牌組數據鏈 (Wands Matrix // 火元素)</summary>
-                        <div class="details-content">
-                            包含權杖王牌至權杖國王共 14 張火元素數據卡牌。映射人類潛意識中的行動力、直覺、意志延伸、職涯熱情、原始創意思維與擴張動能。主導項目初期開發、克服挑戰與執行效率的指標分析。
-                        </div>
-                    </details>
-                    <details class="tarot-details">
-                        <summary class="tarot-summary">聖杯牌組數據鏈 (Cups Matrix // 水元素)</summary>
-                        <div class="details-content">
-                            包含聖杯王牌至聖杯國王共 14 張水元素數據卡牌。映射潛意識矩陣中的情感流動、人際紐帶、直覺共振、內在安全感、防禦盲點以及潛藏的焦慮反饋。在感情發展分析中具備極高權重。
-                        </div>
-                    </details>
-                    <details class="tarot-details">
-                        <summary class="tarot-summary">寶劍牌組數據鏈 (Swords Matrix // 風元素)</summary>
-                        <div class="details-content">
-                            包含寶劍王牌至寶劍國王共 14 張風元素數據卡牌。映射個體的邏輯運算、理性剖析、決策衝突、心智壓力、言語溝通及思想邊界。通常提示需要採取高精度的客觀反思，排除情緒雜訊。
-                        </div>
-                    </details>
-                    <details class="tarot-details">
-                        <summary class="tarot-summary">星幣牌組數據鏈 (Pentacles Matrix // 土元素)</summary>
-                        <div class="details-content">
-                            包含星幣王牌至星幣國王共 14 張土元素數據卡牌。映射外部物質世界、現實資源分配、財務架構、身體健康、實體成果、長期穩定性以及可落地執行的核心商業模型。
-                        </div>
-                    </details>
-                </div>
-            </div>
+            <button class="btn-primary" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
 
             <div class="seo-keywords-matrix">
                 [ ARCHITECTURE_LOG ] 本交互式資訊系統技術模型全面整合大眾心理學（Psychology）、現代隨機決策科學（Decision-making Science）、認知行為學（Cognitive Science）與個體潛意識流動（Subconscious Flow）數據解碼模組。前端架構採非對稱矩陣運算法，旨在協助使用者完成邏輯反思、內在焦慮覺察、職場生涯規劃（Career Planning）與人際關係動態分析。本站內容僅供大眾學術研究與大眾心理暗示參考。
@@ -301,6 +260,7 @@
         <div id="shuffle-view" class="view-node panel-section">
             <div id="user-question-display"></div>
             <div id="flow-hint"></div>
+            <div id="swipe-hint-banner" class="swipe-hint-banner" style="display: none;">[ ◄ Drag or Swipe to Browse 78 Cards Matrix ► ]</div>
             
             <div id="slots-area" class="slots-container">
                 <div class="slot-box">
@@ -364,7 +324,7 @@
                     技術定位宣告 // SPECIFICATION
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機制作為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導，資訊傳播完全符合全球大眾網路資訊傳播安全與隱私權規範。
+                    本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機作成為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導，資訊傳播完全符合全球大眾網路資訊傳播安全與隱私權規範。
                 </p>
             </div>
 
@@ -403,15 +363,15 @@
     </footer>
 
     <script>
-        // 看板動態數值定時重新整理效果
-        setInterval(() => {
-            const latency = Math.floor(Math.random() * 8) + 8;
-            const freq = (94.00 + Math.random() * 0.8).toFixed(2);
-            const elL = document.getElementById('live-latency');
-            const elF = document.getElementById('live-frequency');
-            if(elL) elL.innerText = latency + 'ms';
-            if(elF) elF.innerText = freq + ' MHz';
-        }, 2000);
+        // 4. 骨架屏：DOM 渲染完畢後自動淡出移除骨架屏
+        window.addEventListener('DOMContentLoaded', () => {
+            const skeleton = document.getElementById('init-skeleton');
+            if (skeleton) {
+                skeleton.style.transition = 'opacity 0.4s ease';
+                skeleton.style.opacity = '0';
+                setTimeout(() => skeleton.remove(), 400);
+            }
+        });
 
         // 核心邏輯引擎控制
         function switchView(viewId) {
@@ -468,6 +428,7 @@
             document.getElementById('question').value = '';
             document.getElementById('user-question-display').innerText = '';
             document.getElementById('flow-hint').innerText = '';
+            document.getElementById('swipe-hint-banner').style.display = 'none';
             document.getElementById('pile-master').innerHTML = '';
             document.getElementById('pile-master').style.display = 'block';
             document.getElementById('scroller-wrapper').style.display = 'none';
@@ -497,6 +458,7 @@
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ 矩陣目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
             document.getElementById('flow-hint').innerText = "⚡ 正在串聯 78 節點潛意識能量...";
+            document.getElementById('swipe-hint-banner').style.display = 'none';
             
             document.getElementById('pile-master').style.display = 'block';
             document.getElementById('scroller-wrapper').style.display = 'none';
@@ -555,6 +517,7 @@
             stage.style.display = 'flex';
             
             document.getElementById('flow-hint').innerText = `👉 請左右滑動，點擊中央焦點牌盲抽 【過去 // PAST】`;
+            document.getElementById('swipe-hint-banner').style.display = 'block';
 
             processedDeck.forEach((cardData, index) => {
                 const cardEl = document.createElement('div'); 
@@ -585,37 +548,93 @@
                 scroller.addEventListener('scroll', updateCarouselFocusEffects);
                 initializeMouseDragScroll(scroller);
                 
-                const midCard = document.getElementById(`deck-card-38`);
-                if(midCard) midCard.scrollIntoView({ block: 'nearest', inline: 'center' });
-                updateCarouselFocusEffects();
+                // 1. 視覺提示動畫（Bounce Hint）：首次載入時向右再向左回彈，提醒可以橫向滑動
+                scroller.style.scrollSnapType = 'none';
+                scroller.scrollTo({ left: scroller.scrollLeft + 120, behavior: 'smooth' });
+                setTimeout(() => {
+                    scroller.scrollTo({ left: scroller.scrollLeft - 120, behavior: 'smooth' });
+                    setTimeout(() => {
+                        scroller.style.scrollSnapType = 'x mandatory';
+                        const midCard = document.getElementById(`deck-card-38`);
+                        if(midCard) midCard.scrollIntoView({ block: 'nearest', inline: 'center' });
+                        updateCarouselFocusEffects();
+                    }, 400);
+                }, 350);
+
             }, 50);
         }
 
+        // 2. 觸控與滑鼠拖曳優化：加入速度觀測與帶有緩動滑行的慣性流暢滑動系統
         let isDown = false; let startX; let scrollLeft; let isDragging = false; 
+        let lastVelocityX = 0; let lastTimeStamp = 0; let lastX = 0; let inertiaFrame = null;
 
         function initializeMouseDragScroll(scroller) {
             scroller.addEventListener('mousedown', (e) => {
                 isDown = true; isDragging = false;
+                if(inertiaFrame) cancelAnimationFrame(inertiaFrame);
                 scroller.style.scrollSnapType = 'none'; 
-                startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft;
+                startX = e.pageX - scroller.offsetLeft; 
+                scrollLeft = scroller.scrollLeft;
+                lastX = e.pageX;
+                lastTimeStamp = performance.now();
+                lastVelocityX = 0;
             });
+            
             scroller.addEventListener('mouseleave', () => {
-                if (!isDown) return; isDown = false; scroller.style.scrollSnapType = 'x mandatory'; 
+                if (!isDown) return; 
+                isDown = false; 
+                applyInertiaDecay(scroller);
             });
+            
             scroller.addEventListener('mouseup', () => {
-                isDown = false; scroller.style.scrollSnapType = 'x mandatory'; 
+                if (!isDown) return;
+                isDown = false; 
+                applyInertiaDecay(scroller);
                 setTimeout(() => { isDragging = false; }, 50);
             });
+            
             scroller.addEventListener('mousemove', (e) => {
                 if(!isDown) return;
                 e.preventDefault();
-                const x = e.pageX - scroller.offsetLeft; const walk = (x - startX) * 1.5; 
-                if (Math.abs(walk) > 5) isDragging = true; 
+                const currentNow = performance.now();
+                const deltaT = currentNow - lastTimeStamp;
+                const x = e.pageX - scroller.offsetLeft; 
+                const walk = (x - startX) * 1.3; 
+                
+                if (Math.abs(x - startX) > 5) isDragging = true; 
                 scroller.scrollLeft = scrollLeft - walk;
+                
+                if(deltaT > 0) {
+                    lastVelocityX = (e.pageX - lastX) / deltaT;
+                }
+                lastX = e.pageX;
+                lastTimeStamp = currentNow;
             });
         }
 
+        // 2. 慣性滑動計算：放開手指或滑鼠後模擬實體滑行
+        function applyInertiaDecay(scroller) {
+            let velocity = lastVelocityX * 18; 
+            const friction = 0.94; 
+            
+            function step() {
+                if(Math.abs(velocity) > 0.5) {
+                    scroller.scrollLeft -= velocity;
+                    velocity *= friction;
+                    inertiaFrame = requestAnimationFrame(step);
+                } else {
+                    scroller.style.scrollSnapType = 'x mandatory';
+                    // 滾動微調回彈機制，保證 snap 對齊
+                    const currentPos = scroller.scrollLeft;
+                    scroller.scrollTo({ left: currentPos + 1, behavior: 'auto' });
+                    scroller.scrollTo({ left: currentPos, behavior: 'smooth' });
+                }
+            }
+            inertiaFrame = requestAnimationFrame(step);
+        }
+
         function scrollCarousel(direction) {
+            if(inertiaFrame) cancelAnimationFrame(inertiaFrame);
             const scroller = document.getElementById('fan-scroller');
             const cardWidthWithGap = 84 + 15; 
             if (direction === 'left') {
@@ -683,6 +702,7 @@
                 document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【未來 // FUTURE】`;
             } else {
                 document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
+                document.getElementById('swipe-hint-banner').style.display = 'none';
                 try { playSound('success'); } catch(e){}
                 setTimeout(() => compileAndShowResultView(), 1000);
             }
@@ -747,19 +767,44 @@
                 adviceText = "時機尚未完全成熟，不宜盲目強求實質結果。建議先將焦點轉回內部，徹底找出核心系統盲點進行整頓。"; 
             } else { 
                 introText = `三數據節點全數呈現逆位（【${pName}】 ➔ 【${prName}】 ➔ 【${fName}】）。這意味著當前的潛意識矩陣正經歷著一場徹底的底層重組與能量低潮期。`; 
-                coreAnalysis = `這並非全然是壞事，而是局勢在強烈暗示：過往習慣的應對模式或執念此時已經不適用了。內在壓抑與外界阻力此時正交織在一起。`; 
+                coreAnalysis = `這並非全然是壞事，而是局勢在強烈暗示：過過往習慣的應對模式或執念此時已經不適用了。內在壓抑與外界阻力此時正交織在一起。`; 
                 adviceText = "這是最需要徹底放手與臣服的時刻。請立刻停止所有高風險的強求行動，靜靜等待矩陣能量重新完成自我修復。"; 
             }
             document.getElementById('summary-section').innerHTML = `<h2>🔮 [ 綜合點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
         }
 
+        // 3. html2canvas 多解析度邊界自適應截圖優化
         function generateCardAndRedirect() {
             try { playSound('click'); } catch(e){}
-            if(typeof html2canvas === 'undefined') { return; }
+            if(typeof html2canvas === 'undefined') { 
+                alert("📸 截圖引擎加載中，請稍候重試。");
+                return; 
+            }
             const targetNode = document.getElementById('capture-node');
-            html2canvas(targetNode, { backgroundColor: "#050505", scale: 2, useCORS: true }).then(canvas => {
-                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Matrix-Report.png'; link.href = image; link.click();
-            }).catch(err => {});
+            
+            // 截圖前：動態注入防裁切專屬類別
+            targetNode.classList.add('html2canvas-screenshot-mode');
+            
+            html2canvas(targetNode, { 
+                backgroundColor: "#050505", 
+                scale: 2, 
+                useCORS: true,
+                logging: false,
+                width: targetNode.scrollWidth, // 強制鎖定當前節點實際內容寬高
+                height: targetNode.scrollHeight
+            }).then(canvas => {
+                // 截圖後：立刻移除防裁切專屬類別，恢復前端 UI 的正常彈性排版
+                targetNode.classList.remove('html2canvas-screenshot-mode');
+                
+                const image = canvas.toDataURL("image/png"); 
+                const link = document.createElement('a'); 
+                link.download = 'Tarot-Matrix-Report.png'; 
+                link.href = image; 
+                link.click();
+            }).catch(err => {
+                targetNode.classList.remove('html2canvas-screenshot-mode');
+                alert("📸 截圖生成失敗，請嘗試手動截取螢幕。");
+            });
         }
     </script>
 </body>
