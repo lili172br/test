@@ -19,11 +19,19 @@
         details[open] { border-color: #dc2626; background: #110505; }
         .card-desc { padding: 15px; font-size: 11px; color: #71717a; border-top: 1px solid #1f1f1f; }
 
+        /* 終端機載入畫面 */
+        #loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #050505; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #loader-text { color: #dc2626; font-size: 14px; letter-spacing: 0.3em; }
+
         .btn-start { width: 100%; padding: 18px; background: #dc2626; color: #fff; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; margin: 20px 0; }
         .ads-native-placeholder { margin: 40px 0; padding: 30px; border: 1px dashed #141414; text-align: center; color: #27272a; font-size: 9px; }
     </style>
 </head>
 <body>
+
+    <div id="loader-overlay">
+        <div id="loader-text">INITIALIZING_SYSTEM...</div>
+    </div>
 
     <div class="main-content">
         <h1>🔮 聖三角潛意識矩陣</h1>
@@ -43,7 +51,7 @@
         <div class="panel-section">
             <h2 class="matrix-header">[ LAB: 技術解碼 // 潛意識數據解碼 ]</h2>
             <div class="sys-info">
-                <p><strong>System Architecture Lab：</strong> 本系統採用前端非對稱演算法解碼。當您點擊下方任何卡牌資訊，系統將觸發前端重繪與數據校準，此互動行為可增加頁面黏著度與質量得分。</p>
+                <p><strong>System Architecture Lab：</strong> 本系統採用前端非對稱演算法解碼。當您點擊下方任何卡牌資訊，系統將觸發前端重繪與數據校準，此互動行為可顯著增加頁面黏著度與質量得分。</p>
             </div>
         </div>
 
@@ -54,11 +62,11 @@
 
         <div class="ads-native-placeholder">[ AD_SLOT_02: TARGET_AUDIENCE_STREAM ]</div>
 
-        <button class="btn-start" onclick="window.location.href='input.html'">進入占卜 // START_DIVE</button>
+        <button class="btn-start" onclick="startLoading()">進入占卜 // START_DIVE</button>
     </div>
 
     <script>
-        // 渲染 78 張卡牌
+        // 自動渲染 78 張卡牌
         const db = document.getElementById('full-database');
         if (typeof tarotCardsPool !== 'undefined') {
             tarotCardsPool.forEach((card, index) => {
@@ -66,12 +74,29 @@
                 details.innerHTML = `
                     <summary>[NODE_${index+1}] ${card.nameCN} // ${card.name}</summary>
                     <div class="card-desc">
-                        <p><strong>數據描述：</strong> 本節點對應 ${card.nameCN}。在矩陣分析中，此牌代表潛意識的穩定與邏輯擴張。當此牌義被觸發，系統即進行數據校準。</p>
+                        <p><strong>數據描述：</strong> 此節點對應 ${card.nameCN}。在矩陣分析中，代表潛意識的穩定與邏輯擴張。當此牌義被觸發，系統即進行數據校準。</p>
                         <p><strong>分析參數：</strong> 此節點用於解構個體在面對環境變數時的心理反應路徑。</p>
                     </div>
                 `;
                 db.appendChild(details);
             });
+        }
+
+        // 終端機載入邏輯 (2.5秒黃金窗口)
+        function startLoading() {
+            const overlay = document.getElementById('loader-overlay');
+            const text = document.getElementById('loader-text');
+            overlay.style.display = 'flex';
+            const logs = ["LOADING_DECK...", "CALIBRATING_PROBABILITY...", "SYNCING_SUB_CONSCIOUS...", "MATRIX_READY..."];
+            let i = 0;
+            const timer = setInterval(() => {
+                text.innerText = logs[i];
+                i++;
+                if(i >= logs.length) {
+                    clearInterval(timer);
+                    window.location.href = "input.html"; // 請確認您的路徑是否正確
+                }
+            }, 600);
         }
 
         // 動態看板更新
