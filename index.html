@@ -2,533 +2,831 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔮 78張全矩陣潛意識占卜 // Cross-Platform Full Tarot Matrix</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔羅占卜矩陣 // TAROT_MATRIX</title>
     <style>
-        body { 
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            background-color: #050505; color: #d1d1d1; text-align: center; padding: 15px; margin: 0; min-height: 100vh;
-            -webkit-user-select: none; user-select: none; overflow-x: hidden; display: flex; flex-direction: column; justify-content: space-between; position: relative;
+        :root {
+            --bg-color: #050505;
+            --panel-bg: #0f0f13;
+            --border-color: #2a2a35;
+            --accent-color: #a582e3;
+            --text-color: #e0e0e6;
+            --text-dim: #888898;
+            --font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
         }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        .main-content { flex-grow: 1; width: 100%; z-index: 1; }
-        h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 20px; font-size: 20px; text-shadow: 0 0 10px rgba(255,255,255,0.1); }
-        .sys-status { font-size: 9px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 25px; }
-        .panel-section { 
-            margin: 20px auto; max-width: 650px; background: rgba(10, 10, 10, 0.85); padding: 25px 20px; 
-            border-radius: 12px; border: 1px solid #1f1f1f; box-shadow: 0 8px 32px rgba(0,0,0,0.8); box-sizing: border-box; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
-        .panel-section label { display: block; margin: 15px 0 8px 0; font-size: 12px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
-        .panel-section input, .panel-section select { 
-            width: 90%; padding: 12px; font-size: 13px; border: 1px solid #27272a; border-radius: 6px; background: #050505; color: #fff; text-align: center; outline: none; transition: 0.3s; box-sizing: border-box; font-family: inherit; margin-bottom: 15px;
+
+        /* 視圖控制節點 */
+        .view-node {
+            display: none;
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding: 25px 20px;
+            flex-direction: column;
+            background: var(--bg-color);
         }
-        .panel-section input:focus, .panel-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
-        #user-question-display { font-size: 13px; color: #dc2626; margin: 10px 0 20px 0; font-weight: bold; letter-spacing: 0.05em; line-height: 1.5; }
-        #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .slots-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; margin: 0 auto 25px auto; min-height: 155px; max-width: 500px; width: 100%; box-sizing: border-box; }
-        .slot-box { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .slot-box h3 { color: #71717a; font-size: 10px; margin-bottom: 8px; text-transform: uppercase; }
-        .slot-card-venue { width: 100%; max-width: 84px; height: 144px; border: 1px dashed #27272a; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; color: #3f3f46; font-size: 11px; background: #050505; }
-        .deck-zone { margin-top: 10px; min-height: 220px; position: relative; padding-top: 10px; }
-        .pile-master { width: 84px; height: 144px; margin: 40px auto; position: relative; }
-        .fan-scroller { width: 100%; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; padding: 30px 0; box-sizing: border-box; cursor: grab; }
-        .fan-scroller:active { cursor: grabbing; }
+        .view-node.active-node {
+            display: flex;
+        }
+
+        /* 標題與基礎 UI */
+        .matrix-header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-top: 20px;
+        }
+        .matrix-title {
+            font-size: 20px;
+            letter-spacing: 5px;
+            color: var(--text-color);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .matrix-subtitle {
+            font-size: 10px;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            margin-top: 6px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .input-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+        select, textarea {
+            width: 100%;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        select:focus, textarea:focus {
+            border-color: var(--accent-color);
+        }
+        textarea {
+            height: 110px;
+            resize: none;
+            line-height: 1.5;
+        }
+
+        /* 按鈕樣式 */
+        .action-btn {
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .action-btn:hover, .action-btn:active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px rgba(165, 130, 227, 0.4);
+        }
+
+        /* 洗牌與抽牌視圖 UI */
+        .info-bar {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        #user-question-display { color: var(--accent-color); margin-bottom: 4px; font-weight: bold; }
+        #flow-hint { color: var(--text-dim); }
+
+        /* 三張牌卡槽 */
+        .slots-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+        .slot-box {
+            background: var(--panel-bg);
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            aspect-ratio: 2 / 3.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text-dim);
+            position: relative;
+        }
+
+        /* 牌疊動畫區 */
+        .pile-stage {
+            flex-grow: 1;
+            position: relative;
+            min-height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pile-master {
+            position: relative;
+            width: 84px;
+            height: 134px;
+        }
+
+        /* 3D 傳送帶選牌區 */
+        .scroller-wrapper {
+            position: relative;
+            width: 100%;
+            margin-top: auto;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .fan-scroller {
+            width: 100%;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 0 40px 0;
+        }
         .fan-scroller::-webkit-scrollbar { display: none; }
-        .scroller-wrapper { position: relative; width: 100%; }
+        
+        .spread-fan-stage {
+            display: flex;
+            padding: 0 calc(50% - 42px);
+            gap: 15px;
+            width: max-content;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+
+        /* 骨骼牌卡樣式 */
+        .card {
+            width: 84px;
+            height: 134px;
+            position: absolute;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .spread-fan-stage .card {
+            position: relative;
+            scroll-snap-align: center;
+            flex-shrink: 0;
+            transform-origin: center bottom;
+        }
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .card-back, .card-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .card-back {
+            background: #13131a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid rgba(165, 130, 227, 0.2);
+        }
+        .tarot-symbol {
+            font-size: 24px;
+            color: var(--accent-color);
+            opacity: 0.7;
+        }
+        .card-front {
+            background: #000;
+            transform: rotateY(180deg);
+        }
+        .card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-front img.reversed {
+            transform: rotate(180deg);
+        }
+
+        /* 卡牌飛入動畫與翻牌控制 */
+        .card-in-slot {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+        }
+        .card-in-slot.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .selected-fly {
+            opacity: 0 !important;
+            pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        /* 左右切換微調鈕 */
+        .scroller-nav {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            padding: 0 5px;
+            z-index: 150;
+        }
         .nav-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(10,10,10,0.8); border: 1px solid #27272a; border-radius: 50%; color: #71717a;
-            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 500; font-size: 14px; transition: 0.2s;
+            width: 32px;
+            height: 32px;
+            background: rgba(15, 15, 19, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+            pointer-events: auto;
         }
-        .nav-arrow:hover { border-color: #dc2626; color: #fff; background: #000; box-shadow: 0 0 10px rgba(220,38,38,0.3); }
-        .arrow-left { left: 5px; } .arrow-right { right: 5px; }
-        .spread-fan-stage { display: flex; padding: 0 calc(50% - 42px); gap: 15px; width: max-content; opacity: 0; transition: opacity 0.5s ease; }
-        .card { width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center; transform-origin: center center; transition: transform 0.25s ease, opacity 0.25s ease, z-index 0.25s; }
-        .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .card.selected-fly { opacity: 0 !important; transform: scale(0.2) translateY(-280px) !important; pointer-events: none; z-index: 999 !important; }
-        .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
-        .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-back { 
-            background: #0d0d0d; border: 2px solid #3f3f46; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #dc2626; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.6); box-sizing: border-box; padding: 4px; position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; top: 0; left: 0;
+
+        /* 結果展示頁 UI */
+        .result-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        .card-back::before { content: ''; position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px; border: 1px solid #27272a; border-radius: 5px; pointer-events: none; }
-        .tarot-symbol { font-size: 24px; line-height: 1; font-weight: normal; text-shadow: 0 0 8px rgba(220,38,38,0.4); }
-        .card.is-focused .card-back { border-color: #dc2626; color: #fff; box-shadow: 0 0 20px rgba(220, 38, 38, 0.7); }
-        .card-front { transform: rotateY(180deg); background-color: #000; border: 2px solid #52525b; border-radius: 8px; overflow: hidden; box-sizing: border-box; position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; top: 0; left: 0; }
-        .card-front img { width: 100%; height: 100%; object-fit: cover; }
-        .card-in-slot { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
-        .tilt-box { position: relative; transform-style: preserve-3d; transition: transform 0.1s ease, box-shadow 0.1s ease; }
-        .tilt-box::after { content: ''; position: absolute; inset: 0; border-radius: 8px; pointer-events: none; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.15) 0%, transparent 60%); mix-blend-mode: overlay; opacity: 0; transition: opacity 0.3s ease; z-index: 5; }
-        .tilt-box:hover::after { opacity: 1; }
-        .result-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-content: center; margin: 20px auto; max-width: 600px; width: 100%; }
-        .result-card-box { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
-        .result-card-static { width: 100%; max-width: 90px; height: 154px; background-color: #000; border: 2px solid #52525b; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.9); }
+        .result-card-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .result-card-box h3 {
+            font-size: 12px;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .result-card-static {
+            width: 90px;
+            height: 144px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 15px;
+            background: #000;
+        }
         .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
-        .reversed { transform: rotate(180deg); }
-        .result-info { font-size: 11px; line-height: 1.6; color: #a1a1aa; text-align: center; margin-top: 10px; width: 100%; }
-        .card-title-en { display: block; color: #ffffff; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
-        .card-title-cn { display: block; color: #a1a1aa; font-size: 11px; margin-top: 2px; }
-        .orientation { font-weight: bold; margin: 6px 0; font-size: 10px; letter-spacing: 0.1em; }
-        .upright-text { color: #10b981; } .reversed-text { color: #ef4444; }
-        .card-desc-text { margin: 8px auto 0 auto; font-size: 11px; text-align: justify; letter-spacing: 0.02em; max-width: 140px; color: #a1a1aa; line-height: 1.7; }
-        .summary-box { max-width: 600px; margin: 30px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 22px; border-radius: 12px; text-align: left; line-height: 1.8; box-sizing: border-box; }
-        .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
-        .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
-        #capture-node { padding: 15px; background: #050505; border-radius: 16px; }
-        .result-title-node { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 25px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; }
-        .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 520px; width: 100%; }
-        .sub-btn-group { display: flex; gap: 12px; justify-content: center; width: 100%; }
-        .sub-btn-group button { flex: 1; padding: 12px 0; }
-        button { background-color: #0a0a0a; color: #d1d1d1; border: 1px solid #27272a; padding: 12px 25px; font-size: 12px; font-weight: bold; border-radius: 9999px; cursor: pointer; transition: 0.2s; font-family: inherit; letter-spacing: 0.1em; margin-top: 5px; }
-        button:hover { background-color: #111; border-color: #dc2626; color: #fff; }
-        .btn-primary { background-color: #dc2626; color: #fff; border-color: #dc2626; }
-        .btn-primary:hover { background-color: #b91c1c; border-color: #b91c1c; }
-        .btn-secondary { background-color: #050505; border-color: #3f3f46; color: #a1a1aa; }
-        .btn-share { background-color: #1e1b4b; border-color: #4338ca; color: #e0e7ff; }
-        .btn-share:hover { background-color: #312e81; border-color: #4f46e5; color: #fff; }
-        .view-node { display: none; }
-        .view-node.active-node { display: block; }
-        .toast-msg {
-            position: fixed; bottom: 25%; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(220, 38, 38, 0.95); color: white; padding: 10px 24px; border-radius: 50px;
-            font-size: 12px; font-weight: bold; letter-spacing: 1px; z-index: 1000; pointer-events: none; opacity: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        .result-card-static img.reversed { transform: rotate(180deg); }
+
+        .result-info { display: flex; flex-direction: column; gap: 4px; }
+        .card-title-en { font-size: 16px; font-weight: bold; letter-spacing: 0.5px; }
+        .card-title-cn { font-size: 14px; color: var(--text-dim); }
+        .orientation { font-size: 11px; margin: 6px 0; font-weight: bold; letter-spacing: 1px;}
+        .upright-text { color: #8ce7a6; }
+        .reversed-text { color: #f38383; }
+        .card-desc-text { font-size: 13px; line-height: 1.6; color: #c4c4d0; margin-top: 4px; text-align: justify;}
+
+        .summary-box {
+            background: var(--panel-bg);
+            border: 1px solid rgba(165, 130, 227, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
         }
-        .toast-msg.show-toast { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .summary-box h2 { font-size: 14px; color: var(--accent-color); margin-bottom: 12px; letter-spacing: 1px; }
+        .summary-box p { font-size: 13px; line-height: 1.7; color: #c4c4d0; margin-bottom: 10px; text-align: justify; }
+        .summary-box p:last-child { margin-bottom: 0; }
     </style>
+    <!-- 引入 html2canvas 用於生成圖檔 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
-    <div id="toast-notif" class="toast-msg">📋 完整 78 牌陣解讀已複製，快分享吧！</div>
-
-    <div class="main-content">
-        <h1>🔮 聖三角全矩陣潛意識占卜</h1>
-        <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_FULL_MATRIX</div>
-        
-        <div id="home-view" class="view-node active-node panel-section">
-            <div class="intro-text">
-                <p>本系統已完全重組解鎖！導入經典偉特體系共 **78張完整全牌組**（包含 22 張大阿爾克那與 56 張四元素小阿爾克那），全面覆蓋潛意識深度脈絡，提供最精確的聖三角時空解構。</p>
-            </div>
-            <button class="btn-primary" onclick="switchView('input-view'); safeUnlockSound();">進入全牌組矩陣 // ENTER</button>
+    <!-- 1. 初始輸入首頁 -->
+    <div id="home-view" class="view-node active-node">
+        <div class="matrix-header">
+            <h1 class="matrix-title">意識矩陣占卜</h1>
+            <p class="matrix-subtitle">TAROT MATRIX SYSTEM</p>
         </div>
-
-        <div id="input-view" class="view-node panel-section">
-            <label for="question">[ INITIALIZE_INPUT ] 請輸入問題並在心中默念3次：</label>
-            <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
-            
-            <label for="question-type">( SELECT_MATRIX_NODE ) 請選擇占卜類別：</label>
+        <div class="input-group">
+            <label class="input-label">選擇解構維度 // SELECT DIMENSION</label>
             <select id="question-type">
-                <option value="general">綜合運勢分析 // GENERAL</option>
-                <option value="love">感情桃花發展 // LOVE</option>
-                <option value="work">工作學業事業 // WORK</option>
+                <option value="general">綜合運勢 // GENERAL_FLOW</option>
+                <option value="love">感情發展 // LOVE_MATRIX</option>
+                <option value="work">工作學業 // CAREER_CORE</option>
             </select>
-            <br><br>
-            <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">開始隨機洗牌 // START</button>
         </div>
+        <div class="input-group">
+            <label class="input-label">輸入你的困惑 // INPUT SUB_CONSCIOUS_DATA</label>
+            <textarea id="question" placeholder="請誠心默想並輸入你想問的問題...（例如：未來三個月的感情發展？）"></textarea>
+        </div>
+        <button class="action-btn" onclick="startTarotShuffle()">進入占卜矩陣 // ENTER</button>
+    </div>
 
-        <div id="shuffle-view" class="view-node panel-section">
+    <!-- 2. 洗牌與抽牌核心視圖 -->
+    <div id="shuffle-view" class="view-node">
+        <div class="info-bar">
             <div id="user-question-display"></div>
-            <div id="flow-hint"></div>
-            
-            <div id="slots-area" class="slots-container">
-                <div class="slot-box"><h3>過去 // PAST</h3><div id="slot-0" class="slot-card-venue">等待選牌</div></div>
-                <div class="slot-box"><h3>現在 // PRESENT</h3><div id="slot-1" class="slot-card-venue">等待選牌</div></div>
-                <div class="slot-box"><h3>未來 // FUTURE</h3><div id="slot-2" class="slot-card-venue">等待選牌</div></div>
-            </div>
-
-            <div id="deck-zone" class="deck-zone">
-                <div id="pile-master" class="pile-master"></div>
-                <div class="scroller-wrapper" id="scroller-wrapper" style="display: none;">
-                    <div class="nav-arrow arrow-left" onclick="scrollCarousel('left')">◀</div>
-                    <div class="nav-arrow arrow-right" onclick="scrollCarousel('right')">▶</div>
-                    <div class="fan-scroller" id="fan-scroller"><div id="spread-fan-stage" class="spread-fan-stage"></div></div>
-                </div>
-            </div>
+            <div id="flow-hint">⚡ 系統初始化中...</div>
         </div>
 
-        <div id="result-view" class="view-node panel-section">
-            <div id="capture-node">
-                <div id="result-question-title" class="result-title-node"></div>
-                <div id="result-deck-display" class="result-container"></div>
-                <div id="summary-section" class="summary-box"></div>
+        <!-- 頂部三個時間流卡槽 -->
+        <div class="slots-container">
+            <div class="slot-box"><span>過去</span><div id="slot-0"></div></div>
+            <div class="slot-box"><span>現在</span><div id="slot-1"></div></div>
+            <div class="slot-box"><span>未來</span><div id="slot-2"></div></div>
+        </div>
+
+        <!-- 舞台：洗牌物理動畫 -->
+        <div class="pile-stage">
+            <div class="pile-master" id="pile-master"></div>
+        </div>
+
+        <!-- 舞台：3D 傳送帶手動選牌 -->
+        <div class="scroller-wrapper" id="scroller-wrapper">
+            <div class="scroller-nav">
+                <div class="nav-arrow" onclick="scrollCarousel('left')">◀</div>
+                <div class="nav-arrow" onclick="scrollCarousel('right')">▶</div>
             </div>
-            <div class="action-container">
-                <button class="btn-share" style="width:100%" onclick="copyTextResultToClipboard()">📝 複製 78 牌全文字報告 // SHARE</button>
-                <button class="btn-secondary" style="width:100%" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
-                <div class="sub-btn-group">
-                    <button class="btn-secondary" onclick="switchView('input-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
-                    <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成高畫質小卡 // SAVE IMAGE</button>
-                </div>
+            <div class="fan-scroller" id="fan-scroller">
+                <div class="spread-fan-stage" id="spread-fan-stage"></div>
             </div>
         </div>
     </div>
 
-    <footer style="font-size: 11px; color: #71717a; margin-top: 50px; border-top: 1px solid #141416; padding: 25px 15px; line-height: 1.8; text-align: center; z-index: 1;">
-        <div style="margin-bottom: 15px; color: #a1a1aa;">
-            <strong>🔮 免責聲明 // Disclaimer</strong><br>
-            本系統提供的全牌組占卜結果、潛意識解構與核心建議僅供娛樂與大眾心理諮詢參考，不代表絕對的科學事實。
+    <!-- 3. 結果解讀報表頁 -->
+    <div id="result-view" class="view-node">
+        <div id="capture-node" style="padding: 10px; background: #050505;">
+            <div class="matrix-header">
+                <h1 class="matrix-title">矩陣解構報告</h1>
+                <p class="matrix-subtitle" id="result-question-title"></p>
+            </div>
+            <div class="result-wrapper" id="result-deck-display"></div>
+            <div class="summary-box" id="summary-section"></div>
         </div>
-        <div style="color: #52525b; font-size: 10px;">
-            <strong>⚖️ 版權與授權宣告 // Copyright & Licenses</strong><br>
-            Tarot dataset Copyright (c) 2019 equokka (MIT License). Rider-Waite-Smith (RWS) Tarot Deck images are in the Public Domain.
-        </div>
-    </footer>
+        <button class="action-btn" style="margin-top: 30px;" onclick="generateCardAndRedirect()">封存矩陣並導向 // EXPORT_DATA</button>
+        <button class="action-btn" style="border-color:#444; color:#888; margin-top:10px;" onclick="resetToHome()">重新注入能量 // REBOOT</button>
+    </div>
 
+    <!-- 核心運作邏輯控制 -->
     <script>
-        // 🌌 輕量量子網格背景
-        const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let particlesPool = [];
-        function initBackgroundMatrix() {
-            resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-            for(let i=0; i<30; i++) { particlesPool.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 1.2 + 0.5, speedY: Math.random() * 0.15 + 0.05, alpha: Math.random() * 0.3 + 0.1 }); }
-            animateBackground();
-        }
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        function animateBackground() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = 'rgba(25, 25, 25, 0.4)'; ctx.lineWidth = 1; const gridSize = 30;
-            for(let x=0; x<canvas.width; x+=gridSize) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
-            for(let y=0; y<canvas.height; y+=gridSize) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
-            ctx.fillStyle = '#dc2626';
-            particlesPool.forEach(p => { p.y -= p.speedY; if(p.y < 0) p.y = canvas.height; ctx.globalAlpha = p.alpha; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2); ctx.fill(); });
-            ctx.globalAlpha = 1.0; requestAnimationFrame(animateBackground);
-        }
-        document.addEventListener('DOMContentLoaded', initBackgroundMatrix);
-
-        // 🎴 3D 傾斜與環境光折射特效
-        function bindTiltEngineToResults() {
-            setTimeout(() => {
-                document.querySelectorAll('.result-card-static').forEach(el => {
-                    el.classList.add('tilt-box');
-                    el.addEventListener('mousemove', (e) => {
-                        const r = el.getBoundingClientRect(); const x = e.clientX - r.left; const y = e.clientY - r.top;
-                        el.style.setProperty('--mx', `${(x / r.width) * 100}%`); el.style.setProperty('--my', `${(y / r.height) * 100}%`);
-                        el.style.transform = `perspective(500px) rotateX(${ -((y - r.height/2) / (r.height/2)) * 12}deg) rotateY(${((x - r.width/2) / (r.width/2)) * 12}deg) scale(1.03)`;
-                    });
-                    el.addEventListener('mouseleave', () => { el.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale(1)'; });
-                });
-            }, 100);
-        }
-
-        // 📝 一鍵複製分享文本
-        let globalTextResultSummary = "";
-        function copyTextResultToClipboard() {
-            try { playSound('click'); } catch(e){}
-            if(!globalTextResultSummary) return;
-            navigator.clipboard.writeText(globalTextResultSummary).then(() => {
-                const t = document.getElementById('toast-notif'); t.classList.add('show-toast'); setTimeout(() => t.classList.remove('show-toast'), 2500);
-            }).catch(() => { alert("複製失敗，請手動截圖分享！"); });
-        }
-
+        // 確保視圖切換正常運作
         function switchView(viewId) {
-            document.querySelectorAll('.view-node').forEach(n => n.classList.remove('active-node'));
-            const target = document.getElementById(viewId); if (target) target.classList.add('active-node');
+            console.log("切換視圖至:", viewId);
+            const nodes = document.querySelectorAll('.view-node');
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].classList.remove('active-node');
+            }
+            const target = document.getElementById(viewId);
+            if (target) {
+                target.classList.add('active-node');
+            } else {
+                console.error("找不到目標視圖 ID:", viewId);
+            }
         }
 
         let AudioEngine = null;
-        function safeUnlockSound() { try { if (!AudioEngine) AudioEngine = new (window.AudioContext || window.webkitAudioContext)(); if (AudioEngine && AudioEngine.state === 'suspended') AudioEngine.resume(); playSound('click'); } catch(e) {} }
+        function safeUnlockSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                
+                if (!AudioEngine) AudioEngine = new AudioCtx();
+                if (AudioEngine && AudioEngine.state === 'suspended') AudioEngine.resume();
+                playSound('click');
+            } catch(e) {
+                console.warn("音訊初始化失敗，已自動跳過聲音:", e);
+            }
+        }
+
         function playSound(type, step = 0) {
             try {
-                if (!AudioEngine) return; const now = AudioEngine.currentTime;
+                if (!AudioEngine) return;
+                const now = AudioEngine.currentTime;
                 if (type === 'click') {
-                    const o = AudioEngine.createOscillator(); const g = AudioEngine.createGain(); o.frequency.setValueAtTime(800, now); o.frequency.exponentialRampToValueAtTime(300, now + 0.05); g.gain.setValueAtTime(0.1, now); o.connect(g); g.connect(AudioEngine.destination); o.start(now); o.stop(now + 0.05);
+                    const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                    osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                    gain.gain.setValueAtTime(0.1, now); osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.05);
                 } else if (type === 'shuffle_tick') {
-                    const o = AudioEngine.createOscillator(); const g = AudioEngine.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(120 + Math.random()*50, now); g.gain.setValueAtTime(0.06, now); o.connect(g); g.connect(AudioEngine.destination); o.start(now); o.stop(now + 0.03);
+                    const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(120 + Math.random()*50, now); gain.gain.setValueAtTime(0.08, now);
+                    osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.04);
                 } else if (type === 'flip') {
-                    const o = AudioEngine.createOscillator(); const g = AudioEngine.createGain(); o.frequency.setValueAtTime(300 + step*100, now); o.frequency.exponentialRampToValueAtTime(150, now + 0.2); g.gain.setValueAtTime(0.1, now); o.connect(g); g.connect(AudioEngine.destination); o.start(now); o.stop(now + 0.2);
+                    const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                    osc.frequency.setValueAtTime(300 + step*100, now); osc.frequency.exponentialRampToValueAtTime(150, now + 0.3);
+                    gain.gain.setValueAtTime(0.1, now); osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.3);
                 } else if (type === 'success') {
-                    [523.25, 659.25, 783.99].forEach((f, i) => { const o = AudioEngine.createOscillator(); const g = AudioEngine.createGain(); o.frequency.setValueAtTime(f, now + i*0.08); g.gain.setValueAtTime(0.04, now + i*0.08); o.connect(g); g.connect(AudioEngine.destination); o.start(now + i*0.08); o.stop(now + i*0.08 + 0.15); });
+                    [523.25, 659.25, 783.99].forEach((f, i) => {
+                        const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                        osc.frequency.setValueAtTime(f, now + i*0.08); gain.gain.setValueAtTime(0.05, now + i*0.08);
+                        osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now + i*0.08); osc.stop(now + i*0.08 + 0.2);
+                    });
                 }
             } catch(e) {}
         }
 
-        // 🎴 完美建立 78 張偉特牌數據矩陣
-        const tarotCardsPool = [];
-        // 1. 大阿爾克那 (0-21)
-        const majorNames = ["The Fool","The Magician","The High Priestess","The Empress","The Emperor","The Hierophant","The Lovers","The Chariot","Strength","The Hermit","Wheel of Fortune","Justice","The Hanged Man","Death","Temperance","The Devil","The Tower","The Star","The Moon","The Sun","Judgement","The World"];
-        majorNames.forEach((n, i) => { tarotCardsPool.push({ name: n, img: `m${String(i).padStart(2,'0')}.jpg` }); });
-        // 2. 小阿爾克那 (四元素: w, c, s, p 各 14張)
-        const suitPrefixes = ['w', 'c', 's', 'p'];
-        const suitNames = ['Wands', 'Cups', 'Swords', 'Pentacles'];
-        const rankNames = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Page','Knight','Queen','King'];
-        suitPrefixes.forEach((prefix, sIdx) => {
-            rankNames.forEach((rank, rIdx) => {
-                tarotCardsPool.push({ name: `${rank} of ${suitNames[sIdx]}`, img: `${prefix}${String(rIdx+1).padStart(2,'0')}.jpg` });
-            });
-        });
+        const tarotCardsPool = [
+            { "name": "The Fool", "img": "m00.jpg" }, { "name": "The Magician", "img": "m01.jpg" },
+            { "name": "The High Priestess", "img": "m02.jpg" }, { "name": "The Empress", "img": "m03.jpg" },
+            { "name": "The Emperor", "img": "m04.jpg" }, { "name": "The Hierophant", "img": "m05.jpg" },
+            { "name": "The Lovers", "img": "m06.jpg" }, { "name": "The Chariot", "img": "m07.jpg" },
+            { "name": "Strength", "img": "m08.jpg" }, { "name": "The Hermit", "img": "m09.jpg" },
+            { "name": "Wheel of Fortune", "img": "m10.jpg" }, { "name": "Justice", "img": "m11.jpg" },
+            { "name": "The Hanged Man", "img": "m12.jpg" }, { "name": "Death", "img": "m13.jpg" },
+            { "name": "Temperance", "img": "m14.jpg" }, { "name": "The Devil", "img": "m15.jpg" },
+            { "name": "The Tower", "img": "m16.jpg" }, { "name": "The Star", "img": "m17.jpg" },
+            { "name": "The Moon", "img": "m18.jpg" }, { "name": "The Sun", "img": "m19.jpg" },
+            { "name": "Judgement", "img": "m20.jpg" }, { "name": "The World", "img": "m21.jpg" }
+        ];
 
-        let processedDeck = []; let selectedHand = []; let currentSlotIndex = 0; let selectedType = 'general'; let isShuffling = false;
+        let processedDeck = []; 
+        let selectedHand = []; 
+        let currentSlotIndex = 0; 
+        let selectedType = 'general';
+        let isShuffling = false;
         
         function resetDivinationEngine() {
-            document.getElementById('question').value = ''; document.getElementById('user-question-display').innerText = ''; document.getElementById('flow-hint').innerText = '';
-            document.getElementById('pile-master').innerHTML = ''; document.getElementById('pile-master').style.display = 'block'; document.getElementById('scroller-wrapper').style.display = 'none';
-            document.getElementById('spread-fan-stage').innerHTML = ''; document.getElementById('spread-fan-stage').style.opacity = '0';
+            document.getElementById('question').value = '';
+            document.getElementById('user-question-display').innerText = '';
+            document.getElementById('flow-hint').innerText = '';
+            document.getElementById('pile-master').innerHTML = '';
+            document.getElementById('pile-master').style.display = 'block';
+            document.getElementById('scroller-wrapper').style.display = 'none';
+            document.getElementById('spread-fan-stage').innerHTML = '';
+            document.getElementById('spread-fan-stage').style.opacity = '0';
             for(let i=0; i<3; i++) document.getElementById(`slot-${i}`).innerHTML = '等待選牌';
-            selectedHand = []; currentSlotIndex = 0; isShuffling = false; globalTextResultSummary = "";
+            selectedHand = []; currentSlotIndex = 0; isShuffling = false;
         }
         function resetToHome() { resetDivinationEngine(); switchView('home-view'); }
 
         function startTarotShuffle() {
-            const questionInput = document.getElementById('question').value.trim(); selectedType = document.getElementById('question-type').value;
-            if (questionInput === "") { alert("🔮 全牌組共振需要誠心，請先輸入您想解構的問題！"); return; }
-            if (isShuffling) return; isShuffling = true; try { safeUnlockSound(); } catch(e){}
+            const questionInput = document.getElementById('question').value.trim();
+            selectedType = document.getElementById('question-type').value;
+            if (questionInput === "") { alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！"); return; }
+            if (isShuffling) return;
+            
+            isShuffling = true;
+            try { safeUnlockSound(); } catch(e){}
+            
             switchView('shuffle-view');
             
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
-            document.getElementById('user-question-display').innerText = `[ 全矩陣目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
-            document.getElementById('flow-hint').innerText = "⚡ 正在載入 78 張全時空牌組節點...";
+            document.getElementById('user-question-display').innerText = `[ 矩陣目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
+            document.getElementById('flow-hint').innerText = "⚡ 正在串聯潛意識能量節點...";
+            
+            document.getElementById('pile-master').style.display = 'block';
+            document.getElementById('scroller-wrapper').style.display = 'none';
             
             const pile = document.getElementById('pile-master'); pile.innerHTML = '';
-            for(let i=0; i<30; i++) { // 輕量渲染 30 張代表厚度
-                const pCard = document.createElement('div'); pCard.className = 'card'; pCard.style.top = `-${i * 1.2}px`; pCard.style.left = `${i * 0.1}px`;
-                pCard.innerHTML = `<div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div></div>`; pile.appendChild(pCard);
+            for(let i=0; i<22; i++) {
+                const pCard = document.createElement('div'); pCard.className = 'card';
+                pCard.style.top = `-${i * 1.5}px`; pCard.style.left = `${i * 0.2}px`;
+                pCard.innerHTML = `<div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div></div>`;
+                pile.appendChild(pCard);
             }
+
             let poolCopy = [...tarotCardsPool].sort(() => 0.5 - Math.random());
-            processedDeck = poolCopy.map(c => ({ ...c, isReversed: Math.random() < 0.4 })); // 40% 逆位率
+            processedDeck = poolCopy.map(c => ({ ...c, isReversed: Math.random() < 0.5 }));
 
             setTimeout(() => {
-                document.getElementById('flow-hint').innerText = "⚡ 78 張潛意識大數據矩陣混淆清洗中...";
-                let startTime = performance.now(); let duration = 1600; let lastTick = 0; const pileCards = pile.querySelectorAll('.card');
-                function physicsShuffle(now) {
+                document.getElementById('flow-hint').innerText = "⚡ 潛意識矩陣清洗中 (CORE_SHUFFLING)...";
+                let startTime = performance.now(); let duration = 1800; let lastTick = 0;
+                const pileCards = pile.querySelectorAll('.card');
+
+                // 使用安全作用域的標準箭頭常數函式
+                const physicsShuffle = (now) => {
                     let elapsed = now - startTime;
                     if(elapsed < duration) {
-                        if (now - lastTick > 80) { try { playSound('shuffle_tick'); } catch(e){} lastTick = now; }
+                        if (now - lastTick > 90) { try { playSound('shuffle_tick'); } catch(e){} lastTick = now; }
                         pileCards.forEach((c, idx) => {
-                            let offsetX = 35 * Math.sin(now * 0.025 + idx); let offsetY = (idx * -1.2) + (8 * Math.cos(now * 0.02 + idx));
-                            c.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${6 * Math.sin(now * 0.015 + idx)}deg)`;
+                            let offsetX = 30 * Math.sin(now * 0.02 + idx);
+                            let offsetY = (idx * -1.5) + (10 * Math.cos(now * 0.015 + idx));
+                            c.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${8 * Math.sin(now * 0.01 + idx)}deg)`;
                         });
                         requestAnimationFrame(physicsShuffle);
-                    } else { setTimeout(() => spread3DCarouselDeck(), 200); }
-                }
+                    } else {
+                        pileCards.forEach((c, idx) => c.style.transform = `translate(0px, -${idx * 1.5}px) rotate(0deg)`);
+                        setTimeout(() => spread3DCarouselDeck(), 300);
+                    }
+                };
                 requestAnimationFrame(physicsShuffle);
-            }, 500);
+            }, 600);
         }
 
         function getCardOffsetFromCenter(card) {
-            const scroller = document.getElementById('fan-scroller'); if(!scroller) return 0;
-            return (card.getBoundingClientRect().left + (card.offsetWidth / 2)) - (scroller.getBoundingClientRect().left + (scroller.offsetWidth / 2));
+            const scroller = document.getElementById('fan-scroller');
+            if(!scroller) return 0;
+            const scrollerCenter = scroller.getBoundingClientRect().left + (scroller.offsetWidth / 2);
+            const cardRect = card.getBoundingClientRect();
+            return (cardRect.left + (cardRect.width / 2)) - scrollerCenter;
         }
 
         function spread3DCarouselDeck() {
-            document.getElementById('pile-master').style.display = 'none'; document.getElementById('scroller-wrapper').style.display = 'block';
-            const stage = document.getElementById('spread-fan-stage'); const scroller = document.getElementById('fan-scroller');
-            stage.innerHTML = ''; stage.style.display = 'flex';
-            document.getElementById('flow-hint').innerText = `👉 請左右滑動，點擊焦點牌盲抽 【過去 // PAST】`;
+            document.getElementById('pile-master').style.display = 'none';
+            document.getElementById('scroller-wrapper').style.display = 'block';
+            
+            const stage = document.getElementById('spread-fan-stage'); 
+            const scroller = document.getElementById('fan-scroller');
+            
+            stage.innerHTML = ''; 
+            stage.style.display = 'flex';
+            
+            document.getElementById('flow-hint').innerText = `👉 請左右滑動，點擊中央焦點牌盲抽 【過去 // PAST】`;
 
             processedDeck.forEach((cardData, index) => {
-                const cardEl = document.createElement('div'); cardEl.className = 'card'; cardEl.setAttribute('id', `deck-card-${index}`);
-                cardEl.innerHTML = `<div class="card-inner"><div class="card-back"><div style="font-size:8px; opacity:0.3;">78_SYS</div><div style="flex-grow:1; display:flex; align-items:center;" class="tarot-symbol">⚝</div><div style="font-size:7px; opacity:0.2;">${index+1}</div></div></div>`;
-                cardEl.onclick = () => { if (isDragging) return; if(cardEl.classList.contains('is-focused') || Math.abs(getCardOffsetFromCenter(cardEl)) < 55) { selectCardFromCarousel(index); } else { cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } };
+                const cardEl = document.createElement('div'); 
+                cardEl.className = 'card'; 
+                cardEl.setAttribute('id', `deck-card-${index}`);
+                cardEl.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-back">
+                            <div style="font-size: 9px; opacity: 0.4; letter-spacing: 1px;">TAROT</div>
+                            <div style="flex-grow: 1; display: flex; align-items: center;" class="tarot-symbol">⚝</div>
+                            <div style="font-size: 8px; opacity: 0.3;">${index + 1}</div>
+                        </div>
+                    </div>`;
+                
+                cardEl.onclick = (e) => {
+                    if (isDragging) return; 
+                    if(cardEl.classList.contains('is-focused') || Math.abs(getCardOffsetFromCenter(cardEl)) < 60) {
+                        selectCardFromCarousel(index);
+                    } else {
+                        cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                };
                 stage.appendChild(cardEl);
             });
             
             setTimeout(() => {
-                stage.style.opacity = '1'; scroller.addEventListener('scroll', updateCarouselFocusEffects); initializeMouseDragScroll(scroller);
-                const midCard = document.getElementById(`deck-card-38`); if(midCard) midCard.scrollIntoView({ block: 'nearest', inline: 'center' });
+                stage.style.opacity = '1';
+                scroller.addEventListener('scroll', updateCarouselFocusEffects);
+                initializeMouseDragScroll(scroller);
+                
+                const midCard = document.getElementById(`deck-card-11`);
+                if(midCard) midCard.scrollIntoView({ block: 'nearest', inline: 'center' });
                 updateCarouselFocusEffects();
             }, 50);
         }
 
-        let isDown = false; let startX; let scrollLeft; let isDragging = false;
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let isDragging = false; 
+
         function initializeMouseDragScroll(scroller) {
-            scroller.addEventListener('mousedown', (e) => { isDown = true; isDragging = false; scroller.style.scrollSnapType = 'none'; startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft; });
-            scroller.addEventListener('mouseleave', () => { if (!isDown) return; isDown = false; scroller.style.scrollSnapType = 'x mandatory'; });
-            scroller.addEventListener('mouseup', () => { isDown = false; scroller.style.scrollSnapType = 'x mandatory'; setTimeout(() => { isDragging = false; }, 50); });
-            scroller.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); const x = e.pageX - scroller.offsetLeft; const walk = (x - startX) * 1.4; if (Math.abs(walk) > 5) isDragging = true; scroller.scrollLeft = scrollLeft - walk; });
+            scroller.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isDragging = false;
+                scroller.style.scrollSnapType = 'none'; 
+                startX = e.pageX - scroller.offsetLeft;
+                scrollLeft = scroller.scrollLeft;
+            });
+            
+            scroller.addEventListener('mouseleave', () => {
+                if (!isDown) return;
+                isDown = false;
+                scroller.style.scrollSnapType = 'x mandatory'; 
+            });
+            
+            scroller.addEventListener('mouseup', () => {
+                isDown = false;
+                scroller.style.scrollSnapType = 'x mandatory'; 
+                setTimeout(() => { isDragging = false; }, 50);
+            });
+            
+            scroller.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - scroller.offsetLeft;
+                const walk = (x - startX) * 1.5; 
+                if (Math.abs(walk) > 5) {
+                    isDragging = true; 
+                }
+                scroller.scrollLeft = scrollLeft - walk;
+            });
         }
 
-        function scrollCarousel(direction) { const scroller = document.getElementById('fan-scroller'); const step = 84 + 15; if (direction === 'left') { scroller.scrollBy({ left: -step, behavior: 'smooth' }); } else { scroller.scrollBy({ left: step, behavior: 'smooth' }); } }
+        function scrollCarousel(direction) {
+            const scroller = document.getElementById('fan-scroller');
+            const cardWidthWithGap = 84 + 15; 
+            if (direction === 'left') {
+                scroller.scrollBy({ left: -cardWidthWithGap, behavior: 'smooth' });
+            } else {
+                scroller.scrollBy({ left: cardWidthWithGap, behavior: 'smooth' });
+            }
+        }
 
         function updateCarouselFocusEffects() {
-            const scroller = document.getElementById('fan-scroller'); const cards = document.querySelectorAll('.spread-fan-stage .card');
-            if(!scroller || cards.length === 0) return; const scrollerCenter = scroller.getBoundingClientRect().left + (scroller.offsetWidth / 2);
+            const scroller = document.getElementById('fan-scroller');
+            const cards = document.querySelectorAll('.spread-fan-stage .card');
+            if(!scroller || cards.length === 0) return;
+
+            const scrollerCenter = scroller.getBoundingClientRect().left + (scroller.offsetWidth / 2);
+
             cards.forEach(card => {
                 if(card.classList.contains('selected-fly')) return;
-                const dist = (card.getBoundingClientRect().left + (card.offsetWidth / 2)) - scrollerCenter; const absDist = Math.abs(dist);
-                if (absDist < 45) { card.style.transform = `scale(1.1) translateY(-15px) rotate(0deg)`; card.style.opacity = `1`; card.style.zIndex = `100`; card.classList.add('is-focused'); }
-                else if (absDist >= 45 && absDist < 120) { card.style.transform = `scale(0.95) translateY(-5px) rotate(${dist > 0 ? 7 : -7}deg)`; card.style.opacity = `0.85`; card.style.zIndex = `50`; card.classList.remove('is-focused'); }
-                else if (absDist >= 120 && absDist < 220) { card.style.transform = `scale(0.8) translateY(6px) rotate(${dist > 0 ? 14 : -14}deg)`; card.style.opacity = `0.4`; card.style.zIndex = `20`; card.classList.remove('is-focused'); }
-                else { card.style.transform = `scale(0.5) translateY(20px) rotate(${dist > 0 ? 20 : -20}deg)`; card.style.opacity = `0.02`; card.style.zIndex = `1`; card.classList.remove('is-focused'); }
+
+                const cardRect = card.getBoundingClientRect();
+                const cardCenter = cardRect.left + (cardRect.width / 2);
+                const distanceFromCenter = cardCenter - scrollerCenter;
+                const absDistance = Math.abs(distanceFromCenter);
+
+                if (absDistance < 50) {
+                    card.style.transform = `scale(1.1) translateY(-15px) rotate(0deg)`;
+                    card.style.opacity = `1`;
+                    card.style.zIndex = `100`;
+                    card.classList.add('is-focused');
+                } else if (absDistance >= 50 && absDistance < 140) {
+                    const direction = distanceFromCenter > 0 ? 8 : -8;
+                    card.style.transform = `scale(0.95) translateY(-5px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.9`;
+                    card.style.zIndex = `50`;
+                    card.classList.remove('is-focused');
+                } else if (absDistance >= 140 && absDistance < 240) {
+                    const direction = distanceFromCenter > 0 ? 15 : -15;
+                    card.style.transform = `scale(0.8) translateY(8px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.5`;
+                    card.style.zIndex = `20`;
+                    card.classList.remove('is-focused');
+                } else {
+                    const direction = distanceFromCenter > 0 ? 22 : -22;
+                    card.style.transform = `scale(0.6) translateY(20px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.04`;
+                    card.style.zIndex = `1`;
+                    card.classList.remove('is-focused');
+                }
             });
         }
 
         function selectCardFromCarousel(index) {
-            if (currentSlotIndex >= 3) return; const targetCard = document.getElementById(`deck-card-${index}`);
+            if (currentSlotIndex >= 3) return;
+            const targetCard = document.getElementById(`deck-card-${index}`);
             if (!targetCard || targetCard.classList.contains('selected-fly')) return;
-            try { playSound('flip', currentSlotIndex); } catch(e){} const cardData = processedDeck[index]; selectedHand.push(cardData);
+
+            try { playSound('flip', currentSlotIndex); } catch(e){}
+            const cardData = processedDeck[index]; selectedHand.push(cardData);
+            
             targetCard.classList.add('selected-fly');
             
             const currentSlot = document.getElementById(`slot-${currentSlotIndex}`);
             currentSlot.innerHTML = `<div class="card card-in-slot flipped"><div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div><div class="card-front"><img src="cards/${cardData.img}" class="${cardData.isReversed ? 'reversed' : ''}"></div></div></div>`;
+
             currentSlotIndex++;
-            if (currentSlotIndex === 1) { document.getElementById('flow-hint').innerText = `👉 請繼續滑動盲抽 【現在 // PRESENT】`; }
-            else if (currentSlotIndex === 2) { document.getElementById('flow-hint').innerText = `👉 請繼續滑動盲抽 【未來 // FUTURE】`; }
-            else { document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心 78 階矩陣計算完畢..."; try { playSound('success'); } catch(e){} setTimeout(() => compileAndShowResultView(), 900); }
+            if (currentSlotIndex === 1) {
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【現在 // PRESENT】`;
+            } else if (currentSlotIndex === 2) {
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【未來 // FUTURE】`;
+            } else {
+                document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
+                try { playSound('success'); } catch(e){}
+                setTimeout(() => compileAndShowResultView(), 1000);
+            }
+            
             setTimeout(() => updateCarouselFocusEffects(), 200);
         }
 
         function compileAndShowResultView() {
-            const questionInput = document.getElementById('question').value.trim(); const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
-            document.getElementById('result-question-title').innerText = `[ 全矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
+            const questionInput = document.getElementById('question').value.trim();
+            const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
+            document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
+            
             const resultDeckDiv = document.getElementById('result-deck-display'); resultDeckDiv.innerHTML = '';
             const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
+            
             const meaningsPool = getDynamicTarotMeanings();
 
-            let textCardBlocks = [];
             selectedHand.forEach((card, index) => {
-                const cardMeaning = meaningsPool[card.name] || { nameCN: card.name, general: { upright: "潛意識流動中。", reversed: "逆向思考盲點。" } };
+                const cardMeaning = meaningsPool[card.name] || { nameCN: "未知", general: { upright: "無數據", reversed: "無數據" } };
                 const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 
-                textCardBlocks.push(`• ${positions[index].split(" // ")[0]}：${cardMeaning.nameCN} (${card.isReversed ? '逆位' : '正位'})\n  解讀：${explanation}`);
-
                 const cardBox = document.createElement('div'); cardBox.className = 'result-card-box';
                 cardBox.innerHTML = `
                     <h3>${positions[index]}</h3>
-                    <div class="result-card-static"><img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}"></div>
+                    <div class="result-card-static">
+                        <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
+                    </div>
                     <div class="result-info">
-                        <span class="card-title-en">${card.name}</span><span class="card-title-cn">${cardMeaning.nameCN}</span>
+                        <span class="card-title-en">${card.name}</span>
+                        <span class="card-title-cn">${cardMeaning.nameCN}</span>
                         <div class="orientation ${card.isReversed ? 'reversed-text' : 'upright-text'}">${oriText}</div>
                         <p class="card-desc-text">${explanation}</p>
                     </div>`;
                 resultDeckDiv.appendChild(cardBox);
             });
+            generateComprehensiveSummary(meaningsPool); 
             
-            const finalVerdict = generateComprehensiveSummary(meaningsPool); 
-            globalTextResultSummary = `🔮 聖三角全矩陣（78張完整版）占卜報告\n\n📌 占卜目標 [${typeNames[selectedType]}]: "${questionInput}"\n\n${textCardBlocks.join('\n\n')}\n\n📝 [ 綜合大數據評估 ]\n${finalVerdict}\n\n✨ 點此解構你的潛意識 ➔ ${window.location.origin + window.location.pathname}`;
-            bindTiltEngineToResults(); switchView('result-view');
+            switchView('result-view');
         }
 
         function generateComprehensiveSummary(meaningsPool) {
             const pCard = selectedHand[0]; const prCard = selectedHand[1]; const fCard = selectedHand[2];
-            const pName = (meaningsPool[pCard.name] || {nameCN: pCard.name}).nameCN + (pCard.isReversed ? "逆位" : "正位");
-            const prName = (meaningsPool[prCard.name] || {nameCN: prCard.name}).nameCN + (prCard.isReversed ? "逆位" : "正位");
-            const fName = (meaningsPool[fCard.name] || {nameCN: fCard.name}).nameCN + (fCard.isReversed ? "逆位" : "正位");
+            const pName = (meaningsPool[pCard.name] || {nameCN:"未知"}).nameCN + (pCard.isReversed ? "逆位" : "正位");
+            const prName = (meaningsPool[prCard.name] || {nameCN:"未知"}).nameCN + (prCard.isReversed ? "逆位" : "正位");
+            const fName = (meaningsPool[fCard.name] || {nameCN:"未知"}).nameCN + (fCard.isReversed ? "逆位" : "正位");
             const totalUprights = selectedHand.filter(c => !c.isReversed).length; 
             
             let introText = "", coreAnalysis = "", adviceText = "";
             if (totalUprights === 3) { 
-                introText = `本次 78 張全矩陣解構呈現完美的線性正向流動。從過去的【${pName}】到現在的【${prName}】，你的潛意識與環境能量正牌串聯順暢。`; 
-                coreAnalysis = `這代表事物發展脈絡清晰、盲點極少，元素能量（風火水土）完全到位。隨着未來節點【${fName}】的落地，大局將強勢推向既定成功的終端。`; 
-                adviceText = "行動與思維完全合一，請維持當前的高效執行力，大膽拍板做出核心決策！"; 
+                introText = `本次矩陣解構呈現線性流動。從過去的【${pName}】到現在的【${prName}】，你的潛意識能量一直處於順暢循環的完美狀態。`; 
+                coreAnalysis = `這代表你當前詢問的事情，發展脈絡極其清晰，外界的雜訊與干擾非常微弱。隨著未來的【${fName}】數據落座，這股正向動能將會順理成章地推向大圓滿。`; 
+                adviceText = "請完全信任你的內在直覺，配合你現有的資源與強大行動力，大膽地向前推進，果斷做出跨越性的核心決策！"; 
             } else if (totalUprights === 2) { 
-                introText = `全矩陣數據顯示，整體局勢的主流仍掌握在你的手中。雖然在特定的時空相位（過去、現在或未來）伴隨著部分元素的阻塞或能量延遲。`; 
-                coreAnalysis = `【${pName}】與【${prName}】的互動顯示，目前的局勢雖然有小部分的殘留課題或溝通盲點需要微調，但並不足以阻擋【${fName}】帶來的全新破局。`; 
-                adviceText = "建議針對產生逆位阻力的節點進行局部的細節優化，保持耐心即可安穩過渡。"; 
+                introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在時間軸的某個特定節點上伴隨著些微的遲滯、制約或能量微調，但主流能量依舊由正位牌組強勢主導。`; 
+                coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然有一些盲點、殘留課題或環境阻力需要時間消化，但並不足以阻擋未來的【${fName}】所帶來的全新破局氣象。`; 
+                adviceText = "建議你維持現有的基礎步調，並對目前的執行計劃進行局部的精密微調。只需要保持足夠的耐心，當前的微小阻礙自然會在流動中迎刃而解。"; 
             } else if (totalUprights === 1) { 
-                introText = `警訊！全牌組陣列中出現了高達兩張逆位拉扯，這說明隱藏在冰山下的潛意識焦慮、外在環境的資源匱乏或溝通不對稱正處於爆發期。`; 
-                coreAnalysis = `雖然有單一正位牌試圖給予你底層核心支撐，但從整體時間軸來看，元素拉扯（例如過度情緒化或行動力癱瘓）已經反客為主，局勢顯得相對被動。`; 
-                adviceText = "目前時機不成熟，強求必破產。請先將焦點移回自身，排查身邊的灰色風險，重新整頓。"; 
+                introText = `當前牌陣中出現了較多的逆位能量拉扯，這是一份來自潛意識矩陣深處的嚴肅警訊。目前的局勢中隱藏著較多的制約、焦慮、資訊不對稱或是能量嚴重受阻的情況。`; 
+                coreAnalysis = `雖然有部分節點試圖提供底層支撐，但從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於爆發高峰期。`; 
+                adviceText = "目前時機尚未成熟，不宜盲目推展與求任何實質結果。建議先將焦點從外在的追求轉回內心，停下腳步沉澱情緒，徹底找出當前的核心系統盲點進行整頓。"; 
             } else { 
-                introText = `三數據節點全數陷入逆位（【${pName}】 ➔ 【${prName}】 ➔ 【${fName}】）。這是 78 階矩陣發出的最高級別系統重設訊號。`; 
-                coreAnalysis = `這代表你過去沿用的邏輯、框架或執念在當前環境下已經徹底卡死，元素的失衡、混亂或外界的降維打擊在此刻交織。`; 
-                adviceText = "這是最需要徹底放手與臣服的時刻。請立刻停止一切高風險的擴張、投資或勉強的情感挽回。給自己充足的時間進行底層代碼的全面大掃除，靜待能量修復。"; 
+                introText = `三數據節點全數呈現逆位（【${pName}】 ➔ 【${prName}】 ➔ 【${fName}】）。這意味著當前的潛意識矩陣正經歷著一場徹底的底層架構重組、代碼崩潰與能量低潮期。`; 
+                coreAnalysis = `這並非全無益處，而是局勢在強烈暗示：你過去習慣的應對模式、思考方向或執念已經完全行不通了。內在的壓抑、混亂與外界的巨大阻力此時正交織在一起。`; 
+                adviceText = "這是最需要徹底放手與臣服的時刻。請立刻停止所有高風險的試探、強求或勉強的擴張行動。給自己充足的時間進行內心的全面大掃除，靜靜等待矩陣能量重新完成自我修復。"; 
             }
             document.getElementById('summary-section').innerHTML = `<h2>🔮 [ 綜合點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
-            return `${introText}\n${coreAnalysis}\n${adviceText}`;
         }
 
         function generateCardAndRedirect() {
             try { playSound('click'); } catch(e){}
             if(typeof html2canvas === 'undefined') { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; return; }
-            html2canvas(document.getElementById('capture-node'), { backgroundColor: "#050505", scale: 2, useCORS: true, allowTaint: true, logging: false }).then(canvas => {
-                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-FullMatrix-Report.png'; link.href = image; link.click();
+            const targetNode = document.getElementById('capture-node');
+            html2canvas(targetNode, { backgroundColor: "#050505", scale: 2, useCORS: true }).then(canvas => {
+                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Report.png'; link.href = image; link.click();
                 setTimeout(() => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; }, 1000);
-            }).catch(() => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; });
+            }).catch(err => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; });
         }
 
         function getDynamicTarotMeanings() {
-            const data = {
-                // 大牌 22 張
-                "The Fool": { nameCN: "愚者", general: { upright: "代表全新的開始與冒險。信任你的直覺，大膽跳入未知的流中。", reversed: "警告你可能過於魯莽或缺乏計劃。盲目的樂觀可能導致失控。" }, love: { upright: "一段充滿新鮮感、無拘無束的新戀情即將展開。", reversed: "感情中出現了不負責的跡象。一方可能害怕承諾。" }, work: { upright: "適合挑戰全新的領域、創業或跳槽。拋開傳統框架。", reversed: "工作上缺乏規劃導致混亂。不建議在此時進行高風險決定。" } },
-                "The Magician": { nameCN: "魔術師", general: { upright: "掌握著強大的資源與行動力。將想法轉化為現實的時機已成熟。", reversed: "注意資源是否被誤用。可能存在操縱、欺騙或空有才華缺乏執行力。" }, love: { upright: "關係中溝通流暢，充滿魅力與趣味，頻率極高。", reversed: "注意感情中的甜言蜜語背後是否藏有隱瞞，互動流於表面。" }, work: { upright: "展現強大工作能力的黃金時期。發展能量非常旺盛。", reversed: "職場上被話術欺騙。專注力過於分散，導致進度停滯。" } },
-                "The High Priestess": { nameCN: "女祭司", general: { upright: "直覺正處於高頻共振期。保持冷計，被隱藏的真相即將浮現。", reversed: "可能過於壓抑情感，或過度理智而忽略了直覺的警訊。" }, love: { upright: "感情上較為被動、注重精神交流。正處於冷靜觀察狀態。", reversed: "情感壓抑過度導致隔閡加深。過度敏感、多疑。" }, work: { upright: "適合從事研究、分析等靜態工作。靠直覺做出正確抉擇。", reversed: "面對職場決策時過度猶豫不決。不適合簽署任何重要契約。" } },
-                "The Empress": { nameCN: "皇后", general: { upright: "代表豐收、繁榮與物質富足。將迎來豐碩回報。", reversed: "目前可能感到缺乏安全感，或對環境有過度的控制慾。" }, love: { upright: "感情生活充滿甜蜜與溫馨，彼此包容。近期桃花能量強勁。", reversed: "關係中表現得過度控制。注意物質問題可能導致摩擦。" }, work: { upright: "職場發展順遂，努力將迎來實質回報。團隊氛圍和諧。", reversed: "工作流於安逸、怠惰，缺乏前進的積極度。注意過於感情用事。" } },
-                "The Emperor": { nameCN: "皇帝", general: { upright: "掌握秩序與權力。擁有堅強意志。穩定與紀律是成功的關鍵。", reversed: "注意不要流於專橫霸道。當前架構可能過於僵化。" }, love: { upright: "關係穩定、具安全感。以責任感與忠誠為基石。", reversed: "一方過於專斷、固執、難以溝通，互動充滿壓迫感。" }, work: { upright: "有望建立制度。專注於架構優化，成功將近在咫尺。", reversed: "職場遇到僵化的體制，不願接受新技術，會讓進度卡關。" } },
-                "The Hierophant": { nameCN: "教皇", general: { upright: "象徵傳統、體制、導師與精神指引。遵循常規能獲得庇佑。", reversed: "對體制產生反叛，或受到錯誤偏見的引導。打破常規的邊界。" }, love: { upright: "關係受到傳統祝福，走向穩定承諾或婚姻階段。", reversed: "價值觀產生巨大衝突，感到受體制綁架，溝通卡關。" }, work: { upright: "職場有貴人相助，遵循公司既定政策可保平安。", reversed: "遭遇僵化制度壓榨，或與上司理念不合。適合大膽創新突破。" } },
-                "The Lovers": { nameCN: "戀人", general: { upright: "象徵和諧、吸引力與核心選擇。聆聽內心最真實的熱情。", reversed: "內在能量產生了失衡，或當前面臨誘惑與錯誤抉擇。" }, love: { upright: "感情運勢極佳，充滿強大吸引力。單身者將遇到靈魂同步對象。", reversed: "情感中出現不信任、多疑。需注意外界的野桃花誘惑。" }, work: { upright: "職場上迎來極佳合作機會，團隊默契十足。", reversed: "團隊內部出現拉扯或合作破裂。現階段抉擇可能只是短視近利。" } },
-                "The Chariot": { nameCN: "戰車", general: { upright: "代表意志力、勝利與克服障礙。擁有極強專注力，勢不可擋。", reversed: "警告可能正逐漸失去掌控力，或前進方向發生嚴重偏離。" }, love: { upright: "感情上採取積極進攻姿態。有能力克服任何環境阻礙。", reversed: "感情中出現嚴重權力爭奪，互不相讓，容易因衝動口出惡言。" }, work: { upright: "事業上展現出強大競爭力，適合開拓新市場。", reversed: "專案進度面臨方向混亂窘境。情緒壓力已達臨界點，盲目衝動。" } },
-                "Strength": { nameCN: "力量", general: { upright: "內心堅韌與溫柔控制力達到平衡。憑藉無比耐心就能感化困難。", reversed: "暗示當前陷入自我懷疑，或是被內心的焦慮與恐懼所吞噬。" }, love: { upright: "在感情中展現高情商。能用溫柔與包容化解對方的壞脾氣。", reversed: "關係中感到無力與疲憊，佔有慾失控。不對等的張力消磨愛意。" }, work: { upright: "面對危機展現臨危不亂的沉著智慧。抗壓性獲得高度肯定。", reversed: "面臨巨大精神內耗。容易因自信不足而選擇退縮，把局勢搞砸。" } },
-                "The Hermit": { nameCN: "隱士", general: { upright: "向內探索、尋求內在智慧的沉澱期。在潛意識深處點亮指路明燈。", reversed: "警告可能過度與世隔絕，演變成逃避現實。陷入無意義的偏執。" }, love: { upright: "進入精神層次審視期。有伴者傾向給予彼此尊重空間。", reversed: "彼此構築起高牆，溝通陷入名存實亡的冷淡狀態，提防冷暴力。" }, work: { upright: "適合傾注於深度思考、技術研發工作。沉穩積蓄核心知識。", reversed: "在職場上顯得與團隊格格不入。過於固執己見導致研發脫節。" } },
-                "Wheel of Fortune": { nameCN: "命運之輪", general: { upright: "不可抗拒的命運齒輪加速轉動。轉折點即將到來，局勢朝有利方向發展。", reversed: "暗示處於運勢波動低谷期，容易遇到突如其來的阻礙，保持彈性。" }, love: { upright: "感情上迎來宿命般的緣分。單身者極易遇見一見鍾情的對象。", reversed: "發展面臨外部不可抗力干擾，陷入重複同一個矛盾的惡性循環。" }, work: { upright: "職場運勢迎來大洗牌轉機，順應潮流做出的變革將迎來倍增回報。", reversed: "出現意料之外的變故。目前環境不利，不建議盲目做重大投資。" } },
+            return {
+                "The Fool": { nameCN: "愚者", general: { upright: "代表全新的開始與冒險精神。信任你的直覺，大膽跳入未知的流中。", reversed: "警告你可能過於魯莽或缺乏計劃。盲目的樂觀可能導致失控，建議先冷靜檢視底細。" }, love: { upright: "一段充滿新鮮感、無拘無束的新戀情即將展開。享受當下的火花。", reversed: "感情中出現了不負責的跡象。一方可能害怕承諾，忽略了潛在風險。" }, work: { upright: "適合挑戰全新的領域、創業或跳槽。拋開傳統框架的黃金期。", reversed: "工作上缺乏規劃導致混亂。不建議在此時進行未經評估的高風險決定。" } },
+                "The Magician": { nameCN: "魔術師", general: { upright: "你掌握著強大的資源與行動力。將想法轉化為現實的時機已成熟。", reversed: "注意掌握的力量是否被誤用。可能存在操縱、欺騙或空有才華缺乏執行力的情況。" }, love: { upright: "關係中溝通流暢，充滿魅力與趣味. 頻率極高。", reversed: "注意感情中的甜言蜜語背後是否藏有隱瞞，互動流於表面。" }, work: { upright: "展現強大工作能力的黃金時期。升職與發展能量非常旺盛。", reversed: "職場上被話術欺騙或操縱。專注力過於分散，導致進度停滯。" } },
+                "The High Priestess": { nameCN: "女祭司", general: { upright: "直覺與潛意識正處於高頻共振期。保持冷靜，被隱藏的真相即將浮現。", reversed: "可能過於壓抑情感，或過度理智而忽略了直覺的警訊。建議誠實面對恐懼。" }, love: { upright: "感情上較為被動、注重精神交流。正處於冷靜觀察的狀態。", reversed: "情感壓抑過度導致隔閡加深。過度敏感、多疑，讓對方難以靠近。" }, work: { upright: "適合從事研究、分析等靜態工作。靠精準直覺能在複雜數據中找出正確抉擇。", reversed: "面對職場決策時過度猶豫不決。不適合簽署任何重要契約。" } },
+                "The Empress": { nameCN: "皇后", general: { upright: "代表豐收、繁榮與物質富足。無論是生活還是計畫，都將迎來豐碩回報。", reversed: "目前可能感到缺乏安全感，或對環境有過度的控制慾。創造力受到阻塞。" }, love: { upright: "感情生活充滿甜蜜與溫馨，彼此包容與支持。近期桃花能量強勁。", reversed: "關係中表現得過度控制或佔有慾過強。注意物質問題可能導致摩擦。" }, work: { upright: "職場發展順遂，努力將迎來實質回報。團隊氛圍和諧。", reversed: "工作流於安逸、怠惰，缺乏前進的積極度。注意職場上不要過於感情用事。" } },
+                "The Emperor": { nameCN: "皇帝", general: { upright: "掌握著秩序與權力。擁有堅強意志力與清晰掌控架構。穩定與紀律是成功的關鍵。", reversed: "注意不要流於專專霸道。當前架構可能過於僵化，或逐漸失去掌控。" }, love: { upright: "關係穩定、具安全感。以責任感與忠誠為基石，非常可靠。", reversed: "一方過於專斷、固執、難以溝通. 互動充滿壓迫感。" }, work: { upright: "有望晉升主管職、建立制度。專注於架構優化，成功將近在咫尺。", reversed: "職場遇到僵化的體制或過於守舊，不願接受新技術，會讓進度卡關。" } },
+                "The Lovers": { nameCN: "戀人", general: { upright: "象徵完美的和諧、吸引力與核心選擇。聆聽內心最真實的熱情做出決定。", reversed: "意指內在能量產生了失衡，或當前面臨誘惑與錯誤抉擇。混亂內耗中。" }, love: { upright: "感情運勢極佳，彼此之間充滿強大吸引力。單身者將遇到靈魂同步對象。", reversed: "情感中出現不信任、多疑。需注意外界的野桃花誘惑。" }, work: { upright: "職場上迎來極佳合作機會，團隊默契十足。順應熱情就能做出正確決定。", reversed: "團隊內部出現拉扯或合作破裂。現階段抉擇可能只是出於短視近利。" } },
+                "The Chariot": { nameCN: "戰車", general: { upright: "代表意志力、勝利與克服障礙。此時擁有極強專注力，勢不可擋。", reversed: "警告可能正逐漸失去掌控力，或前進方向發生嚴重偏離。盲目會演變成魯莽。" }, love: { upright: "感情上採取積極進攻姿態。有能力克服任何空間、背景或環境阻礙。", reversed: "感情中出現嚴重權力爭奪，互不相讓，遇到挫折容易衝動說出傷害彼此的話。" }, work: { upright: "事業上展現出強大競爭力，適合開拓新市場、接手高難度專案。", reversed: "專案進度面臨方向混亂窘境。情緒壓力已達臨界點，容易因衝動做錯決策。" } },
+                "Strength": { nameCN: "力量", general: { upright: "內心堅韌與溫柔控制力達到完美平衡。憑藉無比耐心就能感化困難。", reversed: "暗示當前陷入自我懷疑，或是被內心的焦慮與恐懼所吞噬。" }, love: { upright: "在感情中展現高情商。能用溫柔與包容化解對方的壞脾氣與不安。", reversed: "關係中感到無力與疲憊，佔有慾失控。不對等的張力會消磨愛意。" }, work: { upright: "面對危機展現臨危不亂的沉著智慧。抗壓性獲得高度肯定。", reversed: "面臨巨大精神內耗。容易因自信不足而選擇退縮，把局勢搞砸。" } },
+                "The Hermit": { nameCN: "隱士", general: { upright: "向內探索、尋求內在智慧的沉澱期。在潛意識深處點亮一盞指路明燈。", reversed: "警告可能過度與世隔絕，演變成逃避現實。陷入無意義的偏執。" }, love: { upright: "進入精神層次審視期。有伴者傾向給予彼此尊重空間，追求靈魂共鳴。", reversed: "彼此構築起高牆，溝通陷入名存實亡的冷淡狀態。一方可能在施展冷暴力。" }, work: { upright: "適合傾注於深度思考、技術研發或幕後顧問工作。沉穩積蓄核心知識。", reversed: "在職場上顯得與團隊格格不入。過於固執己見導致研發與現實脫節。" } },
+                "Wheel of Fortune": { nameCN: "命運之輪", general: { upright: "不可抗拒的命運齒輪加速轉動。轉折點即將到來，局勢將朝有利方向發展。", reversed: "暗示處於運勢波動低谷期，容易遇到突如來來的阻礙，建議保持彈性。" }, love: { upright: "感情上迎來宿命般的緣分。單身者極易遇見一見鍾情的對象。", reversed: "發展面臨外部不可抗力干擾，陷入重複同一個矛盾的惡性循環。" }, work: { upright: "職場運勢迎來大洗牌轉機，順應潮流做出的變革將迎來翻倍回報。", reversed: "出現意料之外的變故。目前環境對你較不利，不建議盲目做重大投資。" } },
                 "Justice": { nameCN: "正義", general: { upright: "代表公平、理性與因果律。過去種下的因，此時將迎來公正的果。", reversed: "局勢出現失衡、偏見或是遭受不公正對待。需小心因果迴力鏢。" }, love: { upright: "互動講求絕對公平與互相尊重。彼此坦誠相對，沒有隱瞞。", reversed: "關係出現嚴重失衡，雙方計較得失的張力拉滿，充滿無休止爭吵。" }, work: { upright: "適合處理契約簽署。只要秉持誠信，正義將會為你劈開謠言。", reversed: "職場遭遇不公平對待。注意此時不宜進行灰色操作，否則面臨查殺。" } },
-                "The Hanged Man": { nameCN: "倒吊人", general: { upright: "雖然當前處於被動受限狀態，但換個角度看世界，這是為更高成就的犧牲。", reversed: "暗示正在進行無謂掙扎，或者你的犧牲並沒有得到應有價值。" }, love: { upright: "甘願為對方付出與等待。此時按兵不動是在深耕基礎默契。", reversed: "出現了單方面無底線的委曲求全，退讓只換來對方的得寸進尺。" }, work: { upright: "面臨過渡期。適合退居幕後默默耕耘、沉澱技術，大動作開拓無效。", reversed: "陷入無意義的瞎忙與盲目內耗。需要立刻停止無謂奉獻，重新審視。" } },
-                "Death": { nameCN: "死神", general: { upright: "徹底的終結與隨之而來的偉大新生。唯有清理掉冗餘，新代碼才能載入。", reversed: "死死抓著已經腐爛的過去不肯放手，拒絕接受改變。無限延長痛苦。" }, love: { upright: "不健康的關係將迎來徹底終結。空出雙手，新的人際矩陣才能成立。", reversed: "感情走到了冰點，因為恐懼孤單而選擇拖延，嚴重消耗能量。" }, work: { upright: "職場上面臨重大洗牌，劇變正是你建立全新王國的起點。", reversed: "事業發展面臨苟延殘喘，明知沒有前景依舊抱持幻想，錯失重生窗口。" } },
-                "Temperance": { nameCN: "節制", general: { upright: "象徵完美的淨化與跨界融合。在動態平衡中創造出治癒能量。", reversed: "內在能量失去平衡，生活或人際關係出現溝通不良。" }, love: { upright: "交流達到精神完美契合。極具治癒感、細水長流的健康戀情。", reversed: "雙方溝通頻率完全不對盤。缺乏體貼與耐性，感情在瑣事中消磨。" }, work: { upright: "適合進行跨部門溝通或跨領域合作，強大協調能力能完美平衡衝突。", reversed: "職場人際關係失調，協作卡關。可能在時間分配上出現嚴重失衡。" } },
-                "The Devil": { nameCN: "惡魔", general: { upright: "暗示正被強烈物質慾望、執念或不健康依賴關係束縛。直面陰暗面是關鍵。", reversed: "偉大的覺醒時刻。開始看清虛幻誘惑，潛意識自由代碼重新編寫。" }, love: { upright: "一段充滿致命肉體吸引力，但也伴隨強烈控制與嫉妒的關係。", reversed: "終於從充滿控制、冷暴力的虐戀中清醒。找回自主界線，勇敢抽身。" }, work: { upright: "能獲得巨大物質回報，但背後可能隱藏權謀鬥爭，高風險博弈。", reversed: "拒絕職場上的不正當誘惑或壓榨條款。決定離開血汗環境，奪回自主權。" } },
-                "The Tower": { nameCN: "高塔", general: { upright: "警告！一場突如其來、無法抗拒的毀滅性劇變即將震撼生活。強行系統重塑。", reversed: "危機雖然即將爆發，但衝擊已被降到最低；或代表粉飾太平。" }, love: { upright: "感情面臨毫無預警的重大衝擊，隱藏的秘密曝光，關係瞬間分崩離析。", reversed: "矛盾到了隨時爆炸邊緣，勉強維持表面和平更讓人折磨。" }, work: { upright: "職場上面臨突發性災難。不要試圖挽救，強迫你徹底更換全新賽道。", reversed: "工作中雷聲大雨點小，危機擦身而過，根本漏洞未解決，下次更致命。" } },
-                "The Star": { nameCN: "星星", general: { upright: "風暴過後，亮起了代表希望與療癒的星光。內心焦慮平息，光明在望。", reversed: "正被失望與悲觀情緒籠罩。可能設定了過於虛無飄渺、不切實際的目標。" }, love: { upright: "一段充滿精神共鳴、純潔且具高度治癒感的戀情。", reversed: "對感情抱持過於脫離現實的完美幻想，對伴侶產生無謂的挑剔。" }, work: { upright: "靈感爆發黃金期，利於藝術創作、設計或品牌建立。才華吸引目光。", reversed: "計劃流於紙上談兵，缺乏執行可行性。高估資源、低估市場。" } },
+                "The Hanged Man": { nameCN: "倒吊人", general: { upright: "雖然當前處於被動受限狀態，但只要換個角度看世界，這是為了更高成就的犧牲。", reversed: "暗示正在進行無謂掙扎，或者你的犧牲並沒有得到應有價值。" }, love: { upright: "甘願為對方付出與等待。此時按兵不動是在深耕基礎默契。", reversed: "出現了單方面無底線的委曲求全，退讓只換來對方的得寸進尺。" }, work: { upright: "面臨過渡期。適合退居幕後默默耕耘、沉澱技術，大動作開拓無效。", reversed: "陷入無意義的瞎忙與盲目內耗。需要立刻停止無謂奉獻，重新審視。" } },
+                "Death": { nameCN: "死神", general: { upright: "徹底的終結與隨之而來的偉大新生。唯有清理掉冗餘，新代碼才能載入。", reversed: "死死抓著已經腐爛的過去不肯放手，拒絕接受改變。無限延長痛苦。" }, love: { upright: "不健康的關係將迎來徹底終結。空出雙手，新的人際矩陣才能成立。", reversed: "感情走到了冰點，因為恐懼孤單而選擇拖延，嚴重消耗能量。" }, work: { upright: "職場上面臨重大洗牌，劇變正是你建立全新王國的起點。", reversed: "事業發展面臨苟延殘喘，明知沒有前景依舊抱持幻想，錯失重生窗口." } },
+                "Temperance": { nameCN: "節制", general: { upright: "象徵完美的淨化與跨界融合。在動態平衡中創造出治癒能量。", reversed: "內在能量失去平衡，生活或人際關係出現溝通不良。" }, love: { upright: "交流達到精神完美契合。極具治癒感、細水長流的健康戀情。", reversed: "雙方溝通頻率完全不對盤。缺乏體貼與耐性，感情在瑣事中消磨。" }, work: { upright: "適合進行跨部門溝通或跨領域合作. 強大協調能力能完美平衡衝突。", reversed: "職場人際關係失調，協作卡關。可能在時間分配上出現嚴重失衡。" } },
+                "The Devil": { nameCN: "惡魔", general: { upright: "暗示正被強烈物質慾望、執念 or 不健康依賴關係束縛。直面陰暗面是關鍵。", reversed: "偉大的覺醒時刻。開始看清虛幻誘惑，潛意識自由代碼重新編寫。" }, love: { upright: "一段充滿致命肉體吸引力，但也伴隨強烈控制與嫉妒的關係。", reversed: "終於從充滿控制、冷暴力的虐戀中清醒。找回自主界線，勇敢抽身。" }, work: { upright: "能獲得巨大物質回報，但背後可能隱藏權謀鬥爭，高風險博弈。", reversed: "拒絕職場上的不正當誘惑或壓榨條款。決定離開血汗環境，奪回自主權。" } },
+                "The Tower": { nameCN: "高塔", general: { upright: "警告！一場突如來、無法抗拒的毀滅性劇變即將震撼生活。強行系統重塑。", reversed: "危機雖然即將爆發，但衝擊已被降到最低；或代表粉飾太平。" }, love: { upright: "感情面臨毫無預警的重大衝擊，隱藏的秘密曝光，關係瞬間分崩離析。", reversed: "矛盾到了隨時爆炸邊緣，勉強維持表面和平更讓人折磨。" }, work: { upright: "職場上面臨突發性災難。不要試圖挽救，強迫你徹底更換全新賽道。", reversed: "工作中雷聲大雨點小，危機擦身而過，根本漏洞未解決，下次更致命。" } },
+                "The Star": { nameCN: "星星", general: { upright: "風暴過後，亮起了代表希望與療癒的星光。內心焦慮平息，光明在望。", reversed: "正被失望與悲觀情緒籠罩。可能設定了過於虛無飄渺、不切實際的目標。" }, love: { upright: "一見鍾情一段充滿精神共鳴、純潔且具高度治癒感的戀情。", reversed: "對感情抱持過於脫離現實的完美幻想，對伴侶產生無謂的挑剔。" }, work: { upright: "靈感爆發黃金期，利於藝術創作、設計或品牌建立。才華吸引目光。", reversed: "計劃流於紙上談兵，缺乏執行可行性。高估資源、低估市場結構。" } },
                 "The Moon": { nameCN: "月亮", general: { upright: "進入充滿迷霧、焦慮與未知恐懼的幽暗海域。資訊不透明，勿盲目決策。", reversed: "恐懼與焦慮開始逐漸消散。那些誤解與秘密即將水落石出。" }, love: { upright: "充滿不安、猜忌與情緒起伏的曖昧期。信任基礎極其脆弱。", reversed: "誤會與謊言即將被拆穿，不再逃避問題。隱藏的不安正逐步退場。" }, work: { upright: "環境充滿爾虞我詐。現階段專案合約細節極不透明，暗藏陷阱。", reversed: "原本混亂、拉扯不清的人事糾紛落幕。終於看清專案真實走向。" } },
-                "The Sun": { nameCN: "太陽", general: { upright: "象徵極致成功、榮耀、活力與純粹快樂。萬事大吉的至尊王牌。過往一切努力此時都將開花結果。", reversed: "整體運勢依舊保持水準，但光芒可能被短暫烏雲遮蔽。成功只會遲到。" }, love: { upright: "感情運勢爆棚！互動充滿陽光、熱情與坦率。極度受人羨慕。", reversed: "依舊溫馨，但少了一點剛開始的激情。注意不要因為小脾氣消磨熱情。" }, work: { upright: "事業迎來大光明鼎盛時期。求職、創業或升遷都將獲得成功。", reversed: "專案雖能成功，但過程花費比預期多的時間。職場注意不要功高震主。" } },
-                "Judgement": { nameCN: "審判", general: { upright: "命運號角吹響，迎來重大覺醒與因果了結。做出改變一生的重大決定。", reversed: "處於逃避狀態。害怕跨出舒適圈而選擇拖延，錯失系統升級機會。" }, love: { upright: "感情上迎來破鏡重圓，或關係面臨重大昇華。走向命運交織的轉折。", reversed: "面對重複發生的致命問題依舊拒絕理智了斷。無意義地內耗。" }, work: { upright: "面臨關鍵裁決或重大轉機，迎來翻轉職業生涯的黃金職缺。", reversed: "因為猶豫不決錯失跳槽或晉升黃金期。過往過失缺乏承擔勇氣。" } },
-                "The World": { nameCN: "世界", general: { upright: "恭喜！本階段旅程已達到完美終點與大圓滿。代表成功與內心和諧。", reversed: "距離最後成功只剩最後一哩路，千萬不要在此時鬆懈，咬緊牙關完成。" }, love: { upright: "感情迎來最完美大結局。彼此靈魂達到天衣無縫的融合，最高規格祝福。", reversed: "大體上穩定幸福，但心中總覺得缺少臨門一腳的極致激情。" }, work: { upright: "事業達到顛峰狀態！交出無可挑剔的完美成績單。享受收穫期。", reversed: "專案已完成 99%，卻在最後驗收階段卡在繁瑣流程上。保持耐性。" } },
-
-                // 🌟 小牌精選數據結構（四元素核心）
-                // 1. 權杖 (Wands) - 火元素 (行動力、能量、意志)
-                "Ace of Wands": { nameCN: "權杖一", general: { upright: "火元素爆發！代表全新的計畫、強大的行動力創始期，機會就在眼前。", reversed: "計畫胎死腹中。點子很多但缺乏續航力，熱情迅速熄滅。" }, love: { upright: "新戀情的激情火花被點燃，互動充滿積極熱烈。", reversed: "承諾缺乏後續動力，可能流於短暫的肉體吸引或激情消退。" }, work: { upright: "絕佳的開創性專案啟動。適合創業或帶頭衝鋒。", reversed: "工作上缺乏目標、動力不足，新專案面臨難產阻力。" } },
-                "Two of Wands": { nameCN: "權杖二", general: { upright: "站在高處規劃未來。你已經獲得階段性成功，正在思考下一步擴張。", reversed: "缺乏遠見，或是害怕跨出舒適圈，導致規劃無限期延宕。" }, love: { upright: "雙方正在規劃未來的共同藍圖，關係面臨選擇升級。", reversed: "對未來方向看法不一致，彼此猶豫不決，缺乏安全感。" }, work: { upright: "適合進行跨國貿易、長期策略規劃。前途光明。", reversed: "職場上決策流於保守，原地踏步，錯失向外發展的黃金期。" } },
-                "Three of Wands": { nameCN: "權杖三", general: { upright: "格局全面放大。你的基建已穩固，船隻正在出海，迎來更大市場。", reversed: "進度雷聲大雨點小，海外或遠期計畫遭遇不可預期的延誤。" }, love: { upright: "遠距離戀情發展順利，或是彼此即將共同邁入全新生活里程。", reversed: "對於遠景感到焦慮，承諾無法兌現，各自打著算盤。" }, work: { upright: "業務擴張、尋求跨界合作的完美契機。規模正逐步放大。", reversed: "團隊內部協調出問題，導致外包或擴展計畫陷入混亂拉扯。" } },
-                "Four of Wands": { nameCN: "權杖四", general: { upright: "象徵繁榮、穩固、和諧與階段性慶典。內部架構極其安全。", reversed: "表面的和平，內部可能存在細微的不和諧，或慶祝被迫延期。" }, love: { upright: "關係極度穩定，極可能談婚論嫁，或是共同買房組建家庭。", reversed: "家庭內部有些小摩擦，或是彼此的承諾缺乏底氣與共識。" }, work: { upright: "專案圓滿收尾，迎來階段性成果發表會，團隊氛圍極佳。", reversed: "雖然有賺錢，但部門之間分配不均，基層穩固度有些動搖。" } },
-                "Five of Wands": { nameCN: "權杖五", general: { upright: "內部競爭與衝突。意見百家爭鳴，需要透過混亂來理出新秩序。", reversed: "無意義的內耗與惡性爭鬥。矛盾被激化，或大家選擇冷漠逃避。" }, love: { upright: "關係中吵架頻率變高，彼此互不相讓，溝通變成權力爭奪。", reversed: "冷戰爆發。或雙方決定不再爭論核心問題，粉飾太平。" }, work: { upright: "職場上面臨激烈的商戰競爭，或是團隊內部開會爭執不下。", reversed: "惡性辦公室政治、內部分裂。專案因內耗嚴重卡死。" } },
-                "Six of Wands": { nameCN: "權杖六", general: { upright: "凱旋歸來！代表獲得大眾認可、勝利、名聲與重大好消息。", reversed: "名不符實。或是遭遇短暫的挫敗，感到自信心受挫、不被重視。" }, love: { upright: "感情受到周遭朋友高度祝福，你是這段關係的主導贏家。", reversed: "感情中出現不對等的虛榮心，一方過度自大引起對方反感。" }, work: { upright: "提案大獲成功，升職加薪，成為職場焦點人物。", reversed: "功勞被搶走，或是專案雷大雨小，市場認可度不如預期。" } },
-                "Seven of Wands": { nameCN: "權杖七", general: { upright: "腹背受敵但屹立不倒。憑藉頑強意志堅守陣地，防守就是最好的進攻。", reversed: "壓力過大導致防線崩潰。可能選擇妥協，或被競爭對手攻破。" }, love: { upright: "即使面臨長輩反對或外界八卦，依然堅定捍衛彼此的愛情。", reversed: "面對外界的流言蜚語感到精疲力竭，開始動搖並有退縮打算。" }, work: { upright: "一人力抗多方質疑，堅定執行自己的架構，最終能保住核心利益。", reversed: "職場壓力爆棚，遭受多方投訴或圍剿，防線失守。" } },
-                "Eight of Wands": { nameCN: "權杖八", general: { upright: "高鐵般的速度感。事情正在急速推進，訊息如雪片般飛來，毫無延誤。", reversed: "方向完全錯誤的盲目加速。或是計畫突然陷入停滯、取消。" }, love: { upright: "戀情進展神速，閃戀、閃婚能量極強。訊息互動頻繁。", reversed: "因衝動而產生爭執，或是熱情突然冷卻，訊息已讀不回。" }, work: { upright: "進度條全速前進，出差頻繁，文件審批效率極高。", reversed: "計畫臨時生變停擺，面臨交通阻礙或嚴重的溝通資訊錯位。" } },
-                "Nine of Wands": { nameCN: "權杖九", general: { upright: "嚴陣以待的最後防線。雖然精疲力竭、滿身是傷，但絕不放棄。", reversed: "防禦過當變成被迫害妄想。或者體力、精神已達極限，徹底躺平。" }, love: { upright: "因過去受過傷，在感情中防備心極重，難以真正對人敞開心扉。", reversed: "卸下無謂的武裝防備；或精神徹底崩潰，無心再經營維繫。" }, work: { upright: "專案進入最後攻堅階段，雖然加班嚴重但仍須咬牙撐住防線。", reversed: "職場過勞警告。抗壓防線全面崩塌，效率極度低下。" } },
-                "Ten of Wands": { nameCN: "權杖十", general: { upright: "責任過重、不堪重負。一個人扛下了所有，距離終點只剩最後一段路。", reversed: "負擔過重導致崩潰。或是終於學會放手、將權限外包委託。" }, love: { upright: "愛得太沉重。單方面過度付出，讓這段感情變成了沉重枷鎖。", reversed: "無法再承受沉重壓力，雙方決定把話說開，共同分擔或徹底放手。" }, work: { upright: "能者多勞的極端，一個人做三個人的工作，面臨崩潰邊緣。", reversed: "學會拒絕職場PUA，將工作權責重新劃分，釋放壓力。" } },
-                "Page of Wands": { nameCN: "權杖侍從", general: { upright: "充滿好奇心與熱情的探索者。帶來新鮮的訊息、計畫或學習機會。", reversed: "流於三分鐘熱度。缺乏耐性，容易因為遇到一點挫折就放棄。" }, love: { upright: "曖昧期充滿活力的互動。單身者容易遇到年紀較輕、性格陽光的對象。", reversed: "關係流於短暫的新鮮感，缺乏深度定力，注意對方可能很不成熟。" }, work: { upright: "職場新人運。適合學習新技能、開啟第一步的研究計畫。", reversed: "眼高手低，缺乏經驗卻不願意虛心學習，導致細節漏洞百出。" } },
-                "Knight of Wands": { nameCN: "權杖騎士", general: { upright: "勇往直前的衝鋒者。代表強大的爆發力、出差、旅行與風風火火的行動。", reversed: "衝動暴躁。缺乏思考的盲目行動導致四處碰壁、發生衝突。" }, love: { upright: "追求攻勢猛烈，情感大膽奔放，熱烈得讓人難以抗拒。", reversed: "來得快去得也快的短命戀情。脾氣火爆，動輒大吵大鬧。" }, work: { upright: "執行力拉滿！能夠以極快速度解決眼前的燃眉之急。", reversed: "職場上成了刺頭，做事橫衝直撞，極易頂撞主管或得罪客戶。" } },
-                "Queen of Wands": { nameCN: "權杖王后", general: { upright: "熱情、自信、充滿個人魅力的領導者。善於社交且散發正能量。", reversed: "嫉妒心強、過度強勢控制。容易在背後產生情緒化的支配欲。" }, love: { upright: "在感情中大方有自信，極具吸引力，彼此相處和諧陽光。", reversed: "在關係中過度霸道，經常情緒化逼迫對方聽從自己的命令。" }, work: { upright: "職場上展現極強的協調與激勵能力，是極具魅力的女性貴人。", reversed: "因情緒化決策導致團隊反感，注意辦公室內的流言嫉妒拉扯。" } },
-                "King of Wands": { nameCN: "權杖國王", general: { upright: "雄才大略的領袖。擁有宏觀視野、強大意志力與無庸置疑的掌控權。", reversed: "獨裁專斷、粗暴傲慢。不聽取任何人意見，容易做出盲目決策。" }, love: { upright: "成熟且具保護欲的伴侶。承諾一諾千金，非常值得信賴。", reversed: "大男人/大女人主義作祟，完全不尊重伴侶感受，控制欲爆棚。" }, work: { upright: "創業、升遷或帶領大團隊的黃金期。你的方向就是終點。", reversed: "決策出錯卻死不認錯，專斷獨行導致整個部門蒙受巨大損失。" } },
-
-                // 2. 聖杯 (Cups) - 水元素 (情感、直覺、人際)
-                "Ace of Cups": { nameCN: "聖杯一", general: { upright: "情感噴發！象徵內心充盈的愛、新戀情、新友誼與心靈的治癒。", reversed: "情感枯竭、內耗。付出得不到回應，情緒防線崩潰。" }, love: { upright: "迎來一場靈魂契合、充滿愛意的新關係。彼此心靈共鳴。", reversed: "單戀、表錯情。情感被揮霍，關係中充斥著失落感。" }, work: { upright: "對工作重新找回熱情，職場人際關係極佳，團隊氛圍溫馨。", reversed: "職場環境冷漠、缺乏歸屬感。注意情緒化導致工作效率低落。" } },
-                "Two of Cups": { nameCN: "聖杯二", general: { upright: "完美的平等結盟。象徵和諧的合作、互利共贏、心靈相通的契合。", reversed: "關係失衡、破裂。結盟出現裂痕，溝通頻率完全錯位。" }, love: { upright: "戀人之間心心相印，彼此極度信任，適合確立關係或告白。", reversed: "彼此失去默契，爭吵不斷。溝通橋樑斷裂，關係亮起紅燈。" }, work: { upright: "簽署雙贏合約、遇到極具默契的合夥人，合作進展順遂。", reversed: "合夥關係出現利益或理念不合，合約談判面臨破局危機。" } },
-                "Three of Cups": { nameCN: "聖杯三", general: { upright: "小組歡慶。代表朋友圈聚會、慶功宴、人際關係的和諧與分享。", reversed: "過度沉溺於社交娛樂；或是人際圈中出現了三人行的尷尬拉扯。" }, love: { upright: "關係充滿歡樂，融入彼此的朋友圈。單身者容易在聚會中遇見桃花。", reversed: "注意感情中出現第三者拉扯，或是朋友過度干涉你們的私領域。" }, work: { upright: "團隊合作圓滿，專案大功告成，迎來開心的慶功大聚會。", reversed: "辦公室小團體排擠嚴重，分工流於形式，缺乏實質生產力。" } },
-                "Four of Cups": { nameCN: "聖杯四", general: { upright: "不滿足與冷淡。沉溺在自我世界中，對外界主動遞來的機會視而不見。", reversed: "走出沉悶與退縮。開始重新打開盲盒，接受外界的新提議。" }, love: { upright: "對現狀感到厭倦，對伴侶的付出覺得理所當然，陷入情感疲憊期。", reversed: "決定打破冷戰，重新正視對方的優點，嘗試為感情注入新動能。" }, work: { upright: "職場倦怠期。對目前的薪資或職缺感到麻木，缺乏挑戰動力。", reversed: "不再消極躺平，開始主動對外投遞履歷，尋求新的轉機。" } },
-                "Five of Cups": { nameCN: "聖杯五", general: { upright: "沉溺於悲傷與失去。盯著打破的三個杯子哭泣，卻忽略身後還有兩個滿的。", reversed: "收拾心情，擦乾眼淚。開始從悲傷中走出來，看見留下的資源。" }, love: { upright: "失戀的陰霾揮之不去，對過去的遺憾充滿懊悔與自責。", reversed: "終於決定放下前任、停止內耗，轉身擁抱當前真正關心你的人。" }, work: { upright: "投資失利或專案受挫，沉浸在失敗的打擊中，進度嚴重滯後。", reversed: "痛定思痛，及時停損。重新盤點手頭資源，準備低谷翻盤。" } },
-                "Six of Cups": { nameCN: "聖杯六", general: { upright: "溫馨的童年回憶。象徵舊友重逢、前任回頭、或是獲得純粹無條件的照顧。", reversed: "過度沉溺於過去的榮光或回憶，拒絕面對現實生活的殘酷轉變。" }, love: { upright: "前任求複合機率高；或是彼此相處如童話般純粹、互相關懷。", reversed: "老毛病又犯。總是拿現任跟過去比較，導致關係產生無謂摩擦。" }, work: { upright: "遇到老同事、老客戶回頭照顧，或是進入家族企業等有人情味的環境。", reversed: "職場思維過於落後，跟不上現代科技矩陣腳步，需要徹底革新。" } },
-                "Seven of Cups": { nameCN: "聖杯七", general: { upright: "蜃樓海市。眼前充滿各種不切實際的幻想、選擇與誘惑，缺乏實質落地。", reversed: "看穿幻象，回歸理智。撥雲見日，終於做出務實的單一核心決定。" }, love: { upright: "身邊看似桃花朵朵開，實則全是爛桃花或虛無的曖昧網戀。", reversed: "不再沉溺於不切實際的完美擇偶幻想，選擇回歸現實的相處。" }, work: { upright: "宏大藍圖很多，但多半是畫大餅，缺乏實際的執行代碼與資金。", reversed: "認清團隊的真實能力，砍掉不切實際的邊緣專案，專注核心業務。" } },
-                "Eight of Cups": { nameCN: "聖杯八", general: { upright: "毅然轉身離去。即使目前的成就看似豐滿，但你決定追尋更高的精神目標。", reversed: "裹足不前。明知當前環境不適合，卻因為恐懼未知而不敢離開。" }, love: { upright: "決定告別不健康的曖昧或感情，轉身去尋找真正屬於自己的幸福。", reversed: "在一段沒有未來的感情中分分合合、拖延拉扯，下不了決心割捨。" }, work: { upright: "主動放棄目前的穩定職位，決定跳槽、留學或追尋更有價值的志業。", reversed: "對工作極度不滿卻遲遲不敢遞辭呈，在原地繼續忍受精神內耗。" } },
-                "Nine of Cups": { nameCN: "聖杯九", general: { upright: "美夢成真！代表物質與情感的極大滿足，自得其樂的「願望牌」。", reversed: "過度沉溺於感官享受、暴飲暴食。自私自大，容易引發周遭不滿。" }, love: { upright: "對當前的感情狀態感到極度滿意，單身者也非常享受富足的單身生活。", reversed: "關係流於物質享樂，缺乏精神交流；一方顯得過於自戀、不顧對方。" }, work: { upright: "目標順利達成，利潤豐厚，獲得極大的成就感與業界讚賞。", reversed: "注意業績達標後開始自傲、怠惰，對下屬或合作夥伴產生頤指氣使的態度。" } },
-                "Ten of Cups": { nameCN: "聖杯十", general: { upright: "大圓滿的家庭幸福。人際關係的終極和諧，充滿愛、歸屬感與精神回報。", reversed: "家庭內部出現裂痕，表面的和諧被拆穿，人際關係陷入冷漠。" }, love: { upright: "感情最完美的歸宿，彼此視對方為終身伴侶，家庭生活幸福美滿。", reversed: "家庭反對、或是價值觀產生隔閡，關係看似完美實則缺乏共識。" }, work: { upright: "團隊凝聚力達到最高峰，彼此如家人般信任，專案推動毫無阻力。", reversed: "團隊內部拉扯、人情世故複雜，導致合作面臨結構性的崩解。" } },
-                "Page of Cups": { nameCN: "聖杯侍從", general: { upright: "充滿文藝氣息與同理心的萌芽者。帶來感性的消息、直覺或藝術靈感。", reversed: "情緒化、玻璃心。容易沉溺於幻想，面對批評時極度脆弱、逃避。" }, love: { upright: "浪漫的告白、甜蜜的訊息傳遞。關係充滿純真的詩意。", reversed: "情緒陰晴不定。過度依賴對方給予情緒價值，容易無理取鬧。" }, work: { upright: "適合從事設計、文案或公關工作。直覺精準，靈感源源不絕。", reversed: "職場上被認為抗壓性太低、玻璃心，容易因私人情緒影響工作進度。" } },
-                "Knight of Cups": { nameCN: "聖杯騎士", general: { upright: "白馬王子。代表浪漫的邀約、和平鴿、高情商的溝通與藝術天賦。", reversed: "情場浪子。滿口甜言蜜語但缺乏責任感，注意不切實際的誘惑陷阱。" }, love: { upright: "迎來一場極度浪漫的追求，伴侶體貼入微，情感流動細細長流。", reversed: "注意對方可能只是個中央空調，處處留情卻不願意給予實質承諾。" }, work: { upright: "靠著高超的人際公關手腕化解部門衝突，談判順利達成共識。", reversed: "工作態度過於散漫、理想化，缺乏雷厲風行的執行力，進度拖延。" } },
-                "Queen of Cups": { nameCN: "聖杯王后", general: { upright: "溫柔慈愛、直覺極強的神仙教母。擁有無與倫比的同理心與療癒超能力。", reversed: "情緒勒索、過度敏感。容易陷入自憐自哀的受害者情緒中無法自拔。" }, love: { upright: "彼此包容、充滿滋養的靈魂伴侶。能給予對方無條件的情緒支持。", reversed: "在感情中化身控制狂或進行冷暴力情緒勒索，搞得雙方精疲力竭。" }, work: { upright: "職場上的最強傾聽者，善於凝聚人心，直覺極為靈敏，能避開風險。", reversed: "將私人恩怨帶入工作決策，玻璃心碎一地，無法理性處理危機。" } },
-                "King of Cups": { nameCN: "聖杯國王", general: { upright: "定海神針。情感深沉且極具理性的智者。喜怒不形於色，控場能力極強。", reversed: "情感騙子。內心陰暗、善於進行心理操縱、雙標且情緒反覆無常。" }, love: { upright: "寬厚、沉穩且極具包容力的伴侶，是能為你遮風擋雨的溫暖港灣。", reversed: "遇到冷酷、善於冷暴力的偽善對象。注意對方的承諾背後隱藏的目的。" }, work: { upright: "適合作為高階主管或危機處理專家。靠著沉穩大氣贏得全場尊重。", reversed: "職場上遇到善於拉幫結派、打壓異己的雙面人主管，環境有毒。" } },
-
-                // 3. 寶劍 (Swords) - 風元素 (傷害、邏輯、理智、考驗)
-                "Ace of Swords": { nameCN: "寶劍一", general: { upright: "理智如鋼。代表思維突破、斬斷混亂、大膽破局與絕對的理智勝利。", reversed: "決策失誤、言詞傷人。思維陷入混亂偏執，可能面臨權威挑戰失敗。" }, love: { upright: "以極其理智坦誠的態度溝通，斬斷過去的曖昧，確立明晰的界線。", reversed: "說話過於尖酸刻薄刺傷彼此。關係面臨一刀兩斷的決裂危機。" }, work: { upright: "以雷霆手段劈開複雜難題。適合進行核心架構重組、簽定重大決策。", reversed: "方案缺乏邏輯支撐，面臨推翻。職場溝通語氣過衝導致人際卡關。" } },
-                "Two of Swords": { nameCN: "寶劍二", general: { upright: "僵局與逃避。雙眼被蒙蔽，雙手持劍交叉，內心陷入兩難，選擇拒絕面對真相。", reversed: "打破僵局。摘下眼罩，看清現實局勢，終於願意做出艱難的抉擇。" }, love: { upright: "情感陷入冷戰僵局，彼此封閉內心，不願意坦誠溝通核心矛盾。", reversed: "痛苦但必要的坦白。決定不再逃避問題，將深層矛盾搬上檯面解決。" }, work: { upright: "面臨兩大方案的世紀兩難，各有利弊，導致專案卡在原地動彈不得。", reversed: "終於看清市場真實風向，果斷二選一，重啟停滯已久的研發進度。" } },
-                "Three of Swords": { nameCN: "寶劍三", general: { upright: "心碎的時刻。三把寶劍直刺心臟，代表遭遇背叛、分離、晴天霹靂的痛苦。", reversed: "傷口開始癒合。走出背叛的陰霾，釋放壓抑已久的悲傷，迎來新生。" }, love: { upright: "遭遇嚴重的背叛、分手、或是發現令人心碎的謊言。痛苦難耐。", reversed: "最痛的時期已經過去，開始原諒自己與過去，心理防線重新建立。" }, work: { upright: "專案慘遭中途攔截或合作破裂，遭受巨大的利益損失或言論打擊。", reversed: "從失敗的陰影中重組團隊，汲取血淚教訓，開始修補核心安全漏洞。" } },
-                "Four of Swords": { nameCN: "寶劍四", general: { upright: "退隱與休養。將寶劍掛在牆上，閉上雙眼靜止冥想，這是為了走更遠路而充電。", reversed: "重返戰場。休息結束，體能與思維完成自我修復，重新投入戰鬥。", }, love: { upright: "關係進入冷靜期，彼此需要空間沉澱，暫時不想處理情感矛盾。", reversed: "冷戰、冷靜期宣告結束。雙方重新恢復熱絡互動，嘗試修補關係。" }, work: { upright: "暫時遠離職場紛爭，適合休假、調養身體，不宜在此時大動作進攻。", reversed: "結束休假，重新接管專案核心。戰鬥力回升，準備迎擊下一波挑戰。" } },
-                "Five of Swords": { nameCN: "寶劍五", general: { upright: "慘勝如敗。贏了爭辯卻輸了人心，人際關係四分五裂。注意身邊的流言蜚語。", reversed: "休兵止戰。意識到爭吵的無意義，願意放下驕傲，嘗試修補人際關係。" }, love: { upright: "無休止的針鋒相對，雙方都想當贏家，最終只留下滿目瘡痍的感情。", reversed: "雙方決定放下執怨，停止互相傷害的惡性循環，嘗試和解。" }, work: { upright: "職場辦公室鬥爭慘烈，雖然強行推行方案，但已經徹底失去基層信任。", reversed: "內耗爭鬥平息，大家決定把焦點放回專案本身，減少無謂的口舌之爭。" } },
-                "Six of Swords": { nameCN: "寶劍六", general: { upright: "渡過苦海。乘著小船默默離開傷心地，傷痛依然存在，但局勢正逐漸好轉。", reversed: "卡在苦海中動彈不得。拒絕做出改變，或者面臨無法擺脫的糾纏困境。" }, love: { upright: "經歷風波後，關係進入低調療癒期，彼此默默陪伴渡過難關。", reversed: "不願意放手過去的傷害，舊帳翻個不停，導致關係無法往前推進。" }, work: { upright: "專案正從危機中低調轉移，適合低調調職、更換團隊以尋求安全。", reversed: "轉型計畫遭遇重大阻礙，卡在青黃不接的尷尬期，進退兩難。" } },
-                "Seven of Swords": { nameCN: "寶劍七", general: { upright: "潛逃與密謀。獨自偷走五把寶劍，象徵採取非傳統手段、走捷徑或提防欺騙。", reversed: "東窗事發。計謀被揭穿，或是決定放棄灰色操作，回歸坦誠與光明正大。" }, love: { upright: "感情中隱瞞了某些秘密；單身者需提防遇到滿口謊言的渣男渣女。", reversed: "隱瞞的事情終於敗露；或者雙方決定不再試探，坦承所有的過去。" }, work: { upright: "不適合強攻，適合採取奇襲、游擊戰術或智取。注意商業機密外洩。", reversed: "灰色操作被主管或審計查殺，面臨商譽受損，必須回歸誠信正軌。" } },
-                "Eight of Swords": { nameCN: "寶劍八", general: { upright: "作繭自縛。四周插滿寶劍，雙眼被蒙蔽，其實腳下根本沒有束縛，恐懼由心生。", reversed: "心理覺醒。發現束縛自己的只是幻覺，扯下眼罩，勇敢走出困境。" }, love: { upright: "在感情中感到極度壓抑與無助，自認為無法離開，實則是不敢跨出舒適圈。", reversed: "意識到自己掌握著感情主導權，不再忍受壓榨，勇敢打破受害者枷鎖。" }, work: { upright: "思維被體制完全限制，感到動彈不得，自我懷疑嚴重，工作極度痛苦。", reversed: "打破思想鋼印，大膽提出離職或全新方案，發現世界其實很寬廣。" } },
-                "Nine of Swords": { nameCN: "寶劍九", general: { upright: "深夜噩夢。雙手捂臉從床上驚醒，代表極端的焦慮、失眠、內疚與精神折磨。", reversed: "黑夜即將破曉。意識到自己只是庸人自擾，焦慮平息，正視現實。" }, love: { upright: "內心充滿無端的猜忌與恐懼，被不安全感瘋狂折磨，導致失眠內耗。", reversed: "終於看開，明白許多恐懼只是自己腦補。緊繃的情緒迎來大釋放。" }, work: { upright: "職場壓力達到頂峰，面臨精神崩潰與極端失眠，被工作壓得喘不過氣。", reversed: "最壞的情況不過如此，開始心理重建，積極尋求心理諮商或外援。" } },
-                "Ten of Swords": { nameCN: "寶劍十", general: { upright: "走到終點。十把寶劍將人死死釘在地上，代表最徹底的破產、失敗與結束。物極必反。", reversed: "死而復生。最慘的時刻已經過去，天邊已現曙光，你正在緩慢爬起來。" }, love: { upright: "關係迎來最慘烈、絕無複合可能的毀滅性分手。痛徹心扉。", reversed: "從絕望的感情廢墟中站起來，明白這是一次痛苦但徹底的解脫。" }, work: { upright: "專案徹底宣告失敗、公司倒閉或遭遇慘烈裁員。系統全面崩潰。", reversed: "跌落谷底後的觸底反彈。重新找回歸零的勇氣，準備重寫人生代碼。" } },
-                "Page of Swords": { nameCN: "寶劍侍從", general: { upright: "機警敏銳的情報探測者。思維靈敏，但也代表可能面臨被監視、被八卦。", reversed: "口無遮攔、憤世嫉俗。缺乏深度思考，容易轉變成網絡鍵盤俠或酸民。" }, love: { upright: "曖昧期互相瘋狂視姦對方的社群（Threads/IG），內心充滿試探與戒備。", reversed: "說話不經大腦刺傷對方，或者在背後說八卦被抓包，信任度降低。" }, work: { upright: "適合從事市場調研、競爭對手數據監控，警覺性極高。", reversed: "職場上成了小喇叭，傳播未經證實的謠言，被主管列入黑名單。" } },
-                "Knight of Swords": { nameCN: "寶劍騎士", general: { upright: "言詞犀利、快如閃電的戰士。理智拉滿，不講人情只講邏輯，勢不可擋。", reversed: "盲目衝動、傷人傷己。為了辯論而辯論，作風偏激，容易引發衝突災難。" }, love: { upright: "互動中喜歡講道理、辨是非，缺乏浪漫，但解決問題極其高效。", reversed: "情緒失控的大吵大鬧，說話極度刻薄，完全不顧及對方的自尊心。" }, work: { upright: "雷厲風行解決積壓已久的爛攤子，以絕對的邏輯優勢壓制全場。", reversed: "職場上橫衝直撞得罪所有人，決策缺乏核心數據支持，容易翻車。" } },
-                "Queen of Swords": { nameCN: "寶劍王后", general: { upright: "冰山美人。絕對的理性主義者，言詞精準，具備高超的評判力與情感抽離能力。", reversed: "冷酷無情、偏激刻薄。內心充滿怨恨，用高牆將所有人拒之門外。" }, love: { upright: "在感情中極度獨立、不依賴對方，要求對等且高質量的精神對話。", reversed: "防備心過重，說話帶刺，經常冷嘲熱諷，讓伴侶感到巨大的壓力。" }, work: { upright: "適合擔任審計、合規或法務主管。鐵面無私，明察秋毫。", reversed: "職場作風過於嚴苛不近人情，導致下屬集體反彈，團隊關係惡劣。" } },
-                "King of Swords": { nameCN: "寶劍國王", general: { upright: "法律與秩序的最高捍衛者。擁有終極理智、專業權威，只看證據與邏輯。", reversed: "暴君。利用智商優勢智商霸凌他人，冷酷殘忍，極度自私與專斷。" }, love: { upright: "伴侶高智商、理性、成熟。能給予你方向指導，但缺乏甜言蜜語。", reversed: "對方極度冷酷，像判官一樣審視你，互動缺乏任何溫暖的愛意。" }, work: { upright: "職場教父。你的專業判斷是無可挑剔的，利於談判與法律訴訟勝訴。", reversed: "職場遇到高層濫用權力進行打壓。環境充滿冷血的權謀算計。" } },
-
-                // 4. 錢幣 (Pentacles) - 土元素 (物質、現實、金錢、肉體)
-                "Ace of Pentacles": { nameCN: "錢幣一", general: { upright: "土元素顯化！代表獲得實質的金錢、資源、新工作或穩固的健康起點。", reversed: "財運流失、投資失利。到手的鴨子飛了，缺乏務實的底氣。" }, love: { upright: "關係建立在穩固的物質基礎上，彼此對生活有務實的承諾。", reversed: "因為金錢問題產生隔閡，或者感情流於物質權衡，缺乏真心。" }, work: { upright: "迎來升職加薪、新資金挹注、或是獲得待遇極佳的全新工作邀約。", reversed: "新專案因資金不到位面臨流產。注意職場承諾可能只是空頭支票。" } },
-                "Two of Pentacles": { nameCN: "錢幣二", general: { upright: "靈活雜耍。代表在兩大核心（如工作與生活）之間維持完美的動態平衡。", reversed: "顧此失彼。生活失衡，財務面臨拆東牆補西牆的窘境，瀕臨崩潰。" }, love: { upright: "在兩段關係或多個選擇中理智衡量，目前仍能維持表面平衡。", reversed: "精力被嚴重分散，無法兼顧感情與工作，承諾失信用卡債務拉滿。" }, work: { upright: "靈活處理多個專案外包，財務調度彈性極佳，應變能力強。", reversed: "職場遭遇嚴重的時間分配危機，多個專案同時爆炸，陷入混亂。" } },
-                "Three of Pentacles": { nameCN: "錢幣三", general: { upright: "專業團隊協作。匠人精神，代表各司其職的精密合作、技術獲得高度認可。", reversed: "團隊不和諧。分工混亂，出現外行指導內行的滑稽場面，品質低下。" }, love: { upright: "彼此是一起生活的最佳拍檔，關係受到周遭長輩或朋友的穩定支持。", reversed: "雙方在家庭核心分工上出現摩擦，不願意為彼此的專業做出妥協。" }, work: { upright: "適合跨部門精密協作，你的專業技術將獲得客戶與業界高度讚賞。", reversed: "團隊內部出現豬隊友，溝通雞同鴨講，導致工程或專案進度卡關。" } },
-                "Four of Pentacles": { nameCN: "錢幣四", general: { upright: "守財奴。死死抱著現有的資源不放，過度追求安全感導致思维封閉。", reversed: "學會放手。願意花錢投資、分享資源，打破固守的僵局。" }, love: { upright: "佔有慾過強、嫉妒心重。把伴侶當成私人財產死死控制，讓人窒息。", reversed: "放開過度的控制欲，願意給予彼此空間，不再為小事斤斤計較。" }, work: { upright: "作風極度保守，不願意進行任何風險投資，守成有餘開拓不足。", reversed: "打破僵化編制，決定撥出預算升級軟硬體設備，尋求技術突破。" } },
-                "Five of Pentacles": { nameCN: "錢幣五", general: { upright: "雪地受凍。代表物質匱乏、陷入財務危機、或是感到被社會群體排擠。", reversed: "走出寒冬。找到避難所，財務危機迎來轉機，身體正在康復。" }, love: { upright: "貧賤夫妻百事哀。關係面臨現實金錢的巨大考驗，感到無助。", reversed: "最困窘的物質時期即將過去，兩人決定齊心協力開源節流，重回正軌。" }, work: { upright: "面臨嚴重的資金鏈斷裂風險，或是公司遭遇大規模減薪寒冬。", reversed: "獲得了關鍵的微型貸款或社會援助，部門資金問題緩慢迎來解套。" } },
-                "Six of Pentacles": { nameCN: "錢幣六", general: { upright: "慈善與分配。象徵獲得財務援助、資源的公平分配、或是扮演施捨者的角色。", reversed: "不對等的施捨。注意隱藏的附帶條款，或遭遇不公平的利益分配。" }, love: { upright: "一方在物質或情感上過度照顧另一方，目前仍處於和諧的供需平衡。", reversed: "關係變成了一場金錢交易或權力PUA，一方感到尊嚴飽受踐踏。" }, work: { upright: "順利拿到獎金分紅，或者投資人資金正式入帳，利益分配合理。", reversed: "分紅不公引發基層員工集體離職，注意合約中暗藏的霸王條款。" } },
-                "Seven of Pentacles": { nameCN: "錢幣七", general: { upright: "階段性盤點。看著結滿果實的樹木陷入沉思，正在衡量長遠的回報率。", reversed: "投資遲遲看不到回報而感到焦躁。可能選擇中途放棄，缺乏耐心。" }, love: { upright: "關係進入穩定期，正在認真考量長遠的未來（如結婚、買房）的CP值。", reversed: "覺得在這段感情中付出了太多時間成本，卻得不到對等回應，心生退意。" }, work: { upright: "專案迎來階段性成果，適合停下腳步評估長期的利潤回報方向。", reversed: "急於求成導致動作變形。一味催促結果反而會讓未成熟的果實爛掉。" } },
-                "Eight of Pentacles": { nameCN: "錢幣八", general: { upright: "匠人修煉。專注於精進技能、日復一日地打磨作品，汗水絕不白流。", reversed: "粗製濫造、眼高手低。缺乏匠人精神，或者陷入毫無成長的機械式瞎忙。" }, love: { upright: "踏實認真地經營感情，沒有花言巧語，只有日復一日的務實陪伴。", reversed: "生活流於公式化的柴米油鹽，缺乏情調，注意生活過於沉悶卡關。" }, work: { upright: "適合深耕核心技術、考取專業證照。你的實力正在迎來質的飛躍。", reversed: "工作中出現偷工減料的傾向，或者被困在低薪、沒有發展的流水線上。" } },
-                "Nine of Pentacles": { nameCN: "錢幣九", general: { upright: "精緻利己。物質富足、獨立自主的富婆牌。充分享受高質量的精緻生活。", reversed: "外強中乾。過度消費導致卡債高築，為了維持表面奢華而背負沉重代價。" }, love: { upright: "極度享受高質量的單身生活；有伴者則在物質上彼此獨立、互不依附。", reversed: "感情被金錢衡量，或者為了物質委曲求全，內心感到極度空虛。" }, work: { upright: "個人品牌大獲成功，利潤豐厚，實現了一定程度的財務與時間自由。", reversed: "注意投資超出自身能力的項目，金流出現缺口，表面風光內心焦慮。" } },
-                "Ten of Pentacles": { nameCN: "錢幣十", general: { upright: "帝國成型。代表家族遺產、企業帝國、長遠的物質繁榮與家族最高榮耀。", reversed: "家族內鬥。遺產糾紛，或是企業內部結構老化，面臨崩塌風險。" }, love: { upright: "感情與兩個家族的龐大資源深深綁定，門當戶對，穩如泰山。", reversed: "因為家族財產分配、長輩干涉引發嚴重婚姻危機，關係裂痕加深。" }, work: { upright: "進入跨國大企業或根基極深的老牌公司，體制穩固，資源極其龐大。", reversed: "老牌企業體制嚴重腐敗、官僚主義盛行，轉型失敗導致帝國衰退。" } },
-                "Page of Pentacles": { nameCN: "錢幣侍從", general: { upright: "務實求學的初學者。帶著對物質、金融或技能的渴望，踏實跨出第一步。", reversed: "缺乏金錢觀念、投機取巧。不願意下苦功，只想著一夜暴富。" }, love: { upright: "單身者容易遇到踏實、靠譜、對未來有明確儲蓄計畫的年輕對象。", reversed: "感情中缺乏長遠規劃，消費大手大腳，互動流於眼前的短視享樂。" }, work: { upright: "適合學習理財、啟動微型的投資計畫、或是入職穩定的基層崗位。", reversed: "投資遭遇新手殺，盲目跟風炒股導致積蓄虧空。工作敷衍了事。" } },
-                "Knight of Pentacles": { nameCN: "錢幣騎士", general: { upright: "最靠譜的打工人。雖然速度極慢，但作風極度務實、極其準確且永不放棄。", reversed: "墨守成規、鐵公雞。過於死板不願變通，導致進度嚴重嚴重滯後。" }, love: { upright: "雖然缺乏浪漫浪漫情調，但是個會把薪水全上交、極具安全感的伴侶。", reversed: "生活死板得像一潭死水，拒絕任何新鮮嘗試，摳門程度讓人難以忍受。" }, work: { upright: "專案經理的最佳人選。能以極高的耐性與預算控制力，確保專案完美落地。", reversed: "職場上因極度守舊而成為絆腳石，拒絕革新工作流程，效率低下。" } },
-                "Queen of Pentacles": { nameCN: "錢幣王后", general: { upright: "精明幹練的女主人。善於理財、照顧生活、能將混亂環境打理得井井有條。", reversed: "過度拜金、目光短淺。容易因物質焦慮而對身邊的人進行嚴苛限制。" }, love: { upright: "能在物質與生活細節上給予伴侶極大滋養，是強大的賢內助/神隊友。", reversed: "過度計較伴侶的經濟回報，頻繁因金錢問題數落對方，關係緊繃。" }, work: { upright: "適合擔任財務總監、營運主管。對成本控制與資產保值有天生神力。", reversed: "職場上作風流於小家子氣，斤斤計較於微小的行政開銷，反而錯失大局。" } },
-                "King of Pentacles": { nameCN: "錢幣國王", general: { upright: "華爾街之狼/商界巨頭。物質世界的主宰者，擁有極高的商業天賦與帝王財富。", reversed: "唯利是圖、唯我獨尊。容易用金錢衡量人性的一切價值，內心腐敗冷酷。" }, love: { upright: "成熟、成功且能提供極大物質安全感的伴侶。對愛人大方且負責。", reversed: "把婚姻當成一場資產配置合約。喜歡用錢砸人，極度缺乏真正的精神共鳴。", work: { upright: "商業投資大獲成功的黃金期。你的投資眼光此時點石成金，利潤爆棚。", reversed: "職場遭遇嚴重的經濟官司、或因貪婪導致投資面臨降維打擊的慘敗。" } }
+                "The Sun": { nameCN: "太陽", general: { upright: "象徵極致成功、榮耀、活力與純粹快樂。萬事大吉的至尊王牌。", reversed: "整體運勢依舊保持水準，但光芒可能被短暫烏雲遮蔽。成功只會遲到。" }, love: { upright: "感情運勢爆棚！互動充滿陽光、熱情與坦率。極度受人羨慕。", reversed: "依舊溫馨，但少了一點剛開始的激情。注意不要因為小脾氣消磨熱情。" }, work: { upright: "事業迎來大光明鼎盛時期。求職、創業或升遷都將獲得成功。", reversed: "專案雖能成功，但過程花費比預期多的時間。職場注意不要功高震主。" } },
+                "Judgement": { nameCN: "審判", general: { upright: "命運號角吹響，迎來重大覺醒與因果了結。做出改變一生的重大決定。", reversed: "處於逃避狀態。害怕跨出舒適圈而選擇拖延，錯失系統升級機會。" }, love: { upright: "感情上迎來破鏡重圓，或關係面臨重大昇華。走向命運交織的轉折。", reversed: "面對重複發生的致命問題依舊拒絕理智了斷。無意義地內耗。" }, work: { upright: "面臨關鍵裁決或重大轉機，迎來翻轉職業生涯的黃金職缺。", reversed: "因為猶豫不決錯失跳槽或晉升黃金期。過往失誤缺乏承擔勇氣。" },
+                "The World": { nameCN: "世界", general: { upright: "恭喜！本階段旅程已達到完美終點與大圓滿。代表成功與內心和諧。", reversed: "距離最後成功只剩最後一哩路，千萬不要在此時鬆懈，咬緊牙關完成。" }, love: { upright: "感情迎來最完美大結論。彼此靈魂達到天衣無縫的融合，最高規格祝福。", reversed: "大體上穩定幸福，但心中總覺得缺少臨門一腳的極致激情。" }, work: { upright: "事業達到顛峰狀態！交出無可挑剔的完美成績單。享受收穫期。", reversed: "專案已完成 99%，卻在最後驗收階段卡在繁瑣流程上。保持耐性。" } }
             };
-            return data;
         }
     </script>
 </body>
