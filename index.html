@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔮 聖三角潛意識矩陣占卜 // Sub-Node</title>
+    <title>🔮 🔮 聖三角潛意識占卜 // Sub-Node</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { 
@@ -46,7 +46,7 @@
         #user-question-display { font-size: 14px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 22px; }
         #flow-hint { color: #52525b; font-style: italic; font-size: 11px; margin-bottom: 20px; text-transform: uppercase; tracking: 0.1em; }
 
-        /* 【核心修正】：使用 Grid 強制 3 欄等寬橫排，絕不換行 */
+        /* 核心 Grid 橫排架構 */
         .container { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
@@ -57,45 +57,65 @@
             max-width: 600px; 
             width: 100%; 
             box-sizing: border-box; 
+            position: relative; /* 為了洗牌時的絕對定位提供錨點 */
         }
         .card-box { width: 100%; text-align: center; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
         .card-box h3 { color: #71717a; font-size: 10px; margin-bottom: 12px; tracking: 0.1em; text-transform: uppercase; white-space: nowrap; }
         
-        /* 縮小卡牌基本尺寸以完美相容手機版橫排 */
         .card { 
             width: 100%; max-width: 150px; height: 257px; perspective: 1000px; margin: 0 auto 15px auto; 
-            pointer-events: none; opacity: 0.2; transition: opacity 0.4s, border-color 0.4s, box-shadow 0.4s; box-sizing: border-box;
+            pointer-events: none; opacity: 1; box-sizing: border-box;
+            position: relative;
+            transform: translate(0, 0) rotate(0deg);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s;
         }
         
-        /* 【洗牌動畫優化】：加入高頻流光呼吸與震盪浮動效果 */
-        .card.scanning { 
-            opacity: 0.95; 
-            animation: matrixScan 0.5s infinite alternate ease-in-out;
+        /* ==================== 【真實塔羅洗牌動畫】 ==================== */
+        /* 匯聚成中央牌堆狀態 */
+        .card.gathering {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) rotate(0deg);
+            z-index: 10;
         }
-        
-        @keyframes matrixScan {
-            0% { transform: translateY(0px); filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)); }
-            100% { transform: translateY(-8px); filter: drop-shadow(0 0 18px rgba(220, 38, 38, 0.8)); }
+        /* 給予微幅的堆疊高低落差感 */
+        #card-0.gathering { transform: translateX(-50%) translate(2px, 2px) rotate(-1deg); }
+        #card-1.gathering { transform: translateX(-50%) translate(-1px, -2px) rotate(0.5deg); z-index: 11; }
+        #card-2.gathering { transform: translateX(-50%) translate(0px, 1px) rotate(-0.5deg); z-index: 12; }
+
+        /* 執行切牌交錯動畫 */
+        .card.shuffling-left {
+            animation: realShuffleLeft 0.7s ease-in-out infinite alternate;
         }
-        
+        .card.shuffling-right {
+            animation: realShuffleRight 0.7s ease-in-out infinite alternate;
+        }
+
+        @keyframes realShuffleLeft {
+            0% { transform: translateX(-50%) translate(0, 0) rotate(-1deg); z-index: 10; }
+            45% { transform: translateX(-160%) translate(-10px, 5px) rotate(-8deg); z-index: 20; } /* 往左抽牌開來 */
+            55% { z-index: 5; } /* 插回底層 */
+            100% { transform: translateX(-50%) translate(-2px, -1px) rotate(0.5deg); z-index: 5; }
+        }
+        @keyframes realShuffleRight {
+            0% { transform: translateX(-50%) translate(0, 0) rotate(1deg); z-index: 12; }
+            45% { transform: translateX(60%) translate(10px, -5px) rotate(8deg); z-index: 20; } /* 往右抽牌開來 */
+            55% { z-index: 4; } /* 插回底層 */
+            100% { transform: translateX(-50%) translate(1px, 2px) rotate(-0.5deg); z-index: 4; }
+        }
+
+        /* 正常可點擊狀態 */
         .card.playable { 
             pointer-events: auto; opacity: 1; cursor: pointer;
-            animation: cardPulse 2s infinite ease-in-out;
         }
-        .card.playable:hover { transform: translateY(-6px); filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.5)); }
+        .card.playable:hover { transform: translateY(-6px); filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.4)); }
         .card.flipped { opacity: 1; }
-        
-        @keyframes cardPulse {
-            0%, 100% { filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.15)); }
-            50% { filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.40)); }
-        }
         
         .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.9); box-sizing: border-box; }
         
         .card-back { background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-size: 28px; }
-        .card.scanning .card-back { border-color: #dc2626; color: #fff; }
         .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; }
         .card-front img { width: 100%; height: 100%; border-radius: 7px; object-fit: cover; }
         
@@ -196,7 +216,7 @@
     </footer>
 
     <script>
-        // ==================== 【優化優級】：重配音效引擎 ====================
+        // 音效引擎
         const AudioEngine = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type, step = 0) {
@@ -210,19 +230,17 @@
                 osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.05);
             } 
             else if (type === 'shuffle_tick') {
-                // 優化點：引入輕微隨機微調(Jitter)，使卡牌掃描聲更有機械卡嗒顆粒感
+                // 模擬實體卡牌摩擦紙張、切牌時的沙沙聲沉悶音效
                 const osc = AudioEngine.createOscillator(); const filter = AudioEngine.createBiquadFilter(); const gain = AudioEngine.createGain();
-                osc.type = 'sine'; 
-                let jitter = (Math.random() - 0.5) * 80;
-                let freq = 1400 + (step * 300) + jitter; 
+                osc.type = 'triangle'; 
+                let freq = 180 + (Math.random() * 40); 
                 osc.frequency.setValueAtTime(freq, now); 
-                osc.frequency.exponentialRampToValueAtTime(freq - 700, now + 0.04);
-                filter.type = 'bandpass'; filter.frequency.setValueAtTime(freq, now); 
-                gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-                osc.connect(filter); filter.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.04);
+                osc.frequency.exponentialRampToValueAtTime(80, now + 0.08);
+                filter.type = 'lowpass'; filter.frequency.setValueAtTime(300, now); 
+                gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.connect(filter); filter.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.08);
             } 
             else if (type === 'flip') {
-                // 優化點：高低雙振盪器融合。Sine提供科幻沉悶重音，Triangle提供能量解鎖的清脆感
                 const oscBase = AudioEngine.createOscillator(); const oscTop = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
                 let baseFreq = 220.00; if (step === 1) baseFreq = 261.63; if (step === 2) baseFreq = 329.63;
                 
@@ -254,7 +272,7 @@
             }
         }
 
-        // ==================== 完整大牌數據庫 ====================
+        // 大牌數據庫
         const tarotData = {
           "cards": [
             { "name": "The Fool", "img": "m00.jpg" }, { "name": "The Magician", "img": "m01.jpg" },
@@ -294,7 +312,7 @@
                 nameCN: "皇后",
                 general: { upright: "代表豐收、繁榮與物質的富足。你正處於能量飽滿、感官敏銳的收穫期。這是一個充滿溫暖、滋養與創造力的階段。無論是生活還是計畫，都將迎來豐碩的回報。", reversed: "目前你可能感到缺乏安全感，或者是對環境有過度的控制慾。創造力受到阻塞，甚至有過度揮霍、怠惰的傾向。注意不要將自己的情感價值建立在他人的認同上。" },
                 love: { upright: "感情生活充滿甜蜜與溫馨，彼此包容與支持。這是一段非常滋養、甚至有望走向家庭或穩定長期發展的吉兆。單身者近期桃花能量強勁，極具女性魅力。", reversed: "在關係中表現得過度控制或佔有慾過強，這讓對方感到窒息。或者是開出物質、金錢問題導致感情產生摩擦，需要注意情感勒索的傾向。" },
-                work: { upright: "職場發展順遂，你的努力將迎來實質的回報或業績大紅利。團隊氛圍和諧，合作專案能如期推進。現在是擴張業務與享受成果的絕佳時機。", reversed: "工作流於安逸、怠惰，缺乏前進的積極度。亦可能因為過度鋪張浪費、預算控管不佳導致專案出問題。注意職場上不要過於感情用事。" }
+                work: { upright: "職場发展順遂，你的努力將迎來實質的回報或業績大紅利。團隊氛圍和諧，合作專案能如期推進。現在是擴張業務與享受成果的絕佳時機。", reversed: "工作流於安逸、怠惰，缺乏前進的積極度。亦可能因為過度鋪張浪費、預算控管不佳導致專案出問題。注意職場上不要過於感情用事。" }
             },
             "The Emperor": {
                 nameCN: "皇帝",
@@ -306,7 +324,7 @@
                 nameCN: "教皇",
                 general: { upright: "代表傳統、體制、導師以及精神上的指引。你當前所面對的環境需要你遵循既有的規範與智慧。這是一張獲得貴人相助、得到主流認可的穩定之牌。", reversed: "暗示你正試圖打破舊有的教條，或遭遇到了僵化思想的制約。此時容易出現溝通障礙，甚至會受到不實資訊的引導，建議跳脫框架，獨立思考。" },
                 love: { upright: "關係受到傳統價值觀的祝福，傾向於穩定、有責任感的長久承諾。雙方在價值觀或宗教信仰上容易達成高度契合，是一段和諧且充滿尊重的關係。", reversed: "感情中缺乏火花，雙方互動變得像在按部就班、流於形式。亦可能因為長輩過度干涉或價值觀嚴重分歧，導致彼此在溝通上面臨巨大的冷戰張力。" },
-                work: { upright: "適合留在穩定的體制或大公司發展。近期在職場上容易遇到資深的導師、前輩給予核心指導，遵從體制與規範將會為你帶來極大的庇護。", reversed: "職場上遭遇僵化的制度打壓，或是你現階段的創新想法被主流團隊否決。此時不適合強行對抗體制，宜先保存實力，尋求體制外的破局機會。" }
+                work: { upright: "適合留在穩定的體制或大公司發展。近期在職場上容易遇到資深的導師、前輩給予核心指導，遵從體制與規範將會為你帶來極大的庇護。", reversed: "職場上遭遇僵化的制度打壓，或者是你現階段的創新想法被主流團隊否決。此時不適合強行對抗體制，宜先保存實力，尋求體制外的破局機會。" }
             },
             "The Lovers": {
                 nameCN: "戀人",
@@ -323,19 +341,19 @@
             "Strength": {
                 nameCN: "力量",
                 general: { upright: "內心的堅韌與溫柔的控制力達到了完美平衡。你不需要依賴粗暴的手段，而是憑藉著無比的耐心、自信與包容心，就能感化並馴服生命中所有的野獸。", reversed: "暗示你當前可能陷入了自我懷疑，或是情緒失控、被內心的焦慮與恐懼所吞噬。你可能正在用不理智的對抗方式處理問題，導致內在能量大量虛耗。" },
-                love: { upright: "在感情中展現出極高的情商。你能夠用溫柔與包容化解對方的壞脾氣與不安，建立起一段基於深度信任與靈魂尊重的成熟健康關係。", reversed: "在關係中感到無力與疲憊，或者是佔有慾與控制慾失控，試圖用強硬的手腕逼迫對方就範。需注意這種不對等的張力會加速消磨彼此的愛意。" },
+                love: { upright: "在感情中展現出極高的情商。你能夠用溫柔與包容化解對方的壞脾氣與不安，建立起一段基於深度信任與靈魂尊重的成熟健康關係。", reversed: "在關係中感到無力與疲憊，或者是佔有慾與控制慾失控，試圖用強硬的手腕逼迫對方就範。注意這種不對等的張力會加速消磨彼此的愛意。" },
                 work: { upright: "面對職場的危機或棘手難題時，展現出臨危不亂的沉著智慧。你強大的協調能力與內在抗壓性，能讓你贏得長官與團隊最高層級的敬佩。", reversed: "工作中面臨巨大的精神內耗，你感到自己的才華或心力被環境榨乾。此時容易因缺乏自信而選擇退縮，或是因過度急躁而把原本好轉的局勢搞砸。" }
             },
             "The Hermit": {
                 nameCN: "隱士",
                 general: { upright: "這是一個向內探索、尋求內在智慧的沉澱期。外界的喧囂對你而言不再重要，你需要的是孤獨的思考，在潛意識的深處為自己點亮一盞指路的明燈。", reversed: "警告你可能過度與世隔絕，演變成了逃避現實的孤僻與傲慢。或者是在反省的過程中迷失了方向，讓自己陷入了無意義的偏執與精神內耗之中。" },
                 love: { upright: "感情上進入精神層次的審視期。單身者非常享受一個人的清靜與自我提升；有伴侶者則傾向於給予彼此尊重的空間，追求更高層次的靈魂共鳴。", reversed: "彼此之間築起了高牆，溝通陷入名存實亡的寂寞狀態。一方可能假借需要空間之名，行冷暴力之實，讓這段感情充滿了令人窒息的疏離感。" },
-                work: { upright: "適合從事深度思考、長遠規劃、技術研發或幕後顧問工作。此時不宜站在最前線爭名奪利，沈穩地積蓄核心技術與知識，才能為未來奠定王座。", reversed: "在職場上顯得與團隊格格不入，陷入孤立無援的窘境。或者是你過於固執己見、不願聽取主流市場的意見，導致專案或研究逐漸與現實脫節。" }
+                work: { upright: "適合傾注於深度思考、長遠規劃、技術研發或幕後顧問工作。此時不宜站在最前線爭名奪利，沈穩地積蓄核心技術與知識，才能為未來奠定王座。", reversed: "在職場上顯得與團隊格格不入，陷入孤立無援的窘境。或者是你過於固執己見、不願聽取主流市場的意見，導致專案或研究逐漸與現實脫節。" }
             },
             "Wheel of Fortune": {
                 nameCN: "命運之輪",
                 general: { upright: "不可抗拒的命運齒輪開始加速轉動。這是一張代表好運、轉機與順應天時的卡牌。轉折點即將到來，局勢將朝著對你極為有利的方向產生量子躍遷。", reversed: "暗示你正處於運勢波動的低谷期，或試圖強行對抗環境的大趨勢。此時容易遇到突如其來的阻礙，建議保持彈性，不要在錯誤的時機強求盲目的擴張。" },
-                love: { upright: "感情上迎來宿命般的緣分。單身者極易在毫無準備的情況下遇見一見幽鐘的靈魂伴侶；有伴侶者則會經歷一個讓關係產生正向飛躍的關鍵契機。", reversed: "感情發展面臨外部不可抗力的干擾，或者是雙方陷入了不斷重複同一個矛盾的惡性循環之中。目前不宜急於做出承諾，靜待風暴過去。" },
+                love: { upright: "感情上迎來宿命般的緣分。單身者極易在毫無準備的情況下遇見一見鍾情的靈魂伴侶；有伴侶者則會經歷一個讓關係產生正向飛躍的關鍵契機。", reversed: "感情發展面臨外部不可抗力的干擾，或者是雙方陷入了不斷重複同一個矛盾的惡性循環之中。目前不宜急於做出承諾，靜待風暴過去。" },
                 work: { upright: "職場運勢迎來大洗牌式的轉機，原本停滯不前的專案將獲得驚人的外部助力。此時非常適合把握新機會，順應潮流做出的變革將迎來翻倍的回報。", reversed: "工作中出現意料之外的變故或預算被砍的危機。目前的市場環境對你較為不利，不建議進行大刀闊斧的盲目投資，需做好防守型的備份機制。" }
             },
             "Justice": {
@@ -370,7 +388,7 @@
             },
             "The Tower": {
                 nameCN: "高塔",
-                general: { upright: "警告！一場突如其來、無法抗拒的毀滅性劇變即將震撼你的生活。所有建立在虛假、自欺欺人地基上的虛幻架構都將在瞬間崩塌。這是宇宙強行替你進行的系統重塑。", reversed: "暗示一場危機雖然即將爆發，但其衝擊力已被降到最低；或者代表你明知危機四伏，卻依然試圖粉飾太平、躲在即將倒塌的危樓裡，這只會讓危險更加不可控。" },
+                general: { upright: "警告！一場突如來、無法抗拒的毀滅性劇變即將震撼你的生活。所有建立在虛假、自欺欺人地基上的虛幻架構都將在瞬間崩塌。這是宇宙強行替你進行的系統重塑。", reversed: "暗示一場危機雖然即將爆發，但其衝擊力已被降到最低；或者代表你明知危機四伏，卻依然試圖粉飾太平、躲在即將倒塌的危樓裡，這只會讓危險更加不可控。" },
                 love: { upright: "感情面臨毫無預警的重大衝擊，隱藏已久的秘密或背叛被強行曝光，導致關係瞬間面臨分崩離析的考驗。這是一場情感海嘯，考驗著地基是否穩固。", reversed: "雙方的矛盾已經到了隨時會爆炸的邊緣，雖然目前勉強維持著表面的和平，但這種日復一日的精神高壓更讓人折磨。需提防冷不防的突發摩擦引爆連環炸彈。" },
                 work: { upright: "職場上面臨突發性的災難，如專案被一刀切、公司無預警倒閉、核心合夥人突然撤資或商譽遭遇毀滅性打擊。不要試圖挽救，這是在逼你徹底更換賽道。", reversed: "工作中雷聲大雨點小，危機雖然驚險地擦身而過，但根本性的問題與漏洞完全沒有得到解決。如果此時不進行底層代碼的徹底大翻修，下一次崩潰將會更加致命。" }
             },
@@ -388,7 +406,7 @@
             },
             "The Sun": {
                 nameCN: "太陽",
-                general: { upright: "象徵著極致的成功、榮耀、活力與純粹的快樂。你此時的能量正如日中天，所有的陰暗與迷霧在你的光芒照耀下都將煙消滅散。這是一張萬事大吉的至尊王牌。", reversed: "雖然整體運勢依然保持在水準之上，但光芒可能被短暫的烏雲所遮蔽。你可能出現了過度自信、驕傲、或是過度消耗體力的傾向。成功雖然會遲到，但絕不會缺席。" },
+                general: { upright: "象徵著極致的成功、榮耀、活力與純粹的快樂。你此時的能量正如日中天，所有的陰暗與迷霧在你的光芒照耀下都將煙消雲散。這是一張萬事大吉的至尊王牌。", reversed: "雖然整體運勢依然保持在水準之上，但光芒可能被短暫的烏雲所遮蔽。你可能出現了過度自信、驕傲、或是過度消耗體力的傾向。成功雖然會遲到，但絕不會缺席。" },
                 love: { upright: "感情運勢爆棚！彼此的互動充滿了陽光、熱情與毫無保留的坦率。這是一段極具生命力、受人羨慕、且非常適合公開或攜手走向下一階段的黃金戀情。", reversed: "感情依舊溫暖，但彼此之間少了一點剛開始的激情火花，或者是一方在相處時顯得有些小孩子氣、過度傲嬌與任性。注意不要因為小脾氣而消磨了彼此的熱情。" },
                 work: { upright: "事業上迎來大光明的鼎盛時期。不論是創業、求職還是升遷，你都將獲得無與倫比的成功。你強大的正能量與領導力，會讓你成為整個團隊爭相追隨的領袖。", reversed: "專案雖然能夠成功，但過程會比預期中多花費一些時間，且利潤或回報可能被稍微稀釋。需注意職場上不要功高震主，保持適度的低調與謙遜能讓你走得更遠。" }
             },
@@ -400,7 +418,7 @@
             },
             "The World": {
                 nameCN: "世界",
-                general: { upright: "恭喜你！本階段的矩陣旅程已達到完美的終點與大圓滿。這張牌代表著圓滿結束、成功、旅行、以及內心世界的和諧與富足。你已經在當前課題中實現了全人類層級的自由。", reversed: "暗示你距離最後的成功只剩下最後一哩路，但此時系統卻出現了些微的遲滯或虎頭蛇尾的傾向。計畫即將完成，千萬不要在此時鬆懈，咬緊牙關完成最後的代碼封裝。" },
+                general: { upright: "恭喜上！本階段的矩陣旅程已達到完美的終點與大圓滿。這張牌代表著圓滿結束、成功、旅行、以及內心世界的和諧與富足。你已經在當前課題中實現了全人類層級的自由。", reversed: "暗示你距離最後的成功只剩下最後一哩路，但此時系統卻出現了些微的遲滯或虎頭蛇尾的傾向。計畫即將完成，千萬不要在此時鬆懈，咬緊牙關完成最後的代碼封裝。" },
                 love: { upright: "感情迎來最完美的大結局。彼此的靈魂達到了天衣無縫的融合與和諧。無論是走向婚姻、共同旅行還是攜手相伴一生，這都是宇宙給予這段戀情最高規格的祝福。", reversed: "感情大體上非常穩定幸福，但心中總覺得缺少了臨門一腳的極致激情，或是因為遠距離、外在環境的微小阻礙，導致關係在最後的圓滿階段產生了短暫的停滯。" },
                 work: { upright: "事業達到顛峰狀態！不論是跨國大專案的完美結案、還是個人名聲達到行業頂峰，你都交出了一份無可挑剔的完美成績單。這是你享受無上榮耀與實質財富的收穫期。", reversed: "工作專案已經完成了 99%，卻在最後的驗收階段卡在一些繁瑣的行政流程或細節微調上。此時切忌急躁，保持耐性將最後的收尾工作做扎實，勝利依舊屬於你。" }
             },
@@ -420,12 +438,15 @@
             playSound('click');
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ MATRIX_TARGET // ${typeNames[selectedType]} : ${questionInput} ]`;
-            document.getElementById('flow-hint').innerText = "DECRYPTING_SUB_NODES...";
+            document.getElementById('flow-hint').innerText = "SHUFFLING_DECK...";
+            
             initStaticDeck();
             currentFlipIndex = 0;
+            
             const shuffled = [...tarotData.cards].sort(() => 0.5 - Math.random());
             currentHandData = shuffled.slice(0, 3).map(card => { return { ...card, isReversed: Math.random() < 0.5 }; });
-            runDigitalShuffle(); 
+            
+            runRealTarotShuffle(); 
         }
 
         function initStaticDeck() {
@@ -433,31 +454,50 @@
             const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
             for (let i = 0; i < 3; i++) {
                 const cardBox = document.createElement('div'); cardBox.className = 'card-box';
-                cardBox.innerHTML = `<h3>${positions[i]}</h3><div class="card" id="card-${i}" onclick="handleCardFlip(${i})"><div class="card-inner"><div class="card-back">⚝</div><div class="card-front" id="front-slot-${i}"></div></div></div>`;
+                // 初始為 gathering 狀態，全部吸附在中央
+                cardBox.innerHTML = `<h3>${positions[i]}</h3><div class="card gathering" id="card-${i}" onclick="handleCardFlip(${i})"><div class="card-inner"><div class="card-back">⚝</div><div class="card-front" id="front-slot-${i}"></div></div></div>`;
                 deckDiv.appendChild(cardBox);
             }
         }
 
-        function runDigitalShuffle() {
-            let step = 0;
-            const shuffleTimer = setInterval(() => {
-                if (step < 3) {
-                    const card = document.getElementById(`card-${step}`);
-                    if (card) { card.classList.add('scanning'); playSound('shuffle_tick', step); }
-                    step++;
+        function runRealTarotShuffle() {
+            const card0 = document.getElementById('card-0');
+            const card1 = document.getElementById('card-1');
+            const card2 = document.getElementById('card-2');
+            
+            // 開始切牌交叉動畫
+            card0.classList.add('shuffling-left');
+            card2.classList.add('shuffling-right');
+            
+            // 洗牌音效定時器（真實卡牌的沙沙摩擦切牌聲）
+            let soundTicks = 0;
+            const soundInterval = setInterval(() => {
+                if (soundTicks < 12) {
+                    playSound('shuffle_tick');
+                    soundTicks++;
                 } else {
-                    clearInterval(shuffleTimer);
-                    setTimeout(() => {
-                        currentHandData.forEach((card, i) => {
-                            const cardEl = document.getElementById(`card-${i}`);
-                            if (cardEl) cardEl.classList.remove('scanning');
-                            const slot = document.getElementById('front-slot-' + i);
-                            if (slot) slot.innerHTML = `<img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">`;
-                        });
-                        unlockNextCard();
-                    }, 400); // 略微增加延遲，給予掃描動畫視覺緩衝
+                    clearInterval(soundInterval);
                 }
-            }, 300); // 拉長每次切換的時間間隔，讓音效與動畫更有層次
+            }, 180);
+
+            // 經過 2.5 秒的真實切牌洗牌後，停止動畫並將卡牌發到各自對應的位置上
+            setTimeout(() => {
+                clearInterval(soundInterval);
+                
+                // 移除洗牌切牌動畫與吸附屬性
+                card0.classList.remove('shuffling-left', 'gathering');
+                card1.classList.remove('gathering');
+                card2.classList.remove('shuffling-right', 'gathering');
+                
+                // 塞入對應隨機出來的卡牌正面圖片結構
+                currentHandData.forEach((card, i) => {
+                    const slot = document.getElementById('front-slot-' + i);
+                    if (slot) slot.innerHTML = `<img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">`;
+                });
+
+                // 解鎖第一張牌讓玩家點擊
+                unlockNextCard();
+            }, 2500);
         }
 
         function unlockNextCard() {
@@ -467,7 +507,7 @@
                 const posName = currentFlipIndex === 0 ? "過去" : (currentFlipIndex === 1 ? "現在" : "未來");
                 document.getElementById('flow-hint').innerText = `👉 請點擊翻開【${posName}】數據節點`;
             } else {
-                document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 矩陣分析完成...";
+                document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 占卜完成...";
                 playSound('success'); setTimeout(() => { compileAndShowResultView(); }, 1000);
             }
         }
@@ -521,7 +561,7 @@
             }
             else if (totalUprights === 1) { 
                 introText = `當前牌陣中出現了較多的逆位能量拉扯，這是一份來自潛意識矩陣深處的嚴肅警訊。目前的局勢中隱藏著較多的制約、焦慮、資訊不對稱或是能量嚴重受阻的情況。`; 
-                coreAnalysis = `雖然有【${pName}】或【${prName}】其中一者試圖提供底層支撐，但從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於爆發高峰期。`; 
+                coreAnalysis = `雖然有【${pName}】或【${prName}】其中一者試圖提供底層支撐，開從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於爆發高峰期。`; 
                 adviceText = "目前時機尚未成熟，不宜盲目推展與強求任何實質結果。建議先將焦點從外在的追求轉回內心，停下腳步沉澱情緒。徹底找出當前的核心系統盲點進行整頓，才是突破當前僵局的唯一解法。"; 
             }
             else { 
@@ -531,13 +571,13 @@
             }
             
             const summaryDiv = document.getElementById('summary-section');
-            summaryDiv.innerHTML = `<h2>🔮 [ 綜合矩陣點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
+            summaryDiv.innerHTML = `<h2>🔮 [ 綜合點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
         }
 
         function generateCardAndRedirect() {
             playSound('capture'); const targetNode = document.getElementById('capture-node');
             html2canvas(targetNode, { backgroundColor: "#050505", scale: 2, useCORS: true }).then(canvas => {
-                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Matrix-Report.png'; link.href = image; link.click();
+                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Report.png'; link.href = image; link.click();
                 setTimeout(() => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; }, 1000);
             }).catch(err => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; });
         }
