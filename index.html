@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🔮 聖三角潛意識占卜 // Sub-Node</title>
-    <!-- 將 html2canvas 移到最下方或等需要再用，這裡先不擋載入 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <style>
         body { 
@@ -47,6 +46,7 @@
         #user-question-display { font-size: 14px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 22px; }
         #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
 
+        /* 頂部三個固定的槽位 */
         .slots-container { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
@@ -66,37 +66,83 @@
             position: relative; display: flex; align-items: center; justify-content: center; color: #3f3f46; font-size: 11px;
         }
 
-        .deck-zone { margin-top: 30px; min-height: 260px; position: relative; border-top: 1px solid #1f1f1f; padding-top: 25px; }
-        .pile-master { width: 90px; height: 145px; margin: 0 auto; position: relative; cursor: pointer; }
+        /* 🔮 核心變更：全新扇形舞台區塊 */
+        .deck-zone { 
+            margin-top: 25px; 
+            min-height: 320px; 
+            position: relative; 
+            border-top: 1px solid #1f1f1f; 
+            padding-top: 20px;
+        }
+        
+        /* 洗牌疊牌中心 */
+        .pile-master { width: 90px; height: 145px; margin: 40px auto 0 auto; position: relative; cursor: pointer; }
 
-        .spread-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            max-width: 550px;
+        /* 扇形滾動防禦容器：在手機上若超出寬度可以左右微滑，體驗極佳 */
+        .fan-scroller {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 20px;
+            box-sizing: border-box;
+        }
+        /* 隱藏滾動條 */
+        .fan-scroller::-webkit-scrollbar { display: none; }
+
+        /* 扇形展開的絕對圓心定位基座 */
+        .spread-fan-stage {
+            position: relative;
+            width: 600px;       /* 給予足夠寬度展牌 */
+            height: 280px;
             margin: 0 auto;
             opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        @media (max-width: 480px) {
-            .spread-grid { grid-template-columns: repeat(4, 1fr); }
+            transition: opacity 0.6s ease;
+            display: none;
         }
 
+        /* 基礎卡牌樣式 */
         .card { 
-            width: 100%; height: 145px; perspective: 1000px; cursor: pointer; position: relative;
+            width: 85px; height: 135px; perspective: 1000px; cursor: pointer; position: relative;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
         }
         .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .card.selected-fly { opacity: 0; transform: scale(0.5) translateY(-100px); pointer-events: none; }
+        
+        /* 扇形狀態下的卡牌：全部絕對定位疊在基座底部中央，靠 JS 賦予 transform 展開 */
+        .spread-fan-stage .card {
+            position: absolute;
+            bottom: 20px;
+            left: calc(50% - 42.5px); /* 水平置中基準線 */
+            transform-origin: center 250px; /* 🎯 關鍵：將旋轉圓心向下延伸出卡片外，形成完美弧半徑 */
+        }
+
+        /* 被盲抽選中時滑走的特效 */
+        .card.selected-fly { opacity: 0; transform: scale(0.3) translateY(-250px) !important; pointer-events: none; z-index: 99; }
 
         .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-back { background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #52525b; font-size: 20px; }
-        .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; }
-        .card-front img { width: 100%; height: 100%; border-radius: 5px; object-fit: cover; }
+        
+        /* 牌背設計：加強神秘科幻感 */
+        .card-back { 
+            background: #0d0d0d; border: 1px solid #3f3f46; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; color: #dc2626; font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        /* 懸停微調：洗牌完後滑過去會有微微浮起與紅光效果 */
+        .spread-fan-stage .card:hover {
+            z-index: 100 !important;
+        }
+        .spread-fan-stage .card:hover .card-back {
+            border-color: #dc2626;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.6);
+        }
+
+        .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; border-radius: 6px; overflow: hidden; }
+        .card-front img { width: 100%; height: 100%; object-fit: cover; }
         
         .card-in-slot { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
 
+        /* 結果展示頁面 */
         .result-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; margin: 20px auto; max-width: 600px; width: 100%; }
         .result-card-static { width: 100%; max-width: 110px; height: 180px; background-color: #000; border: 1px solid #52525b; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.9); }
         .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
@@ -139,15 +185,13 @@
         <h1>🔮 聖三角潛意識矩陣占卜</h1>
         <div class="sys-status">SYS_STATUS: ACTIVE // DECK_SELECTION</div>
         
-        <!-- 視圖1：首頁 -->
         <div id="home-view" class="view-node active-node panel-section">
             <div class="intro-text">
-                <p>歡迎來到聖三角潛意識占卜。本系統已重構完整大阿爾克那牌組，洗牌後將完全由你的潛意識指引，親自盲抽三張命運節點。</p>
+                <p>歡迎來到聖三角潛意識占卜。本系統已重構完整大阿爾克那牌組，洗牌後將完全由你的潛意識指引，親自展開半圓扇形矩陣並盲抽三張命運節點。</p>
             </div>
             <button class="btn-primary" onclick="switchView('divination-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
         </div>
 
-        <!-- 視圖2：占卜主頁面 -->
         <div id="divination-view" class="view-node panel-section">
             <label for="question">[ INITIALIZE_INPUT ] 請輸入你的問題：</label>
             <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
@@ -181,11 +225,13 @@
 
             <div id="deck-zone" class="deck-zone" style="display: none;">
                 <div id="pile-master" class="pile-master"></div>
-                <div id="spread-grid" class="spread-grid"></div>
+                
+                <div class="fan-scroller">
+                    <div id="spread-fan-stage" class="spread-fan-stage"></div>
+                </div>
             </div>
         </div>
 
-        <!-- 視圖3：結果 -->
         <div id="result-view" class="view-node panel-section">
             <div id="capture-node">
                 <div id="result-question-title" class="result-title-node"></div>
@@ -206,17 +252,18 @@
     <footer><p>⚡ 系統宣告 // Disclaimer</p></footer>
 
     <script>
-        // 核心換頁函式置頂，確保任何時候點擊都有效
         function switchView(viewId) {
             const nodes = document.querySelectorAll('.view-node');
             for (let i = 0; i < nodes.length; i++) {
                 nodes[i].classList.remove('active-node');
             }
             const target = document.getElementById(viewId);
-            if (target) nodes[i = [...nodes].indexOf(target)].classList.add('active-node');
+            if (target) {
+                const idx = Array.from(nodes).indexOf(target);
+                if(idx !== -1) nodes[idx].classList.add('active-node');
+            }
         }
 
-        // 音效模組全包覆防禦
         let AudioEngine = null;
         function safeUnlockSound() {
             try {
@@ -252,7 +299,6 @@
             } catch(e) {}
         }
 
-        // 基本輕量牌庫定義
         const tarotCardsPool = [
             { "name": "The Fool", "img": "m00.jpg" }, { "name": "The Magician", "img": "m01.jpg" },
             { "name": "The High Priestess", "img": "m02.jpg" }, { "name": "The Empress", "img": "m03.jpg" },
@@ -280,8 +326,8 @@
             document.getElementById('slots-area').style.display = 'none';
             document.getElementById('deck-zone').style.display = 'none';
             document.getElementById('pile-master').innerHTML = '';
-            document.getElementById('spread-grid').innerHTML = '';
-            document.getElementById('spread-grid').style.opacity = '0';
+            document.getElementById('spread-fan-stage').innerHTML = '';
+            document.getElementById('spread-fan-stage').style.opacity = '0';
             for(let i=0; i<3; i++) document.getElementById(`slot-${i}`).innerHTML = '等待選牌';
             selectedHand = []; currentSlotIndex = 0; isShuffling = false;
         }
@@ -303,12 +349,12 @@
             document.getElementById('slots-area').style.display = 'grid';
             document.getElementById('deck-zone').style.display = 'block';
             document.getElementById('pile-master').style.display = 'block';
-            document.getElementById('spread-grid').style.display = 'none';
+            document.getElementById('spread-fan-stage').style.display = 'none';
             
             const pile = document.getElementById('pile-master'); pile.innerHTML = '';
             for(let i=0; i<22; i++) {
                 const pCard = document.createElement('div'); pCard.className = 'card';
-                pCard.style.top = `-${i * 1.5}px`; pCard.style.left = `${i * 0.3}px`;
+                pCard.style.top = `-${i * 1.5}px`; pCard.style.left = `${i * 0.2}px`;
                 pCard.innerHTML = `<div class="card-inner"><div class="card-back">⚝</div></div>`;
                 pile.appendChild(pCard);
             }
@@ -324,41 +370,67 @@
                 if(elapsed < duration) {
                     if (now - lastTick > 90) { try { playSound('shuffle_tick'); } catch(e){} lastTick = now; }
                     pileCards.forEach((c, idx) => {
-                        let offsetX = 25 * Math.sin(now * 0.02 + idx);
-                        let offsetY = (idx * -1.5) + (8 * Math.cos(now * 0.015 + idx));
-                        c.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${6 * Math.sin(now * 0.01 + idx)}deg)`;
+                        let offsetX = 30 * Math.sin(now * 0.02 + idx);
+                        let offsetY = (idx * -1.5) + (10 * Math.cos(now * 0.015 + idx));
+                        c.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${8 * Math.sin(now * 0.01 + idx)}deg)`;
                     });
                     requestAnimationFrame(physicsShuffle);
                 } else {
                     pileCards.forEach((c, idx) => c.style.transform = `translate(0px, -${idx * 1.5}px) rotate(0deg)`);
-                    setTimeout(() => spreadTheDeckOut(), 300);
+                    setTimeout(() => spreadTheFanDeck(), 300);
                 }
             }
             requestAnimationFrame(physicsShuffle);
         }
 
-        function spreadTheDeckOut() {
+        // 🎯 【關鍵改造】抹開成完美圓弧扇形
+        function spreadTheFanDeck() {
             document.getElementById('pile-master').style.display = 'none';
-            const grid = document.getElementById('spread-grid'); grid.innerHTML = ''; grid.style.display = 'grid';
-            document.getElementById('flow-hint').innerText = `👉 請憑潛意識直覺，親自盲抽第 1 張牌 【過去 // PAST】`;
+            const stage = document.getElementById('spread-fan-stage'); 
+            stage.innerHTML = ''; 
+            stage.style.display = 'block';
+            
+            document.getElementById('flow-hint').innerText = `👉 請憑潛意識直覺，從扇形矩陣盲抽第 1 張牌 【過去 // PAST】`;
+
+            // 設定扇形展開參數
+            const totalCards = processedDeck.length;
+            const startAngle = -52; // 最左邊卡片的旋轉角度
+            const endAngle = 52;   // 最右邊卡片的旋轉角度
+            const angleStep = (endAngle - startAngle) / (totalCards - 1);
 
             processedDeck.forEach((cardData, index) => {
-                const cardEl = document.createElement('div'); cardEl.className = 'card'; id = `deck-card-${index}`;
+                const cardEl = document.createElement('div'); 
+                cardEl.className = 'card'; 
                 cardEl.setAttribute('id', `deck-card-${index}`);
                 cardEl.innerHTML = `<div class="card-inner"><div class="card-back">?</div></div>`;
-                cardEl.onclick = () => selectCardFromSpread(index);
-                grid.appendChild(cardEl);
+                
+                // 計算每張牌的專屬角度，並設定 Z-Index 層級確保由左至右完美堆疊
+                const currentAngle = startAngle + (index * angleStep);
+                cardEl.style.transform = `rotate(${currentAngle}deg)`;
+                cardEl.style.zIndex = index;
+
+                cardEl.onclick = () => selectCardFromFan(index, currentAngle);
+                stage.appendChild(cardEl);
             });
-            setTimeout(() => grid.style.opacity = '1', 50);
+            
+            setTimeout(() => stage.style.opacity = '1', 50);
+            
+            // 自動幫玩家置中滾動視窗，確保極致的手機單手抽牌體驗
+            const scroller = document.querySelector('.fan-scroller');
+            if(scroller) {
+                scroller.scrollLeft = (stage.offsetWidth - scroller.offsetWidth) / 2;
+            }
         }
 
-        function selectCardFromSpread(index) {
+        function selectCardFromFan(index, appliedAngle) {
             if (currentSlotIndex >= 3) return;
             const targetCard = document.getElementById(`deck-card-${index}`);
             if (!targetCard || targetCard.classList.contains('selected-fly')) return;
 
             try { playSound('flip', currentSlotIndex); } catch(e){}
             const cardData = processedDeck[index]; selectedHand.push(cardData);
+            
+            // 先套用選中飛走特效
             targetCard.classList.add('selected-fly');
             
             const currentSlot = document.getElementById(`slot-${currentSlotIndex}`);
@@ -366,9 +438,9 @@
 
             currentSlotIndex++;
             if (currentSlotIndex === 1) {
-                document.getElementById('flow-hint').innerText = `👉 請憑潛意識直覺，親親盲抽第 2 張牌 【現在 // PRESENT】`;
+                document.getElementById('flow-hint').innerText = `👉 請憑潛意識直覺，從扇形矩陣盲抽第 2 張牌 【現在 // PRESENT】`;
             } else if (currentSlotIndex === 2) {
-                document.getElementById('flow-hint').innerText = `👉 請憑潛意識直覺，親親盲抽第 3 張牌 【未來 // FUTURE】`;
+                document.getElementById('flow-hint').innerText = `👉 請憑潛意識直覺，從扇形矩陣盲抽第 3 張牌 【未來 // FUTURE】`;
             } else {
                 document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
                 try { playSound('success'); } catch(e){}
@@ -384,7 +456,6 @@
             const resultDeckDiv = document.getElementById('result-deck-display'); resultDeckDiv.innerHTML = '';
             const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
             
-            // 💡 動態調用最下方的字典函式，防止首頁加載時死機
             const meaningsPool = getDynamicTarotMeanings();
 
             selectedHand.forEach((card, index) => {
@@ -416,7 +487,7 @@
             } else if (totalUprights === 2) { 
                 introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在時間軸的某個特定節點上伴隨著些微的遲滯、制約或能量微調，但主流能量依舊由正位牌組強勢主導。`; 
                 coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然有一些盲點、殘留課題或環境阻力需要時間消化，但並不足以阻擋未來的【${fName}】所帶來的全新破局氣象。`; 
-                adviceText = "建議你維持現有的基礎步調，並對目前的執行計劃進行局部的精密微調。只需要保持足夠的耐心，當前的微小阻礙自然會在流動中迎刃而解。"; 
+                adviceText = "建議你維持現有的基礎步調，並對目前的執行計劃進行局部的精密微調。只需要保持足夠的耐心，當前的微小阻礙自然會在流動中迎痕而解。"; 
             } else if (totalUprights === 1) { 
                 introText = `當前牌陣中出現了較多的逆位能量拉扯，這是一份來自潛意識矩陣深處的嚴肅警訊。目前的局勢中隱藏著較多的制約、焦慮、資訊不對稱或是能量嚴重受阻的情況。`; 
                 coreAnalysis = `雖然有部分節點試圖提供底層支撐，但從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於爆發高峰期。`; 
@@ -439,7 +510,6 @@
             }).catch(err => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; });
         }
 
-        // 🧠 【終極改善關鍵】牌意字典隔離封裝函式 ── 只有在結果頁被呼叫時才會載入記憶體，完美解決首頁死機問題！
         function getDynamicTarotMeanings() {
             return {
                 "The Fool": { nameCN: "愚者", general: { upright: "代表全新的開始與冒險精神。信任你的直覺，大膽跳入未知的流中。", reversed: "警告你可能過於魯莽或缺乏計劃。盲目的樂觀可能導致失控，建議先冷靜檢視底細。" }, love: { upright: "一段充滿新鮮感、無拘無束的新戀情即將展開。享受當下的火花。", reversed: "感情中出現了不負責的跡象。一方可能害怕承諾，忽略了潛在風險。" }, work: { upright: "適合挑戰全新的領域、創業或跳槽。拋開傳統框架的黃金期。", reversed: "工作上缺乏規劃導致混亂。不建議在此時進行未經評估的高風險決定。" } },
@@ -456,7 +526,7 @@
                 "The Hanged Man": { nameCN: "倒吊人", general: { upright: "雖然當前處於被動受限狀態，但只要換個角度看世界，這是為了更高成就的犧牲。", reversed: "暗示正在進行無謂掙扎，或者你的犧牲並沒有得到應有價值。" }, love: { upright: "甘願為對方付出與等待。此時按兵不動是在深耕基礎默契。", reversed: "出現了單方面無底線的委曲求全，退讓只換來對方的得寸進尺。" }, work: { upright: "面臨過渡期。適合退居幕後默默耕耘、沉澱技術，大動作開拓無效。", reversed: "陷入無意義的瞎忙與盲目內耗。需要立刻停止無謂奉獻，重新審視。" } },
                 "Death": { nameCN: "死神", general: { upright: "徹底的終結與隨之而來的偉大新生。唯有清理掉冗餘，新代碼才能載入。", reversed: "死死抓著已經腐爛的過去不肯放手，拒絕接受改變。無限延長痛苦。" }, love: { upright: "不健康的關係將迎來徹底終結。空出雙手，新的人際矩陣才能成立。", reversed: "感情走到了冰點，因為恐懼孤單而選擇拖延，嚴重消耗能量。" }, work: { upright: "職場上面臨重大洗牌，劇變正是你建立全新王國的起點。", reversed: "事業發展面臨苟延殘喘，明知沒有前景依舊抱持幻想，錯失重生窗口。" } },
                 "Temperance": { nameCN: "節制", general: { upright: "象徵完美的淨化與跨界融合。在動態平衡中創造出治癒能量。", reversed: "內在能量失去平衡，生活或人際關係出現溝通不良。" }, love: { upright: "交流達到精神完美契合。極具治癒感、細水長流的健康戀情。", reversed: "雙方溝通頻率完全不對盤。缺乏體貼與耐性，感情在瑣事中消磨。" }, work: { upright: "適合進行跨部門溝通或跨領域合作。強大協調能力能完美平衡衝突。", reversed: "職場人際關係失調，協作卡關。可能在時間分配上出現嚴重失衡。" } },
-                "The Devil": { nameCN: "惡魔", general: { upright: "暗示正被強烈物質慾望、執念或不健康依賴關係束縛。直面陰暗面是關鍵。", reversed: "偉大的覺醒時刻。開始看清虛幻誘惑，潛意識自由代碼重新編寫。" }, love: { upright: "一段充滿致命肉體吸引力，但也伴隨強烈控制與嫉妒的關係。", reversed: "終於從充滿控制、冷暴力的虐戀中清醒。找回自主界線，勇敢抽身。" }, work: { upright: "能獲得巨大物質回報，但背後可能隱藏權謀鬥爭，高風險博弈。", reversed: "拒絕職場上的不正當誘惑或壓榨條款。決定離開血汗環境，奪回自主權。" } },
+                "The Devil": { nameCN: "惡魔", general: { upright: "暗示正被強烈物質慾望、執念或不健康依賴關係束縛。直面陰暗面是關鍵。", reversed: "偉大的覺醒時刻。開始看清虛幻誘惑，潛意識自由代碼重新編寫。" }, love: { upright: "一段充滿致命肉體吸引力，但也伴隨強烈控制與嫉跡的關係。", reversed: "終於從充滿控制、冷暴力的虐戀中清醒。找回自主界線，勇敢抽身。" }, work: { upright: "能獲得巨大物質回報，但背後可能隱藏權謀鬥爭，高風險博弈。", reversed: "拒絕職場上的不正當誘惑或壓榨條款。決定離開血汗環境，奪回自主權。" } },
                 "The Tower": { nameCN: "高塔", general: { upright: "警告！一場突如其來、無法抗拒的毀滅性劇變即將震撼生活。強行系統重塑。", reversed: "危機雖然即將爆發，但衝擊已被降到最低；或代表粉飾太平。" }, love: { upright: "感情面臨毫無預警的重大衝擊，隱藏的秘密曝光，關係瞬間分崩離析。", reversed: "矛盾到了隨時爆炸邊緣，勉強維持表面和平更讓人折磨。" }, work: { upright: "職場上面臨突發性災難。不要試圖挽救，強迫你徹底更換全新賽道。", reversed: "工作中雷聲大雨點小，危機擦身而過，根本漏洞未解決，下次更致命。" } },
                 "The Star": { nameCN: "星星", general: { upright: "風暴過後，亮起了代表希望與療癒的星光。內心焦慮平息，光明在望。", reversed: "正被失望與悲觀情緒籠罩。可能設定了過於虛無飄渺、不切實際的目標。" }, love: { upright: "迎來一段充滿精神共鳴、純潔且具高度治癒感的戀情。", reversed: "對感情抱持過於脫離現實的完美幻想，對伴侶產生無謂的挑剔。" }, work: { upright: "靈感爆發黃金期，利於藝術創作、設計或品牌建立。才華吸引目光。", reversed: "計劃流於紙上談兵，缺乏執行可行性。高估資源、低估市場。" } },
                 "The Moon": { nameCN: "月亮", general: { upright: "進入充滿迷霧、焦慮與未知恐懼的幽暗海域。資訊不透明，勿盲目決策。", reversed: "恐懼與焦慮開始逐漸消散。那些誤解與秘密即將水落石出。" }, love: { upright: "充滿不安、猜忌與情緒起伏的曖昧期。信任基礎極其脆弱。", reversed: "誤會與謊言即將被拆穿，不再逃避問題。隱藏的不安正逐步退場。" }, work: { upright: "環境充滿爾虞我詐。現階段專案合約細節極不透明，暗藏陷阱。", reversed: "原本混亂、拉扯不清的人事糾紛落幕。終於看清專案真實走向。" } },
