@@ -442,52 +442,17 @@
             } catch(e) {}
         }
 
-        // 78 張完整的塔羅牌定義數據
         const tarotCardsPool = [
             /* 大阿爾克那 22張 */
-            { name: "The Fool", img: "m00.jpg" }, { name: "The Magician", img: "m01.jpg" },
-            { name: "The High Priestess", img: "m02.jpg" }, { name: "The Empress", img: "m03.jpg" },
-            { name: "The Emperor", img: "m04.jpg" }, { name: "The Hierophant", img: "m05.jpg" },
-            { name: "The Lovers", img: "m06.jpg" }, { name: "The Chariot", img: "m07.jpg" },
-            { name: "Strength", img: "m08.jpg" }, { name: "The Hermit", img: "m09.jpg" },
-            { name: "Wheel of Fortune", "img": "m10.jpg" }, { name: "Justice", img: "m11.jpg" },
-            { name: "The Hanged Man", img: "m12.jpg" }, { name: "Death", img: "m13.jpg" },
-            { name: "Temperance", img: "m14.jpg" }, { name: "The Devil", img: "m15.jpg" },
-            { name: "The Tower", img: "m16.jpg" }, { name: "The Star", img: "m17.jpg" },
-            { name: "The Moon", img: "m18.jpg" }, { name: "The Sun", img: "m19.jpg" },
-            { name: "Judgement", img: "m20.jpg" }, { name: "The World", img: "m21.jpg" },
+            { name: "The Fool", img: "m00.jpg" }, { name: "The Magician", img: "m01.jpg" }, { name: "The High Priestess", img: "m02.jpg" }, { name: "The Empress", img: "m03.jpg" }, { name: "The Emperor", img: "m04.jpg" }, { name: "The Hierophant", img: "m05.jpg" }, { name: "The Lovers", img: "m06.jpg" }, { name: "The Chariot", img: "m07.jpg" }, { name: "Strength", img: "m08.jpg" }, { name: "The Hermit", img: "m09.jpg" }, { name: "Wheel of Fortune", img: "m10.jpg" }, { name: "Justice", img: "m11.jpg" }, { name: "The Hanged Man", img: "m12.jpg" }, { name: "Death", img: "m13.jpg" }, { name: "Temperance", img: "m14.jpg" }, { name: "The Devil", img: "m15.jpg" }, { name: "The Tower", img: "m16.jpg" }, { name: "The Star", img: "m17.jpg" }, { name: "The Moon", img: "m18.jpg" }, { name: "The Sun", img: "m19.jpg" }, { name: "Judgement", img: "m20.jpg" }, { name: "The World", img: "m21.jpg" },
             /* 權杖 wands 14張 */
-            { name: "Ace of Wands", img: "w01.jpg" }, { name: "Two of Wands", img: "w02.jpg" },
-            { name: "Three of Wands", img: "w03.jpg" }, { name: "Four of Wands", img: "w04.jpg" },
-            { name: "Five of Wands", img: "w05.jpg" }, { name: "Six of Wands", img: "w06.jpg" },
-            { name: "Seven of Wands", img: "w07.jpg" }, { name: "Eight of Wands", img: "w08.jpg" },
-            { name: "Nine of Wands", img: "w09.jpg" }, { name: "Ten of Wands", img: "w10.jpg" },
-            { name: "Page of Wands", img: "w11.jpg" }, { name: "Knight of Wands", img: "w12.jpg" },
-            { name: "Queen of Wands", img: "w13.jpg" }, { name: "King of Wands", img: "w14.jpg" },
+            { name: "Ace of Wands", img: "w01.jpg" }, { name: "Two of Wands", img: "w02.jpg" }, { name: "Three of Wands", img: "w03.jpg" }, { name: "Four of Wands", img: "w04.jpg" }, { name: "Five of Wands", img: "w05.jpg" }, { name: "Six of Wands", img: "w06.jpg" }, { name: "Seven of Wands", img: "w07.jpg" }, { name: "Eight of Wands", img: "w08.jpg" }, { name: "Nine of Wands", img: "w09.jpg" }, { name: "Ten of Wands", img: "w10.jpg" }, { name: "Page of Wands", img: "w11.jpg" }, { name: "Knight of Wands", img: "w12.jpg" }, { name: "Queen of Wands", img: "w13.jpg" }, { name: "King of Wands", img: "w14.jpg" },
             /* 聖杯 cups 14張 */
-            { name: "Ace of Cups", img: "c01.jpg" }, { name: "Two of Cups", img: "c02.jpg" },
-            { name: "Three of Cups", img: "c03.jpg" }, { name: "Four of Cups", img: "c04.jpg" },
-            { name: "Five of Cups", img: "c05.jpg" }, { name: "Six of Cups", img: "c06.jpg" },
-            { name: "Seven of Cups", img: "c07.jpg" }, { name: "Eight of Cups", img: "c08.jpg" },
-            { name: "Nine of Cups", img: "c09.jpg" }, { name: "Ten of Cups", img: "c10.jpg" },
-            { name: "Page of Cups", img: "c11.jpg" }, { name: "Knight of Cups", img: "c12.jpg" },
-            { name: "Queen of Cups", img: "c13.jpg" }, { name: "King of Cups", img: "c14.jpg" },
+            { name: "Ace of Cups", img: "c01.jpg" }, { name: "Two of Cups", img: "c02.jpg" }, { name: "Three of Cups", img: "c03.jpg" }, { name: "Four of Cups", img: "c04.jpg" }, { name: "Five of Cups", img: "c05.jpg" }, { name: "Six of Cups", img: "c06.jpg" }, { name: "Seven of Cups", img: "c07.jpg" }, { name: "Eight of Cups", img: "c08.jpg" }, { name: "Nine of Cups", img: "c09.jpg" }, { name: "Ten of Cups", img: "c10.jpg" }, { name: "Page of Cups", img: "c11.jpg" }, { name: "Knight of Cups", img: "c12.jpg" }, { name: "Queen of Cups", img: "c13.jpg" }, { name: "King of Cups", img: "c14.jpg" },
             /* 寶劍 swords 14張 */
-            { name: "Ace of Swords", img: "s01.jpg" }, { name: "Two of Swords", img: "s02.jpg" },
-            { name: "Three of Swords", img: "s03.jpg" }, { name: "Four of Swords", img: "s04.jpg" },
-            { name: "Five of Swords", img: "s05.jpg" }, { name: "Six of Swords", img: "s06.jpg" },
-            { name: "Seven of Swords", img: "s07.jpg" }, { name: "Eight of Swords", img: "s08.jpg" },
-            { name: "Nine of Swords", img: "s09.jpg" }, { name: "Ten of Swords", img: "s10.jpg" },
-            { name: "Page of Swords", img: "s11.jpg" }, { name: "Knight of Swords", img: "s12.jpg" },
-            { name: "Queen of Swords", img: "s13.jpg" }, { name: "King of Swords", img: "s14.jpg" },
+            { name: "Ace of Swords", img: "s01.jpg" }, { name: "Two of Swords", img: "s02.jpg" }, { name: "Three of Swords", img: "s03.jpg" }, { name: "Four of Swords", img: "s04.jpg" }, { name: "Five of Swords", img: "s05.jpg" }, { name: "Six of Swords", img: "s06.jpg" }, { name: "Seven of Swords", img: "s07.jpg" }, { name: "Eight of Swords", img: "s08.jpg" }, { name: "Nine of Swords", img: "s09.jpg" }, { name: "Ten of Swords", img: "s10.jpg" }, { name: "Page of Swords", img: "s11.jpg" }, { name: "Knight of Swords", img: "s12.jpg" }, { name: "Queen of Swords", img: "s13.jpg" }, { name: "King of Swords", img: "s14.jpg" },
             /* 錢幣 pentacles 14張 */
-            { name: "Ace of Pentacles", img: "p01.jpg" }, { name: "Two of Pentacles", img: "p02.jpg" },
-            { name: "Three of Pentacles", img: "p03.jpg" }, { name: "Four of Pentacles", img: "p04.jpg" },
-            { name: "Five of Pentacles", img: "p05.jpg" }, { name: "Six of Pentacles", img: "p06.jpg" },
-            { name: "Seven of Pentacles", img: "p07.jpg" }, { name: "Eight of Pentacles", img: "p08.jpg" },
-            { name: "Nine of Pentacles", img: "p09.jpg" }, { name: "Ten of Pentacles", img: "p10.jpg" },
-            { name: "Page of Pentacles", img: "p11.jpg" }, { name: "Knight of Pentacles", img: "p12.jpg" },
-            { name: "Queen of Pentacles", img: "p13.jpg" }, { name: "King of Pentacles", img: "p14.jpg" }
+            { name: "Ace of Pentacles", img: "p01.jpg" }, { name: "Two of Pentacles", img: "p02.jpg" }, { name: "Three of Pentacles", img: "p03.jpg" }, { name: "Four of Pentacles", img: "p04.jpg" }, { name: "Five of Pentacles", img: "p05.jpg" }, { name: "Six of Pentacles", img: "p06.jpg" }, { name: "Seven of Pentacles", img: "p07.jpg" }, { name: "Eight of Pentacles", img: "p08.jpg" }, { name: "Nine of Pentacles", img: "p09.jpg" }, { name: "Ten of Pentacles", img: "p10.jpg" }, { name: "Page of Pentacles", img: "p11.jpg" }, { name: "Knight of Pentacles", img: "p12.jpg" }, { name: "Queen of Pentacles", img: "p13.jpg" }, { name: "King of Pentacles", img: "p14.jpg" }
         ];
 
         let processedDeck = []; 
@@ -532,7 +497,6 @@
             document.getElementById('scroller-wrapper').style.display = 'none';
             
             const pile = document.getElementById('pile-master'); pile.innerHTML = '';
-            // 動態生成 30 張示意牌堆
             for(let i=0; i<30; i++) {
                 const pCard = document.createElement('div'); pCard.className = 'card';
                 pCard.style.top = `-${i * 1.2}px`; pCard.style.left = `${i * 0.1}px`;
@@ -540,7 +504,6 @@
                 pile.appendChild(pCard);
             }
 
-            // 78 張牌洗牌
             let poolCopy = [...tarotCardsPool].sort(() => 0.5 - Math.random());
             processedDeck = poolCopy.map(c => ({ ...c, isReversed: Math.random() < 0.5 }));
 
@@ -719,12 +682,7 @@
             const meaningsPool = getDynamicTarotMeanings();
 
             selectedHand.forEach((card, index) => {
-                // 如果是未定義的小牌，動態生成兜底兜底解釋，確保 78 張任抽都不會爆掉
                 let cardMeaning = meaningsPool[card.name];
-                if (!cardMeaning) {
-                    cardMeaning = generateFallbackMeaning(card.name);
-                }
-                
                 const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
@@ -747,36 +705,11 @@
             switchView('result-view');
         }
 
-        function generateFallbackMeaning(name) {
-            // 針對小牌快速解析
-            let suite = "未知"; let nameCN = name;
-            if(name.includes("Wands")) { suite = "權杖 (行動/火元素)"; }
-            if(name.includes("Cups")) { suite = "聖杯 (情感/水元素)"; }
-            if(name.includes("Swords")) { suite = "寶劍 (傷害與思考/風元素)"; }
-            if(name.includes("Pentacles")) { suite = "錢幣 (物質與穩定/土元素)"; }
-            
-            return {
-                nameCN: name.replace("Wands", "權杖").replace("Cups", "聖杯").replace("Swords", "寶劍").replace("Pentacles", "錢幣").replace("Ace", "單子一").replace("Page", "侍從").replace("Knight", "騎士").replace("Queen", "皇后").replace("King", "國王"),
-                general: { 
-                    upright: `代表該元素能量順暢。${suite}目前在生活中佔據主導地位，推動局勢前進。`, 
-                    reversed: `代表該元素能量受阻、過度或不足。${suite}的特質發生偏移，需要停下修正。` 
-                },
-                love: { 
-                    upright: `感情中展現出${suite}的正向回饋，互動自然且符合預期脈絡。`, 
-                    reversed: `感情中因為${suite}的拉扯感到焦慮，存在一定程度的不合拍與隱藏矛盾。` 
-                },
-                work: { 
-                    upright: `工作學業執行力良好，發揮出${suite}的優勢，專案按部就班前進。`, 
-                    reversed: `事業發展面臨${suite}代碼瓶頸，執行進度延宕，要注意資源配置不均。` 
-                }
-            };
-        }
-
         function generateComprehensiveSummary(meaningsPool) {
             const pCard = selectedHand[0]; const prCard = selectedHand[1]; const fCard = selectedHand[2];
-            const pMeaning = meaningsPool[pCard.name] || generateFallbackMeaning(pCard.name);
-            const prMeaning = meaningsPool[prCard.name] || generateFallbackMeaning(prCard.name);
-            const fMeaning = meaningsPool[fCard.name] || generateFallbackMeaning(fCard.name);
+            const pMeaning = meaningsPool[pCard.name];
+            const prMeaning = meaningsPool[prCard.name];
+            const fMeaning = meaningsPool[fCard.name];
             
             const pName = pMeaning.nameCN + (pCard.isReversed ? "逆位" : "正位");
             const prName = prMeaning.nameCN + (prCard.isReversed ? "逆位" : "正位");
@@ -816,15 +749,93 @@
 
         function getDynamicTarotMeanings() {
             return {
-                /* 這裡保留最核心的大牌解析，小牌如果抽到，會透過 getFallbackMeaning 自動生成完美對應的小牌文案，確保不佔用網頁體積又能覆蓋全部 78 張牌 */
+                /* 大阿爾克那 22張 */
                 "The Fool": { nameCN: "愚者", general: { upright: "代表全新的開始與冒險精神。信任你的直覺，大膽跳入未知的流中。", reversed: "警告你可能過於魯莽或缺乏計劃。盲目的樂觀可能導致失控，建議先冷靜檢視底細。" }, love: { upright: "一段充滿新鮮感、無拘無束的新戀情即將展開。享受當下的火花。", reversed: "感情中出現了不負責的跡象。一方可能害怕承諾，忽略了潛在風險。" }, work: { upright: "適合挑戰全新的領域、創業或跳槽。拋開傳統框架的黃金期。", reversed: "工作上缺乏規劃導致混亂。不建議在此時進行未經評估的高風險決定。" } },
                 "The Magician": { nameCN: "魔術師", general: { upright: "你掌握著強大的資源與行動力。將想法轉化為現實的時機已成熟。", reversed: "注意掌握的力量是否被誤用。可能存在操縱、欺騙或空有才華缺乏執行力的情況。" }, love: { upright: "關係中溝通流暢，充滿魅力與趣味. 頻率極高。", reversed: "注意感情中的甜言蜜語背後是否藏有隱瞞，互動流於表面。" }, work: { upright: "展現強大工作能力的黃金時期。升職與發展能量非常旺盛。", reversed: "職場上被話術欺騙或操縱。專注力過於分散，導致進度停滯。" } },
                 "The High Priestess": { nameCN: "女祭司", general: { upright: "直覺與潛意識正處於高頻共振期。保持冷靜，被隱藏的真相即將浮現。", reversed: "可能過於壓抑情感，或過度理智而忽略了直覺的警訊。建議誠實面對恐懼。" }, love: { upright: "感情上較為被動、注重精神交流。正處於冷靜觀察的狀態。", reversed: "情感壓抑過度導致隔閡加深。過度敏感、多疑，讓對方難以靠近。" }, work: { upright: "適合從事研究、分析等靜態工作。靠精準直覺能在複雜數據中找出正確抉擇。", reversed: "面對職場決策時過度猶豫不決。不適合簽署任何重要契約。" } },
                 "The Empress": { nameCN: "皇后", general: { upright: "代表豐收、繁榮與物質富足。無論是生活還是計畫，都將迎來豐碩回報。", reversed: "目前可能感到缺乏安全感，或對環境有過度的控制慾。創造力受到阻塞。" }, love: { upright: "感情生活充滿甜蜜與溫馨，彼此包容與支持。近期桃花能量強勁。", reversed: "關係中表現得過度控制或佔有慾過強。注意物質問題可能導致摩擦。" }, work: { upright: "職場發展順遂，努力將迎來實質回報。團隊氛圍和諧。", reversed: "工作流於安逸、怠惰，缺乏前進的積極度。注意職場上不要過於感情用事。" } },
                 "The Emperor": { nameCN: "皇帝", general: { upright: "掌握著秩序與權力。擁有堅強意志力與清晰掌控架構。穩定與紀律是成功的關鍵。", reversed: "注意不要流於專專霸道。當前架構可能過於僵化，或逐漸失去掌控。" }, love: { upright: "關係穩定、具安全感。以責任感與忠誠為基石，非常可靠。", reversed: "一方過於專斷、固執、難以溝通. 互動充滿壓迫感。" }, work: { upright: "有望晉升主管職、建立制度。專注於架構優化，成功將近在咫尺。", reversed: "職場遇到僵化的體制或過於守舊，不願接受新技術，會讓進度卡關。" } },
+                "The Hierophant": { nameCN: "教皇", general: { upright: "象徵傳統常規、精神導師與體制認同。依循既有秩序或尋求權威指引將帶來穩定。", reversed: "代表對陳腐教條的反叛、打破常規。不要盲從權威，應建立獨立思考體系。" }, love: { upright: "戀情走向體制認同，適合討論婚嫁或建立受傳統祝福的長久承諾關係。", reversed: "觀念產生嚴重代溝，理念不合，或受到長輩、外界傳統世俗眼光的過度干擾。" }, work: { upright: "適合在大型企業、傳統體制內穩定求財，能獲得資深前輩的提攜引路。", reversed: "職場體制過於守舊壓抑，或遭遇上司畫大餅、不公平的道德綁架。" } },
                 "The Lovers": { nameCN: "戀人", general: { upright: "象徵完美的和諧、吸引力與核心選擇。聆聽內心最真實的熱情做出決定。", reversed: "意指內在能量產生了失衡，或當前面臨誘惑與錯誤抉擇。混亂內耗中。" }, love: { upright: "感情運勢極佳，彼此之間充滿強大吸引力。單身者將遇到靈魂同步對象。", reversed: "情感中出現不信任、多疑。需注意外界的野桃花誘惑關鍵。" }, work: { upright: "職場上迎來極佳合作機會，團隊默契十足。順應熱情就能做出正確決定。", reversed: "團隊內部出現拉扯或合作破裂。現階段抉擇可能只是出於短視近利。" } },
                 "The Chariot": { nameCN: "戰車", general: { upright: "代表勝利與克服障礙。此時擁有極強專注力，勢不可擋。", reversed: "警告可能正逐漸失去掌控力，或前進方向發生嚴重偏離。盲目會演變成魯莽。" }, love: { upright: "感情上採取積極進攻姿態。有能力克服任何空間、背景或環境阻礙。", reversed: "感情中出現嚴重權力爭奪，互不相讓，遇到挫折容易衝動說出傷害彼此的話。" }, work: { upright: "事業上展現出強大競爭力，適合開拓新市場、接手高難度專案。", reversed: "專案進度面臨方向混亂窘境。情緒壓力已達臨界點，容易因衝動做錯決策。" } },
-                "The World": { nameCN: "世界", general: { upright: "本階段旅程已達到完美終點與大圓滿。代表成功與內心和諧。", reversed: "距離最後成功只剩最後一哩路，千萬不要在此時鬆懈，咬緊牙關完成。" }, love: { upright: "感情迎來最完美大結論。彼此靈魂達到天衣無縫的融合，最高規格祝福。", reversed: "大體上穩定幸福，但心中總覺得缺少臨門一腳的極致激情。" }, work: { upright: "事業達到顛峰狀態！交出無可挑剔的完美成績單。享受收穫期。", reversed: "專案已完成 99%，卻在最後驗收階段卡在繁瑣流程上。保持耐性。" } }
+                "Strength": { nameCN: "力量", general: { upright: "代表以內在的勇氣、耐心與溫柔克服強權。擁有堅定不移的內在韌性。", reversed: "能量失衡，可能表現為內心軟弱無力、自信心崩塌，或過度暴躁以致失控。" }, love: { upright: "懂得用溫柔與包容收服對方的脾氣，彼此存在強大的情感紐帶與默契。", reversed: "在感情中感到無力、挫折感重，或試圖用情緒勒索與強硬態度控制對方。" }, work: { upright: "面對職場危機臨危不亂，靠著強大心理素質與抗壓性順利化解難題。", reversed: "面臨嚴重的職場內耗或能力不足，自信心受挫導致執行力低下。" } },
+                "The Hermit": { nameCN: "隱者", general: { upright: "代表內省、沉澱、尋求內在智慧。暫時抽離外界喧囂，專注於自我探索。", reversed: "警惕過度孤立自我、逃避現實，或因固執己見而陷入思想盲同的死胡同。" }, love: { upright: "感情進入冷靜期，彼此需要更多獨立精神空間。單身者享受獨處時光。", reversed: "因缺乏有效溝通而陷入冷戰，冷漠的防禦機制讓關係產生實質疏離感。" }, work: { upright: "適合進行深入研究、技術深造或幕後策劃，不宜急躁擴張、盲目跟風。", reversed: "職場資訊不透明、固步自封。因缺乏外界交流而導致專案方向跑偏。" } },
+                "Wheel of Fortune": { nameCN: "命運之輪", general: { upright: "轉折點到來！命運的齒輪開始順向旋轉，帶來不可逆的幸運與全新機遇。", reversed: "遭遇突如其來的阻礙或運勢低潮。請保持平常心，靜待壞運氣代碼釋放。" }, love: { upright: "宿命般的相遇或關係迎來正向突破！順應命運引導將有驚喜進展。", reversed: "感情面臨考驗，時機不對導致磨擦不斷，有一種力不從心的宿命無奈感。" }, work: { upright: "事業迎來重大順風期，可能遇到突如其來的轉機、升遷或全新賽道。", reversed: "專案進度受大環境等不可抗力干擾而延宕。此時不宜進行任何大額投資。" } },
+                "Justice": { nameCN: "正義", general: { upright: "代表公平、客觀公正、理性權衡與因果法律律令。付出多少，回報多少。", reversed: "出現不公正的待遇、偏見，或自我權衡失準，存在逃避責任的傾向。" }, love: { upright: "關係平等和諧，彼此坦誠相待。適合處理法律層面的婚約協議。", reversed: "感情付出與收穫嚴重失衡，有一方心生不滿，或陷入無休止的翻舊帳。" }, work: { upright: "簽約、合夥順利，決定公正清明。靠著實力與邏輯條理贏得應有回報。", reversed: "遭遇職場不公平待遇、合約糾紛，或因決策缺乏數據支撐而出現重大失誤。" } },
+                "The Hanged Man": { nameCN: "倒吊人", general: { upright: "換個角度看世界。代表自願的犧牲、等待、沉澱與以退為進的智慧。", reversed: "無謂的犧牲、受到委屈卻毫無回報。執著於錯誤方向而不願放手。" }, love: { upright: "願意為愛默默付出，守護彼此。當前關係需要耐心等待時機成熟。", reversed: "感情中一味委曲求全卻只換來對方的索取，該是時候清醒、停止內耗了。" }, work: { upright: "專案處於停滯期，適合重整策略。以時間換取空間，靜候破局點。", reversed: "職場上付出與回報完全不成正比。因害怕改變而死守著沒有前景的崗位。" } },
+                "Death": { nameCN: "死神", general: { upright: "舊局面的徹底結束，新紀元的必然開始。置之死地而後生，迎來解脫。", reversed: "抗拒改變、死守腐朽的殘局不放。痛苦拖延，不願意接受系統重組。" }, love: { upright: "一段不健康的關係正式終結，或是關係徹底脫胎換骨、邁向全新階段。", reversed: "名存實亡的感情依然僵持拖延，雙方在折磨中互相消耗，拒絕面對現實。" }, work: { upright: "舊專案割捨停損，賽道面臨洗牌重組。大膽轉型將迎來全新生機。", reversed: "拒絕轉型與升級，死守過時的技術或業務，導致進度面臨毀滅性卡關。" } },
+                "Temperance": { nameCN: "節制", general: { upright: "象徵完美的淨化、溝通融合與動態平衡。能將不同的資源轉化為和諧能量。", reversed: "能量失衡、缺乏協調。溝通管道受阻，身心處於過度消耗與焦慮中。" }, love: { upright: "精神層面高度契合，溝通流暢無阻，彼此在互動中共同成長、和諧相處。", reversed: "關係缺乏核心共識，溝通頻率各說各話，情感互動出現嚴重的不對等。" }, work: { upright: "資源整合能力極強，跨部門溝通順暢，專案在協調中穩步推進。", reversed: "職場人際關係失調，資源配置混亂，執行步調缺乏邏輯導致效率低下。" } },
+                "The Devil": { nameCN: "惡魔", general: { upright: "代表強烈的物質慾望、誘惑與束縛。雖然帶來短暫歡愉，但背後暗藏代價。", reversed: "覺醒的時刻！開始試圖打破束縛，擺脫不良習慣、執念或病態關係。", reversed: "覺醒的時刻！開始試圖打破束縛，擺脫不良習慣、執念或病態關係。" }, love: { upright: "致命的性吸引力，肉慾與佔有慾強烈。但也需注意關係是否流於利益與控制。", reversed: "決心看清對方真面目，從一段有毒、虐心的情感泥潭中抽身，重獲自由。" }, work: { upright: "利於追求短期暴利、偏財或強烈的權利擴張。但需注意觸碰規則紅線。", reversed: "看穿職場內耗陷阱，拒絕無意義的加班與利益誘惑，尋求健康的職涯轉型。" } },
+                "The Tower": { nameCN: "高塔", general: { upright: "突如其來的劇烈衝擊、粉碎與顛覆。不穩固的虛假架構被強行摧毀。", reversed: "危機即將過去，或雖然面臨動盪，但衝擊力已降到最低。緩慢重建中。" }, love: { upright: "感情遭遇突如其來的強烈風暴，面臨信任崩塌、分手或突發爭執危機。", reversed: "風暴過後留下一地雞毛，雖然免於立刻解體，但內在矛盾仍需漫長修補。" }, work: { upright: "職場爆發重大危機，如核心項目暴雷、裁員或公司架構突發性解體。", reversed: "差點陷入毀滅性災難，雖然避開最壞結果，但仍需進行全面防禦與整頓。" } },
+                "The Star": { nameCN: "星星", general: { upright: "象徵希望、療癒與光明前景。漫長黑夜過去，璀璨未來與靈感正在招手。", reversed: "期望落空、失去信心。陷入悲觀迷茫，看不清未來的方向與價值。" }, love: { upright: "感情充滿純粹、美好的憧憬。彼此能夠互相治癒，攜手走向明朗未來。", reversed: "對感情抱持過度不切實際的幻想，期望越高失望越大，需回歸現實。" }, work: { upright: "靈感源源不絕，職涯前景一片光明。你的才華將逐漸被大眾看見。", reversed: "制定的目標過於好高騖遠，缺乏實質執行步驟，容易淪為空中樓閣。" } },
+                "The Moon": { nameCN: "月亮", general: { upright: "代表迷茫、未知恐懼、不安與隱藏的欺騙。局勢迷霧籠罩，不宜盲目抉擇。", reversed: "迷霧逐漸散去，真相開始浮出水面。內心的恐懼與焦慮感正在消退。" }, love: { upright: "關係充滿不安全感與猜忌，隱瞞或多角關係的陰影讓內心極度煎熬。", reversed: "感情中的誤會與謊言被揭開，雙方終於願意坦誠相對，擺脫曖昧迷茫。" }, work: { upright: "職場資訊極度不透明，背後存在小人作祟或流言蜚語。決策方向模糊。", reversed: "潛在風險被及時察覺，混亂的項目重整出清晰架構，危機宣告解除。" } },
+                "The Sun": { nameCN: "太陽", general: { upright: "無限的光明、成功與喜悅！能量達到巔峰，所有計畫都將獲得最高榮譽。", reversed: "雖然依然保有光明，但能量有所減弱。可能存在過度驕傲或短暫的延誤。" }, love: { upright: "感情生活充滿陽光與熱情，彼此坦率真誠，受眾人祝福，幸福無比。", reversed: "關係依舊溫暖，但互動顯得有些意氣用事，或因小事引發面子之爭。" }, work: { upright: "事業迎來全面爆發期！表現無可挑剔，成果卓越，名利雙收。", reversed: "雖然有小成就，但不可過度自負。專案進度相比預期稍有放緩。" } },
+                "Judgement": { nameCN: "審判", general: { upright: "重大召喚與覺醒！迎來職涯或人生的關鍵裁決，過去的努力將得到正義回報。", reversed: "拒絕聽從內心的召喚，拖延決策。因沉溺於過去的失敗而錯失重生的機遇。" }, love: { upright: "關係面臨關鍵考驗與轉折，可能是破鏡重圓，亦或是走向命運的新抉擇。", reversed: "不願面對關係的根本問題，反覆在舊帳中拉扯，關係停滯在痛苦的循環中。" }, work: { upright: "迎來重大的轉型契機或審查通過。過去積累的底蘊將一戰成名、迎來重生。", reversed: "面對重大職涯抉擇猶豫不決，因缺乏破局勇氣而錯失轉型升級的窗口。" } },
+                "The World": { nameCN: "世界", general: { upright: "本階段旅程已達到完美終點與大圓滿。代表成功、完結與內心至高和諧。", reversed: "距離最後成功只剩最後一哩路。千萬不要在此時鬆懈，咬緊牙關完成。" }, love: { upright: "感情迎來最完美大結論。彼此靈魂達到天衣無縫的融合，最高規格祝福。", reversed: "大體上穩定幸福，但心中總覺得缺少臨門一腳的極致激情，留有小遺憾。" }, work: { upright: "事業達到顛峰狀態！交出無可挑剔的完美成績單。享受豐厚的收穫期。", reversed: "專案已完成 99%，卻在最後驗收階段卡在繁瑣流程上。保持耐性。" },
+
+                /* 權杖 wands 14張 */
+                "Ace of Wands": { nameCN: "權杖一", general: { upright: "一個強而有力的全新計畫、熱情火花與行動契機正要爆發。", reversed: "熱情轉瞬即逝，計畫胎死腹中。缺乏持續推進的動能，面臨延宕。" }, love: { upright: "強烈的激情火花迅速蔓延，新戀情或關係將注入前所未有的活力。", reversed: "空有短暫激情卻缺乏情感基石，熱度過後關係迅速冷卻下來。" }, work: { upright: "充滿開創性的新項目啟動！執行力爆棚，非常適合跨入全新賽道。", reversed: "新計畫雷聲大雨點小，執行力跟不上野心，案子剛起頭就陷入卡關。" } },
+                "Two of Wands": { nameCN: "權杖二", general: { upright: "站在已有成就上眺望遠方。代表規劃藍圖、雄心壯志與面臨擴張的抉擇。", reversed: "守舊不前、缺乏遠見。因害怕未知而猶豫不決，局限於狹隘的現狀中。" }, love: { upright: "彼此開始規劃未來的共同藍圖，關係存在進一步發展、跨越空間的可能。", reversed: "雙方對未來的想像缺乏共識，一方在關係擴張上面臨猶豫與退縮。" }, work: { upright: "適合制定中長期戰略，可能面臨海外發展、跨界合作等重大宏觀抉擇。", reversed: "規劃流於流於空談，缺乏實際配套。因害怕承擔風險而錯失擴張良機。" } },
+                "Three of Wands": { nameCN: "權杖三", general: { upright: "探索的船隻已經啟航。代表擴展版圖、合作順暢與等待豐碩成果。", reversed: "進度雷同受阻，海外計畫或遠景遭遇期望落空。團隊協調出現內耗。" }, love: { upright: "關係根基穩固，彼此對未來充滿信心，攜手航向更廣闊的生命階段。", reversed: "承諾顯得遙遙無期，兩地相隔或未來藍圖的落差讓熱情逐漸磨損。" }, work: { upright: "業務成功拓展，跨部門或跨界合作取得實質突破。成果正在擴大。", reversed: "供應鏈或外部合作爆發連鎖問題，專案進度面臨意料之外的延誤。" } },
+                "Four of Wands": { nameCN: "權杖四", general: { upright: "階段性成功的歡慶、和諧家庭與穩固的繁榮根基。安全感十足。", reversed: "繁榮流於表面，內在和平產生裂痕。慶祝活動因故延期，根基有所動搖。" }, love: { upright: "感情生活穩定甜蜜，適合走向同居、締結婚約或共組家庭。幸福圓滿。", reversed: "看似和樂的家庭或關係內部出現小小摩擦，需要多花心思維護內在和平。" }, work: { upright: "項目順利達成里程碑，團隊氛圍和諧，收益穩固，迎來短暫收穫期。", reversed: "團隊內部出現不和諧聲音，看似穩固的專案架構出現小細節疏漏。" } },
+                "Five of Wands": { nameCN: "權杖五", general: { upright: "面臨激烈的群體競爭、衝突與意見分歧。混亂的博弈正在上演。", reversed: "衝突迎來終結、達成妥協，或是內耗過度選擇逃避競爭。" }, love: { upright: "關係中充斥著無休止的爭吵與觀念碰撞，彼此互不相讓，內耗嚴重。", reversed: "爭執逐漸平息，雙方願意放下成見尋求共識，或者轉為冷戰對抗。" }, work: { upright: "職場陷入惡性競爭、多方利益拉扯，溝通成本極高，專案混亂混雜。", reversed: "內鬥風暴過去，團隊重新回歸正軌，或者因受夠了混亂而選擇離職。" } },
+                "Six of Wands": { nameCN: "權杖六", general: { upright: "凱旋歸來！代表獲得眾人矚目的成功、榮譽、勝利與公眾認可。", reversed: "風光不再，遭遇挫敗或雷聲大雨點小。功勞被他人搶奪，自尊心受挫。" }, love: { upright: "關係發展順遂，成為眾人羨慕的焦點，彼此在情感中獲得極大自信。", reversed: "感情中出現失落感，可能遭遇冷落，或者對方表現得過於自負自私。" }, work: { upright: "交出亮眼成績單，順利升職加薪，贏得全公司與客戶的高度讚譽。", reversed: "專案成果未達預期，或是功勞被團隊內部截胡，面臨高開低走的窘境。" } },
+                "Seven of Wands": { nameCN: "權杖七", general: { upright: "孤軍奮戰抵抗外敵。代表堅守立場、捍衛利益與克服層層挑戰。", reversed: "防線失守、力不從心。因壓力過大而選擇放棄抗爭，陷入被動劣勢。" }, love: { upright: "挺過外界反對或流言蜚語，堅定捍衛彼此的感情，展現極大勇氣。", reversed: "面對外界壓力或感情障礙時感到疲憊不堪，逐漸失去堅守下去的信念。" }, work: { upright: "在職場派系或競爭中堅守陣地，抗壓性極強，成功捍衛自身專案主導權。", reversed: "職場防線面臨崩塌，遭遇多方圍剿，因缺乏核心競爭力而被迫退讓。" } },
+                "Eight of Wands": { nameCN: "權杖八", general: { upright: "迅速、突如其來的進展。代表資訊傳遞極快，目標即將迅速達成。", reversed: "進度戛然而止，或因速度過快導致方向失控、混亂崩潰。訊息延誤。" }, love: { upright: "感情進展神速，可能迎來一見鍾情或突如其來的浪漫出遊。火熱推進。", reversed: "感情步調流於衝動急躁，因缺乏沉澱而引發誤會，或者面臨熱情戛然而止。" }, work: { upright: "項目推進速度極快，溝通效率爆棚，出差、簽約行程安排緊湊且順利。", reversed: "欲速則不達，因盲目趕進度而留下重大代碼漏洞，專案面臨緊急喊卡。" } },
+                "Nine of Wands": { nameCN: "權杖九", general: { upright: "最後關頭的嚴密防禦、疲憊但絕不放棄。展現出強大的防禦耐力。", reversed: "防禦崩潰、體力耗盡。因過度緊繃而倒下，無力再承擔更多責任。" }, love: { upright: "受過傷的內心依然帶著防備，雖然疲憊但仍小心翼翼地維持、守護關係。", reversed: "心力交瘁，過去的感情陰影沉重，終於無力維持這份防備而選擇放手。" }, work: { upright: "專案進入最後攻堅階段，面臨極大工作量仍咬牙堅持，防範潛在漏洞。", reversed: "職場壓力超出心智負荷臨界點，因精疲力竭而引發工作上的連鎖失誤。" } },
+                "Ten of Wands": { nameCN: "權杖十", general: { upright: "承擔了過度的重任、壓力爆棚。雖然目標近在咫尺，但代價沉重。", reversed: "壓力釋放、卸下重擔。不論是主動分權還是被迫放棄，沉重代碼宣告終結。" }, love: { upright: "這段感情經營得無比沉重，一方承擔了過多的責任與情緒包袱，極度疲憊。", reversed: "不願再獨自苦撐，決定跟對方攤牌分擔壓力，或者索性結束這段沉重關係。" }, work: { upright: "一個人承擔了整個團隊的工作量，遭遇嚴重的過勞瓶頸，急需分權授權。", reversed: "拒絕無效內耗，學會拒絕不合理的加班與工作攤派，重回健康職涯軌道。" } },
+                "Page of Wands": { nameCN: "權杖侍從", general: { upright: "充滿好奇心的冒險起點。代表接到新的好消息、靈感與對未知的熱情。", reversed: "缺乏耐性、三分鐘熱度。言行輕率，計畫停留在口頭，缺乏實質行動。" }, love: { upright: "一段充滿青春活力、新鮮感趣味的互動開始，彼此充滿探索的慾望。", reversed: "關係缺乏定性，一方態度顯得幼稚、不負責任，熱情容易流於表面。" }, work: { upright: "職場新人或接觸全新業務，學習熱情高漲，是積累實戰經驗的黃金期。", reversed: "工作上粗心大意，缺乏經驗卻好高騖遠，容易因輕率而搞砸新項目。" } },
+                "Knight of Wands": { nameCN: "權杖騎士", general: { upright: "風馳電掣的行動派！代表強烈的進取心、熱血衝勁與開拓新局。", reversed: "衝動魯莽、脾氣暴躁。做事不顧後果，容易因橫衝直撞而四處碰壁。" }, love: { upright: "追求攻勢猛烈，情感純粹火熱，帶領關係朝目標大步邁進。", reversed: "熱情來得快去得更快，行事缺乏沉穩與耐心，容易因脾氣火爆引發爭吵。" }, work: { upright: "開疆闢土的執行先鋒！效率極高，敢於挑戰高難度目標與未知市場。", reversed: "盲目推進導致專案失控，缺乏大局觀與團隊協調，容易淪為職場豬隊友。" } },
+                "Queen of Wands": { nameCN: "權杖皇后", general: { upright: "熱情奔放、充滿自信與個人魅力的領導者。擁有強大的人格吸引力。", reversed: "虛榮心重、妒忌心強，或是控制慾過旺，試圖用情緒凌駕他人之上。" }, love: { upright: "在感情中展現出極大自信與溫暖魅力，關係充滿活力與正向引導力。", reversed: "掌控慾爆棚，容易因猜忌、吃醋而引發冷戰，給予對方過大的精神壓力。" }, work: { upright: "職場上能力出眾，極具號召力與親和力，能帶領團隊打出漂亮戰役。", reversed: "情緒化決策，職場上作風過於強硬、聽不進反對意見，導致人際關係緊張。" },
+                "King of Wands": { nameCN: "權杖國王", general: { upright: "遠見卓識的領袖。代表強大的掌控力、成熟的執行力與不容挑戰的權威。", reversed: "獨斷專行、暴躁粗暴。作風過於專制霸道，容易因自大而做出盲目決策。" }, love: { upright: "成熟可靠且充滿擔當，主導著關係的正向發展，給予對方十足安全感。", reversed: "在大男子/大女子主義中迷失，缺乏對伴侶的尊重，互動流於單向發號施令。" }, work: { upright: "事業上的頂級掌舵者，高瞻遠矚，具備開創宏大版圖的魄力與領袖特質。", reversed: "職場暴君，決策剛愎自用，因不願聽取下屬與數據建言而導致項目面臨盲區。" },
+
+                /* 聖杯 cups 14張 */
+                "Ace of Cups": { nameCN: "聖杯一", general: { upright: "情感、直覺與愛意的大噴發。象徵新戀情、心靈治癒與精神富足的起點。", reversed: "情感枯竭、內心空虛。熱情受到壓抑，存在情感錯付或玻璃心的傾向。" }, love: { upright: "迎來純粹靈魂共鳴的新戀情，或者是現有關係升溫，愛意滿盈。", reversed: "情感付出得不到回報，感到失落與孤獨。注意不要在愛中迷失自我。" }, work: { upright: "找到能激發熱情、完美符合直覺與興趣的工作，團隊氛圍溫馨包容。", reversed: "工作缺乏熱情，人際關係冷漠疏離，感到極度心累與職業倦怠。" } },
+                "Two of Cups": { nameCN: "聖杯二", general: { upright: "平等且和諧的結合。代表完美的互利合作、強烈吸引力與承諾締結。", reversed: "關係失衡、信任產生裂痕。合作破裂、溝通不暢，面臨利益或情感拉扯。" }, love: { upright: "兩情相悅的極致狀態。彼此尊重、高度契合，適合確立關係或加深承諾。", reversed: "互動出現隔閡，冷戰或多疑破壞了原本的平衡，彼此頻率不再同步。" }, work: { upright: "迎來強強聯手的黃金合夥機會。團隊合作默契十足，談判簽約順利。", reversed: "合夥關係爆發信任危機，因利益分配不均或理念落差導致合作流產。" } },
+                "Three of Cups": { nameCN: "聖杯三", general: { upright: "慶祝、聚會與歡樂的社群共鳴。代表團隊成果豐碩、友誼和諧。", reversed: "樂極生悲。過度沉溺於享樂、無效社交，或是關係中出現三個人的擁擠雜音。" }, love: { upright: "感情氛圍輕鬆愉快，融入彼此的朋友圈，充滿歡聲笑語與甜蜜互動。", reversed: "需警惕感情中出現第三方能量的干擾，或彼此忙於社交而忽略了深度交流。" }, work: { upright: "團隊項目大獲成功，舉辦慶功宴。同事關係融洽，合作氛围輕鬆高效。", reversed: "職場社交過度，無意義的酒局與八卦內耗拉低了實質的工作進度。" } },
+                "Four of Cups": { nameCN: "聖杯四", general: { upright: "情感疲憊與退縮。對眼前的機會視而不見，沉溺於不滿與冥想停滯中。", reversed: "重新喚醒！告別消極消沉，決定張開雙臂接受外界的新機會與改變。" }, love: { upright: "對當前關係感到平淡乏味，陷入倦怠期，封閉內心不願積極互動。", reversed: "打破冷淡僵局，願意走出情感陰影，重新投入到關係的經營或迎接新桃花。" }, work: { upright: "遭遇職涯瓶頸期，對現有業務感到極度厭倦，提不起精神，抗拒新挑戰。", reversed: "主動調整心態，結束混日子狀態，開始積極尋找新的職涯突破口與機會。" } },
+                "Five of Cups": { nameCN: "聖杯五", general: { upright: "沉溺於失去的痛苦中，哀悼打翻的聖杯，卻忽略了背後依然佇立的資源。", reversed: "走出陰霾，收拾殘局。將目光投向未來的機遇，迎來情感重建。" }, love: { upright: "深陷於過去的爭執或失戀陰影中無法自拔，內心充滿悔恨、遺憾與失落。", reversed: "不再為打翻的牛奶哭泣，決心放下過去的恩怨，重新敞開心扉接納新可能。" }, work: { upright: "項目投資失敗或遭遇重大挫折，情緒極度低落，被失敗的陰影完全籠罩。", reversed: "及時進行危機處理與停損，在失敗中汲取教訓，重新整合現有資源重頭再來。" },
+                "Six of Cups": { nameCN: "聖杯六", general: { upright: "童話般的安全感、思鄉、回憶過去。象徵純粹的善意、饋贈與被悉心照顧。", reversed: "沉溺於過去不願前進，或童年陰影復發。需斬斷舊念，回歸現實。" }, love: { upright: "關係充滿純真的愛意與照顧，可能與舊愛重逢，或迎來青梅竹馬般的戀情。", reversed: "過度拿現任與前任作對比，活在虛幻的回憶裡，忽略了當下的幸福。" }, work: { upright: "獲得資深前輩或老友的無私幫助，職場環境溫馨，老項目迎來新轉機。", reversed: "思想過於守舊保守，躺在過去的功勞簿上裹足不前，抗拒新技術的引進。" },
+                "Seven of Cups": { nameCN: "聖杯七", general: { upright: "充斥著虛幻的想像、誘惑與過多的選擇。缺乏實質落地的空中樓閣。", reversed: "看清幻象，回歸清醒。撥開雲霧做出務實抉擇，將精力投入具體行動。" }, love: { upright: "桃花氾濫但多為鏡花水月的爛桃花，對感情抱持太多不切實際的幻想。", reversed: "看清曖昧對象的虛偽面目，不再被甜言蜜語迷惑，回歸理性的情感抉擇。" }, work: { upright: "方案流於表面宏大卻缺乏可行性。注意職場上不要被高回報的畫大餅迷惑。", reversed: "戳破虛假繁榮的泡沫，砍掉不切實際的邊緣業務，專注於核心項目的落地。" },
+                "Eight of Cups": { nameCN: "聖杯八", general: { upright: "主動轉身離去。儘管物質富足，但精神不再滿足，決定追尋更高心靈目標。", reversed: "缺乏離去的勇氣，死守不滿足的現狀。或者是流浪歸來，決定向現實妥協。" }, love: { upright: "儘管彼此沒有原則性矛盾，但因精神不再共鳴，決定平靜轉身、追尋自我。", reversed: "在名存實亡或不再快樂的感情裡拖延糾纏，缺乏斬斷情絲的果斷魄力。" }, work: { upright: "毅然放棄看似安穩但失去靈魂的崗位，跳槽或跨界追尋真正的人生理想。", reversed: "雖然對工作不滿到了極點，但因害怕未知風險而繼續在舒適圈內委曲求全。" },
+                "Nine of Cups": { nameCN: "聖杯九", general: { upright: "願望成真！物質與感官獲得極大滿足。代表知足常樂與享樂主義。", reversed: "過度放縱、沉溺感官享受。或者是表面光鮮亮麗，內心實則空虛自私。" }, love: { upright: "感情生活美滿，彼此對當前互動極為滿意，單身者能順利吸引心儀對象。", reversed: "關係中充斥著過度的自我中心與自私，只顧個人享受而忽略了伴侶的感受。" }, work: { upright: "取得階段性重大成功，項目收益豐厚，個人能力與財富獲得市場認可。", reversed: "因沾沾自喜而陷入怠惰，注意職場人際關係不要給人留下傲慢的負面印象。" },
+                "Ten of Cups": { nameCN: "聖杯十", general: { upright: "情感的終極大團圓！象徵家庭和諧、持久的幸福、社群團結與情感大豐收。", reversed: "家庭和諧破裂、內部分裂。情感紐帶產生嚴重疏離，幸福流於表面形式。" }, love: { upright: "走向婚姻殿堂，建立充滿愛與支持的幸福家庭，彼此是命中注定的伴侶。", reversed: "家庭內部爆發嚴重觀念衝突，看似平穩的婚姻背後隱藏著溝通危機。" }, work: { upright: "團隊凝聚力達到頂峰，跨部門協作天衣無縫，項目成果惠及全體成員。", reversed: "團隊內部拉幫結派，表面一團和氣實則各自留一手，項目執行缺乏向心力。" },
+                "Page of Cups": { nameCN: "聖杯侍從", general: { upright: "溫柔、感性且富有藝術天賦的訊息傳遞者。代表新機會或直覺啟迪。", reversed: "情感脆弱、情緒化、無病呻吟。容易被甜言蜜語矇蔽，沉溺於幻想。" }, love: { upright: "收到浪漫的告白或情感訊號，關係充滿純真、溫柔的詩意情調。", reversed: "情緒起伏過大，在感情中表現得過於任性與玻璃心，容易因缺乏安全感而作鬧。" }, work: { upright: "直覺敏銳，適合從事設計、文案或創意工作，能捕捉到獨特的藝術靈感。", reversed: "工作流於情緒化，抗壓性極差，容易因被批評而陷入消極怠工的惡性循環。" },
+                "Knight of Cups": { nameCN: "聖杯騎士", general: { upright: "白馬王子與浪漫化身。代表帶來充滿誠意的邀請、愛意與和解訊息。", reversed: "情場浪子、虛偽的誘惑。用情不專，言行不一，擅長情感操縱與逃避責任。" }, love: { upright: "迎來一場高規格的浪漫追求，伴侶溫柔體貼，關係朝著夢幻方向發展。", reversed: "警惕對方的過度獻殷勤，可能是一場精心設計的情感陷阱，對方缺乏定性。" }, work: { upright: "職場上人脈外交能力極佳，善於通過和諧的商務談判促成互利共贏的合作。", reversed: "工作作風過於理想化，缺乏實質數據與行動力支持，方案容易中途流產。" },
+                "Queen of Cups": { nameCN: "聖杯皇后", general: { upright: "溫柔慈愛、直覺極強的精神港灣。具備強大的同理心與情感療癒力。", reversed: "情感勒索的掌控者。情緒極度不穩定，陷入自憐自哀與瘋狂猜忌中。" }, love: { upright: "彼此包容、充滿母性般的深厚愛意，精神世界高度同步，關係無比治癒。", reversed: "控制慾以愛的名義偽裝，頻繁進行情緒勒索，讓伴侶感到窒息與沉重壓力。" }, work: { upright: "善於關懷團隊成員，直覺精準，在公關、人力或創意崗位表現極其亮眼。", reversed: "因私人情感干擾職場專業判斷，情緒化用人，導致團隊工作氣氛壓抑混亂。" },
+                "King of Cups": { nameCN: "聖杯國王", general: { upright: "情感與理性的完美掌控者。胸懷寬廣，具備強大的包容力與危機調和力。", reversed: "虛偽的冷酷。內心波濤洶湧表面故作鎮定，善於利用他人的情感弱點進行操縱。" }, love: { upright: "伴侶成熟、溫厚且極度包容，是關係中定海神針般的存在，情感深沉穩固。", reversed: "情感冷暴力，表面看似不計較實則內心算計，用冷漠的防禦機制拉開距離。" }, work: { upright: "卓越的導師型領袖，善於化解部門衝突，深受下屬愛戴，人脈資源極其深厚。", reversed: "職場作風拉幫結派，看似溫和實則處事不公，容易因情緒偏好導致決策失準。" },
+
+                /* 寶劍 swords 14張 */
+                "Ace of Swords": { nameCN: "寶劍一", general: { upright: "思想破局！代表極致的理智、突破重圍的意志力、正義與清明的決斷力。", reversed: "思維混亂、決策失誤。力量被誤用，言詞過於尖銳引發毀滅性災難。" }, love: { upright: "以清晰理智的態度面對關係，斬斷曖昧不清的絲線，做出決定性的表態。", reversed: "溝通演變成互相傷害的利刃，言詞過於冷酷無情，導致關係走向決裂邊緣。" }, work: { upright: "以雷霆萬鈞之勢突破技術瓶頸，決策快狠準，核心攻堅計畫取得決定性勝利。", reversed: "決策缺乏邏輯支撐，盲目出擊導致項目徹底跑偏，需承擔嚴重的決策失誤責任。" },
+                "Two of Swords": { nameCN: "寶劍二", general: { upright: "陷入兩難的僵局。雙眼被蒙蔽，試圖維持內心短暫的理智平衡、拒絕面對現實。", reversed: "僵局被打破！被迫揭開眼罩面對真相，儘管痛苦但必須做出實質抉擇。" }, love: { upright: "雙方陷入冷戰或情感僵局，彼此逃避核心問題，在冷漠中維持虛假的和平。", reversed: "無法再繼續逃避，隱藏的矛盾徹底爆發，雙方必須攤牌面對感情的真實走向。" }, work: { upright: "面臨兩個勢均力敵的方案而猶豫不決，進度陷入觀望停滯狀態，不敢輕舉妄動。", reversed: "撕開拖延的遮羞布，在各方施壓下被迫做出決定，專案打破停滯重新啟動。" },
+                "Three of Swords": { nameCN: "寶劍三", general: { upright: "心碎、背叛與刺骨的痛苦。代表面臨難以接受的感情重創或言詞傷害。", reversed: "痛苦正在減輕、傷口開始癒合。告別最黑暗的陰霾，迎來心靈的釋懷。" }, love: { upright: "遭遇嚴重的背叛、分手或多角關係拉扯，內心被痛苦與悲傷完全撕裂。", reversed: "最痛的時期已經過去，雙方達成和解，或者你終於決定放下這段受傷的感情。" }, work: { upright: "遭遇嚴重的合夥背叛、惡意中傷或項目暴雷，努力付諸東流，損失慘重。", reversed: "停損成功，從失敗的陰影中重新站起來，重組團隊，準備收拾殘局再出發。" },
+                "Four of Swords": { nameCN: "寶劍四", general: { upright: "暫時的休兵與沉澱。躺在石棺上靜養，收回心智精力，為下一戰蓄力。", reversed: "休養結束，重新披掛上陣！告別停滯，帶著恢復的精力再度投入戰場。" }, love: { upright: "關係進入互不打擾的休戰期，彼此給予空間療癒矛盾，不宜急躁推進。", reversed: "冷戰正式宣告結束，雙方打破沉默重新建立對話，關係注入全新動能。" }, work: { upright: "項目進入暫時的封存或低調調整期，適合安排假期，切忌盲目擴張進攻。", reversed: "重回緊湊的工作節奏，休整後的思維無比清明，積壓的業務將迎來高效推進。" },
+                "Five of Swords": { nameCN: "寶劍五", general: { upright: "贏了戰役卻輸了格局。代表慘烈的惡性競爭、自私的勝利與人際關係的破裂。", reversed: "拒絕無謂的內耗爭鬥，試圖從惡性競爭的泥潭中抽身，尋求和解的可能。" }, love: { upright: "無休止的口舌之爭，為了面子口不擇言傷害對方，就算吵贏了也輸掉了感情。", reversed: "意識到爭吵的荒謬，有一方主動低頭讓步，試圖修復因言詞傷害產生的裂痕。" }, work: { upright: "職場辦公室政治慘烈，遭遇暗箭傷人或踩著同事往上爬。環境極度有毒。", reversed: "看透了派系內鬥的無意義，退出利益爭奪，專注於自身專業核心能力的提升。" },
+                "Six of Swords": { nameCN: "寶劍六", general: { upright: "傷痕累累的渡河。代表在他人協助下低調轉移、遠離風暴圈，走向療癒彼岸。", reversed: "困在風暴中心無法脫身。轉型計畫受阻，過去的陰影死死糾纏，進退兩難。" }, love: { upright: "在平淡與互相扶持中走出情感低谷，關係正處於低調、緩慢的療癒期。", reversed: "過去的矛盾反覆發作，雙方無法平靜溝通，感情遷徙旅程遭遇嚴重阻礙。" }, work: { upright: "專案面臨低調轉型或業務重組，雖然過程艱難，但方向正在往好的地方收斂。", reversed: "轉型策略遭遇滑鐵盧，缺乏核心資源支持，試圖擺脫困境卻越陷越深。" },
+                "Seven of Swords": { nameCN: "寶劍七", general: { upright: "孤身潛入敵營偷劍。代表採取非傳統手段、走捷徑、智取，但需防範欺騙與背叛。", reversed: "陰謀敗露、捷徑走入死胡同。謊言被拆穿，必須面對嚴肅的面對代價。" }, love: { upright: "關係中存在隱瞞、心機或地下情傾向。互動缺乏坦誠，各懷鬼胎。", reversed: "隱藏的秘密或謊言被徹底曝光，雙方被迫卸下偽裝，面對最真實的堪憂現狀。" }, work: { upright: "利於奇襲策略、劍走偏鋒。但需嚴格防範商業機密洩露或合夥人的不誠實行為。", reversed: "投機取巧的手段引發嚴重後果，信用破產。專案必須回歸正軌與合規操作。" },
+                "Eight of Swords": { nameCN: "寶劍八", general: { upright: "畫地為牢的困境。雙眼被蒙、寶劍環伺，實則雙腳未被束縛，恐懼源於內心。", reversed: "思想覺醒，重獲自由！扯下眼罩，看清困境虛妄，大步走出自我設限的牢籠。" }, love: { upright: "在感情中感到極度壓抑與無助，認為自己毫無選擇，活在受害者心態中。", reversed: "看清這段感情的毒性，不再自我欺騙，決定鼓起勇氣打破枷鎖，重獲新生。" }, work: { upright: "職場上感到被條條框框死死限制，思維枯竭，有一種被孤立、動彈不得的絕望感。", reversed: "打破思維定勢，主動突破體制限制，積極尋求外部資源，順利找到破局解法。" },
+                "Nine of Swords": { nameCN: "寶劍九", general: { upright: "深夜驚醒的極致焦慮。代表失眠、噩夢纏身、精神壓力已達崩塌邊緣。恐懼被無限放大。", reversed: "焦慮抵達波谷，迎來曙光。意識到恐懼只是庸人自擾，精神壓力開始釋放。" }, love: { upright: "對感情的前景充滿病態的擔憂與猜忌，深夜內耗嚴重，精神折磨到了極點。", reversed: "不再自己嚇自己，決定跟伴侶坦誠內心的脆弱，焦慮在理解中逐漸消散。" }, work: { upright: "面對超負荷的KPI或突發危機，精神極度崩緊，失眠嚴重，陷入恐慌性內耗。", reversed: "找到核心問題所在，恐慌情緒得到控制，開始理性務實地去拆解工作難題。" },
+                "Ten of Swords": { nameCN: "寶劍十", general: { upright: "萬箭穿心，慘烈至極的終點。舊架構徹底毀滅。但黑夜已達極致，黎明即將到來。", reversed: "從廢墟中艱難爬起。最壞的慘狀已經發生，無法更壞了，迎來觸底反彈的微弱生機。" }, love: { upright: "感情遭遇毀滅性打擊，出局、分手或背叛。關係徹底走向無可挽回的終點。", reversed: "在經歷了痛徹心扉的分離後，死心塌地地接受現實，開始緩慢整理心情重建自我。" }, work: { upright: "專案徹底宣告失敗，業務全面暴雷崩盤。面臨最嚴酷的清算與終結代碼。", reversed: "接受破產或失敗的現實，停損完成。在廢墟中尋找殘存的有用代碼，準備重開新局。" },
+                "Page of Swords": { nameCN: "寶劍侍從", general: { upright: "機警、敏銳但缺乏根基的新人。代表處於刺探情報、收集數據、高度戒備的狀態。", reversed: "言詞輕率、八卦成性。刺探行為引發反感，情報失真導致決策跑偏。" }, love: { upright: "對關係抱持審視與暗中觀察態度，頻繁窺探對方社群動態，缺乏實質信任感。", reversed: "在感情中無端猜忌、無中生有，因輕信謠言而引發不必要的冷戰與爭執。" }, work: { upright: "職場情報收集能力極強，適合從事風控、市場調研或數據監測。行事需謹慎。", reversed: "職場大嘴巴，因散布小道消息引發人際崩塌。報告數據不實，導致專案誤判。" },
+                "Knight of Swords": { nameCN: "寶劍騎士", general: { upright: "急風暴雨般的衝鋒者！智商高、速度快，以摧枯拉朽之勢破除阻礙，但缺乏耐性。", reversed: "盲目激進、口不擇言。行事缺乏計劃性，橫衝直撞導致項目四處點火、滿盤皆輸。" }, love: { upright: "感情追求速度極快，說話直白犀利。注重心智交流，但有時顯得缺乏溫情。", reversed: "脾氣暴躁，在爭吵中冷酷無情、言詞如刀，極易在衝動之下說出分手狠話。" }, work: { upright: "解決突發技術難題的救火隊長！雷厲風行，效率奇高，能迅速撕開市場缺口。", reversed: "缺乏大局觀的瞎忙，作風過於侵略性引發團隊強烈反彈，進度因衝動而跑偏。" },
+                "Queen of Swords": { nameCN: "寶劍皇后", general: { upright: "冰雪聰明的理智女王。代表極致的冷靜客觀、目光敏銳、斬斷情緒干擾的決斷力。", reversed: "刻薄冷酷、怨恨心重。過度理智演變成情感暴力，用刻薄的言詞防禦和攻擊外界。" }, love: { upright: "感情中極度獨立自主，不依賴不依附，看問題一針見血，注重精神契合。", reversed: "情感防禦過度，散發出難以接近的冰冷氣息，習慣性挑剔對方，讓關係名存實亡。" }, work: { upright: "頂級的風控專家與審計者。行事滴水不漏，能以冷酷的客觀邏輯做出最正確的糾偏。", reversed: "職場作風過於刻薄挑剔，缺乏同理心，導致下屬怨聲載道，團隊氛圍極度壓抑。" },
+                "King of Swords": { nameCN: "寶劍國王", general: { upright: "權威的思想領袖、大法官。代表擁有至高無上的邏輯架構、專業素養與鐵面無私。", reversed: "冷酷的獨裁暴君。作風專制，缺乏人情味，利用制度與智商優勢殘酷打壓他人。" }, love: { upright: "伴侶極度理智、成熟，以高標準要求彼此。雖然缺乏甜言蜜語，但責任感無可挑剔。", reversed: "關係中充斥著冷暴力與精神打壓，對方高高在上、難以溝通，互動如同法庭審判。" }, work: { upright: "事業上的戰略總設計師，邏輯無懈可擊，制定的規則與標準是成功的核心保證。", reversed: "職場決策過於冷血無情，不顧員工死活，僵化的體制與數據崇拜導致創新被徹底扼殺。" },
+
+                /* 錢幣 pentacles 14張 */
+                "Ace of Pentacles": { nameCN: "錢幣一", general: { upright: "物質與財富的黃金起點！代表迎來實質的資金注入、穩固的商機或豐厚的回報。", reversed: "財運流失、投資打水漂。機會因缺乏資金落地而夭折，虛度了物質大好時機。" }, love: { upright: "感情根基非常務實穩固，彼此擁有共同的物質基礎，戀情走向開花結果。", reversed: "感情被現實的經濟問題死死困擾，或者是過度注重物質條件而忽略了真摯情感。" }, work: { upright: "迎來待遇優厚的新工作、新項目啟動，或者是獲得實質性的資金預算支持。", reversed: "項目預算超支，遭遇資金鏈斷裂風險，或者是因報酬未達預期而導致商機流產。" },
+                "Two of Pentacles": { nameCN: "錢幣二", general: { upright: "在波濤中雜耍兩枚錢幣。代表靈活的資源平衡、多工處理，以及面臨資金的周轉抉擇。", reversed: "失衡崩盤！生活或財務陷入拆東牆補西牆的窘境，多工處理失敗，混亂不堪。" }, love: { upright: "在兩段曖昧關係中權衡搖擺，或者是在感情與工作之間努力尋求時間的平衡。", reversed: "平衡徹底被打破，財務壓力或精力分散讓感情生活一團糟，面臨兩頭落空危機。" }, work: { upright: "具備極佳的靈活性，同時推進兩個項目，善於在有限資源下玩轉資金周轉。", reversed: "分心過度，拆東牆補西牆的策略暴雷，項目進度因精力與資金失控而全面崩潰。" },
+                "Three of Pentacles": { nameCN: "錢幣三", general: { upright: "專業團隊的匠人合作。代表技術精湛、分工明確、在合力打造宏偉的藍圖建築。", reversed: "團隊分工混亂、專業技術不過關。內部勾心鬥角，專案流於粗製濫造。" }, love: { upright: "彼此願意共同經營、磨合生活細節，感情在務實與互相配合中一步步走向成熟。", reversed: "關係缺乏長遠規劃，在日常瑣事的分工上摩擦不斷，缺乏共同建設未來的誠意。" }, work: { upright: "專業能力大放異彩，團隊協作默契十足，項目執行符合最高工業與商業標準。", reversed: "團隊內部爆發嚴重的專業理念衝突，各自為政，項目因技術不過關正面臨驗收危機。" },
+                "Four of Pentacles": { nameCN: "錢幣四", general: { upright: "死守著四枚錢幣不放。代表極度的保守、守財、缺乏安全感，抗拒任何資源變動。", reversed: "開始放手、破財消災。願意打破僵化，進行資金流動或敞開心扉接受新觀念。" }, love: { upright: "佔有慾與控制慾極強，將伴侶視為私有財產，感情缺乏喘息的自由空間。", reversed: "終於放下過度的控制與猜忌，願意給予彼此自由，或者感情遭遇物質層面的破產。" }, work: { upright: "作風極度保守穩健，死守現有業務不願承擔任何風險，資金利用率低下。", reversed: "被迫打破守舊現狀，進行核心資產重組，或者因大意而遭遇不可避免的財產損失。" },
+                "Five of Pentacles": { nameCN: "錢幣五", general: { upright: "雪地中的窮困潦倒。代表面臨嚴重的財務危機、健康受損、被主流社群孤立的困境。", reversed: "寒冬即將過去，曙光初現。財務危機迎來轉機，重新找到收容所與溫暖。", reversed: "寒冬即將過去，曙光初現。財務危機迎來轉機，重新找到收容所與溫暖。" }, love: { upright: "一對貧賤夫妻百事哀，關係共同經歷現實的物質或健康考驗，內心感到無比孤立。", reversed: "彼此攜手熬過了最艱難的物質低谷，經濟狀況好轉，關係迎來情感的回暖與重建。" }, work: { upright: "公司面臨減薪、裁員或破產風暴，個人陷入嚴重的財務困境，求職屢屢碰壁。", reversed: "最壞的失業或財務危機正式告終，順利拿到救濟或找到新的收入來源，重回正軌。" },
+                "Six of Pentacles": { nameCN: "錢幣六", general: { upright: "手持天平施捨窮人。代表資源的合理分配、慈善、獲得實質資助或處於權利高位。", reversed: "不對等的施捨、包藏禍心的資助。存在不公平的利益交換或陷入嚴重的債務泥潭。" }, love: { upright: "關係呈現健康的互相照顧，一方在物質或精神上給予引導，互動和諧對等。", reversed: "感情演變成一方居高臨下的施捨，金錢與情感付出嚴重不平等，暗藏利益算計。" }, work: { upright: "順利拿到融資、獎學金或貴人扶持。團隊資源配置合理，專案回報符合預期。", reversed: "遭遇職場畫大餅，答應的獎金被惡意剋扣，或者因不平等的條約陷入合約陷阱。" },
+                "Seven of Pentacles": { nameCN: "錢幣七", general: { upright: "依著鋤頭審視收穫。代表階段性成果已出，正處於停下來思考未來去留的抉擇期。", reversed: "投資遲遲看不到回報，失去耐性。因前期規劃不當而導致心血面臨付諸東流。" }, love: { upright: "感情經歷了漫長積累，現階段適合停下來冷靜評估，這份付出是否值得繼續投入。", reversed: "對關係遲遲沒有實質進展（如結婚）感到極度焦慮與失望，熱情在等待中消磨殆盡。" }, work: { upright: "項目已取得初步收益，正處於戰略盤整期，權衡是否加大投入或更換賽道。", reversed: "遭遇嚴重的職涯焦慮，付出的努力與回報不成正比，面臨前期沉沒成本的痛苦割舍。" },
+                "Eight of Pentacles": { nameCN: "錢幣八", general: { upright: "專注雕刻錢幣的匠人。代表腳踏實地的專注、技能精進、工匠精神與財富的穩定累積。", reversed: "流於形式的敷衍。工作粗心大意，缺乏核心技術，或沉迷於賺快錢的投機取巧中。" }, love: { upright: "感情經營不浮誇，彼此在日常的柴米油鹽中默默付出，關係務實、細水長流。", reversed: "對感情缺乏耐心經營，生活細節敷衍了事，或者因過度忙於賺錢而徹底冷落了伴侶。" }, work: { upright: "技術鑽研取得突破，專注於垂直領域修煉，靠著無可替代的專業技能賺取穩定財富。", reversed: "職場上粗製濫造、投機取巧，代碼或方案漏洞百出。注意面臨信用破產與降職風險。" },
+                "Nine of Pentacles": { nameCN: "錢幣九", general: { upright: "手托獵鷹的獨身貴族。代表物質極度富足、享受優雅的獨立生活、財富自由的巔峰。", reversed: "德不配位。表面奢華實則負債累累，或為了物質出賣自由，內心極度空虛不安。" }, love: { upright: "單身者極度享受高品質的獨處，魅力四射；戀愛者彼此經濟獨立，互不依附、優雅和諧。", reversed: "過度注重包裝虛榮心，兩人的結合充滿了物質交易的銅臭味，缺乏真誠靈魂交流。" }, work: { upright: "事業取得輝煌成就，成為行業內的頂尖專家，實現了令人羨慕的財務與時間自由。", reversed: "看似風光的項目背後隱藏著巨大的財務壞帳風險，切忌為了虛名而盲目鋪張浪費。" },
+                "Ten of Pentacles": { nameCN: "錢幣十", general: { upright: "鼎盛的家族傳承。代表龐大的資產累積、家族榮耀、帝國穩固與物質富足的終極狀態。", reversed: "家族內鬥、遺產糾紛。看似龐大的金錢帝國內部根基腐朽，面臨破產與名譽掃地。" }, love: { upright: "感情根基無比深厚，獲得雙方家族的全力支持與巨額財富祝福，步入豪門或穩固婚姻。", reversed: "婚姻因嚴重的財產爭奪、長輩干預而陷入四分五裂的僵局，感情被利益無情撕碎。" }, work: { upright: "企業規模宏大，根基無比穩固。項目背靠頂級大廠或雄厚資本，回報極其豐厚安全。", reversed: "公司高層陷入權力與利益瓜分的惡性內鬥，體制僵化腐朽，基層項目面臨崩塌解體。" },
+                "Page of Pentacles": { nameCN: "錢幣侍從", general: { upright: "務實認真的學習者。代表獲得實質的好消息、新投資計畫的啟動或掌握賺錢新技能。", reversed: "眼高手低、缺乏理財觀念。花錢大手大腳，計畫缺乏務實底氣，淪為紙上談兵。" }, love: { upright: "一段以共同進步為目標、態度認真務實的戀情開始，彼此注重未來的現實承諾。", reversed: "關係缺乏現實基礎，一方在財務上表現得極不成熟，空口說白話，難以給予承諾。" }, work: { upright: "職場上踏實肯幹，非常適合接觸金融、地產或具體技術研發，基礎打得極其扎實。", reversed: "工作上缺乏專注力，理財觀念混亂，方案缺乏市場調研與數據支撐，極易投資失誤。" },
+                "Knight of Pentacles": { nameCN: "錢幣騎士", general: { upright: "絕對可靠的耕耘者。速度雖慢但穩如磐石，每一步都精準落地，代表穩健與忠誠。", reversed: "陷入死板僵化。過度墨守成規導致進度極其緩慢，缺乏變通，生活變得枯燥乏味。" }, love: { upright: "伴侶雖然缺乏浪漫情調，但忠誠度與責任感無可挑剔，能給予最穩固的物質依靠。", reversed: "互動變得像例行公事般枯燥無趣，一方過度固執死板，讓關係陷入令人窒息的沉悶中。" }, work: { upright: "職場上的模範員工與精準執行者，承接的項目絕不會出錯，資金管理滴水不漏。", reversed: "專案進度因過度墨守成規而嚴重滯後，抗拒任何技術創新與流程優化，死板硬套。" },
+                "Queen of Pentacles": { nameCN: "錢幣皇后", general: { upright: "務實溫厚的大地之母。代表高超的理財與生活管理能力，既享有財富又兼顧家庭。", reversed: "陷入物質焦慮。金錢奴隸，表現為極度吝嗇、拜金，或者是生活自理能力崩塌。" }, love: { upright: "懂得將生活打理得井井有條，給予伴侶極大的包容與溫暖，關係充滿煙火氣的幸福。", reversed: "在感情中過度計較經濟得失，頻繁因金錢問題給對方施壓，內心充滿了不安全感。" }, work: { upright: "卓越的財務主管或後勤保障者，善於將有限資源最大化利用，專案收益四平八穩。", reversed: "預算審核過於苛刻，職場作風因小失大。因過度計較短期金錢回報而錯失戰略大局。" },
+                "King of Pentacles": { nameCN: "錢幣國王", general: { upright: "商業帝國的頂級總裁。代表無可搖動的財富權威、卓越的商業直覺與物質世界的最高主宰。", reversed: "腐敗的暴發戶。唯利是圖、唯錢至上。因過度貪婪或嚴重的投資盲目而面臨財務崩盤。" }, love: { upright: "伴侶是極其成功的實業家或經濟支柱，能提供最高規格的物質保障與穩固承諾。", reversed: "將商業利益帶入感情，試圖用金錢買斷對方的尊嚴與自由，互動充滿了冷酷的算計。" }, work: { upright: "商業戰場上的常勝將軍，投資眼光精準無比，操盤的項目均能實現極其龐大的商業變現。", reversed: "決策徹底被貪婪矇蔽，盲目追求槓桿與暴利，項目正滑向毀滅性的龐氏騙局與壞帳深淵。" }
             };
         }
     </script>
