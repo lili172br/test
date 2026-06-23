@@ -73,14 +73,8 @@
         .card.flipped .card-inner { transform: rotateY(180deg); }
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); box-sizing: border-box; }
         
-        .card-back { 
-            background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-size: 36px;
-        }
-        .card.scanning .card-back {
-            border-color: #dc2626;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
-        }
+        .card-back { background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-size: 36px; }
+        .card.scanning .card-back { border-color: #dc2626; color: #fff; box-shadow: 0 0 15px rgba(220, 38, 38, 0.5); }
         .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; border-radius: 10px; }
         .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
         
@@ -105,9 +99,7 @@
         .summary-box p { margin: 15px 0 0 0; font-size: 13px; color: #d1d1d1; text-indent: 2em; }
 
         #capture-node { padding: 15px; background: #050505; border-radius: 16px; }
-        .result-title-node {
-            font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 20px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; line-height: 1.5;
-        }
+        .result-title-node { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 20px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; line-height: 1.5; }
 
         .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 15px; max-width: 420px; width: 100%; box-sizing: border-box; }
         .sub-btn-group { display: flex; gap: 15px; justify-content: center; width: 100%; }
@@ -183,225 +175,174 @@
     </footer>
 
     <script>
-        // ==================== 頂級優化科幻音效引擎 ====================
+        // ==================== 音效引擎 ====================
         const AudioEngine = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type, step = 0) {
             if (AudioEngine.state === 'suspended') { AudioEngine.resume(); }
             const now = AudioEngine.currentTime;
-            
-            // 原本清脆、好聽的按鈕專屬點擊音效
             if (type === 'click') {
-                const osc = AudioEngine.createOscillator();
-                const gain = AudioEngine.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
-                gain.gain.setValueAtTime(0.12, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-                osc.connect(gain); gain.connect(AudioEngine.destination);
-                osc.start(now); osc.stop(now + 0.05);
-            } 
-            // 洗牌：清脆的高級數位晶片嗶聲
-            else if (type === 'shuffle_tick') {
-                const osc = AudioEngine.createOscillator();
-                const filter = AudioEngine.createBiquadFilter();
-                const gain = AudioEngine.createGain();
-                
-                osc.type = 'sine';
-                let freq = 1600 + (step * 250);
-                osc.frequency.setValueAtTime(freq, now);
-                osc.frequency.exponentialRampToValueAtTime(freq - 600, now + 0.05);
-                
-                filter.type = 'bandpass';
-                filter.frequency.setValueAtTime(freq, now);
-                
-                gain.gain.setValueAtTime(0.05, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-                
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(AudioEngine.destination);
-                osc.start(now); osc.stop(now + 0.05);
-            } 
-            // 翻牌：大氣、具有未來感的全息螢幕展開聽感
-            else if (type === 'flip') {
-                const oscBase = AudioEngine.createOscillator();
-                const oscTop = AudioEngine.createOscillator();
-                const gain = AudioEngine.createGain();
-                
-                let baseFreq = 329.63; // E4
-                if (step === 1) baseFreq = 392.00; // G4
-                if (step === 2) baseFreq = 523.25; // C5
-                
-                oscBase.type = 'triangle';
-                oscBase.frequency.setValueAtTime(baseFreq, now);
-                oscBase.frequency.exponentialRampToValueAtTime(baseFreq * 0.5, now + 0.3);
-                
-                oscTop.type = 'sine';
-                oscTop.frequency.setValueAtTime(baseFreq * 2, now);
-                oscTop.frequency.exponentialRampToValueAtTime(baseFreq * 4, now + 0.25);
-                
-                gain.gain.setValueAtTime(0.08, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-                
-                oscBase.connect(gain);
-                oscTop.connect(gain);
-                gain.connect(AudioEngine.destination);
-                
-                oscBase.start(now); oscTop.start(now);
-                oscBase.stop(now + 0.35); oscTop.stop(now + 0.35);
-            }
-            // 錯誤提示音
-            else if (type === 'error') {
-                const osc = AudioEngine.createOscillator();
-                const gain = AudioEngine.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(140, now);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-                osc.connect(gain); gain.connect(AudioEngine.destination);
-                osc.start(now); osc.stop(now + 0.15);
-            }
-            // 成功提示音
-            else if (type === 'success') {
+                const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'shuffle_tick') {
+                const osc = AudioEngine.createOscillator(); const filter = AudioEngine.createBiquadFilter(); const gain = AudioEngine.createGain();
+                osc.type = 'sine'; let freq = 1600 + (step * 250); osc.frequency.setValueAtTime(freq, now); osc.frequency.exponentialRampToValueAtTime(freq - 600, now + 0.05);
+                filter.type = 'bandpass'; filter.frequency.setValueAtTime(freq, now); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.connect(filter); filter.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'flip') {
+                const oscBase = AudioEngine.createOscillator(); const oscTop = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                let baseFreq = 329.63; if (step === 1) baseFreq = 392.00; if (step === 2) baseFreq = 523.25;
+                oscBase.type = 'triangle'; oscBase.frequency.setValueAtTime(baseFreq, now); oscBase.frequency.exponentialRampToValueAtTime(baseFreq * 0.5, now + 0.3);
+                oscTop.type = 'sine'; oscTop.frequency.setValueAtTime(baseFreq * 2, now); oscTop.frequency.exponentialRampToValueAtTime(baseFreq * 4, now + 0.25);
+                gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                oscBase.connect(gain); oscTop.connect(gain); gain.connect(AudioEngine.destination); oscBase.start(now); oscTop.start(now); oscBase.stop(now + 0.35); oscTop.stop(now + 0.35);
+            } else if (type === 'error') {
+                const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(140, now); gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.15);
+            } else if (type === 'success') {
                 const notes = [523.25, 659.25, 783.99, 1046.5];
                 notes.forEach((freq, index) => {
-                    const osc = AudioEngine.createOscillator();
-                    const gain = AudioEngine.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + index * 0.05);
-                    gain.gain.setValueAtTime(0.06, now + index * 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.002, now + index * 0.05 + 0.15);
-                    osc.connect(gain); gain.connect(AudioEngine.destination);
-                    osc.start(now + index * 0.05); osc.stop(now + index * 0.05 + 0.15);
+                    const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(freq, now + index * 0.05);
+                    gain.gain.setValueAtTime(0.06, now + index * 0.05); gain.gain.exponentialRampToValueAtTime(0.002, now + index * 0.05 + 0.15);
+                    osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now + index * 0.05); osc.stop(now + index * 0.05 + 0.15);
                 });
-            }
-            // 截圖提示音
-            else if (type === 'capture') {
-                const osc = AudioEngine.createOscillator();
-                const gain = AudioEngine.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1800, now);
-                gain.gain.setValueAtTime(0.06, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-                osc.connect(gain); gain.connect(AudioEngine.destination);
-                osc.start(now); osc.stop(now + 0.08);
+            } else if (type === 'capture') {
+                const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(1800, now); gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.08);
             }
         }
 
-        // ==================== 占卜主邏輯 ====================
-        const tarotData = {
-          "cards": [
-            { "name": "The Fool", "img": "m00.jpg" },
-            { "name": "The Magician", "img": "m01.jpg" },
-            { "name": "The High Priestess", "img": "m02.jpg" },
-            { "name": "The Empress", "img": "m03.jpg" },
-            { "name": "The Emperor", "img": "m04.jpg" }
-          ]
-        };
-
+        // ==================== 【修復重點】：深度長篇牌意資料庫 ====================
         const tarotMeanings = {
-            "The Fool": { nameCN: "愚者", general: { upright: "新的開始、自由、冒險。", reversed: "魯莽、輕率、不負責任。" }, love: { upright: "一段充滿新鮮感的新戀情即將展開。", reversed: "感情中過度盲目。" }, work: { upright: "適合挑戰全新的領域。", reversed: "工作上缺乏規劃導致混難。" } },
-            "The Magician": { nameCN: "魔術師", general: { upright: "創造力、行動力、潛力發揮。", reversed: "操縱、欺騙、計畫不踏實。" }, love: { upright: "關係中溝通流暢，充滿趣味。", reversed: "注意感情中的甜言蜜語背後是否隱瞞。" }, work: { upright: "展現強大工作能力的時期。", reversed: "空有才華卻缺乏執行力。" } },
-            "The High Priestess": { nameCN: "女祭司", general: { upright: "直覺、潛意識、智慧、冷靜。", reversed: "膚淺、過度理性、壓抑情感。" }, love: { upright: "感情上較為被動、精神交流大於物質。", reversed: "情感壓抑過度導致隔閡。" }, work: { upright: "適合從事研究、企劃、分析等靜態工作。", reversed: "面對職場決策時過度猶豫不決。" } },
-            "The Empress": { nameCN: "皇后", general: { upright: "豐收、繁榮、孕育、母愛。", reversed: "缺乏安全感、過度控制。" }, love: { upright: "感情生活充滿甜蜜與熱情，彼此包容。", reversed: "在關係中過度控制、佔有慾過強。" }, work: { upright: "職場發展順遂，努力將迎來實質的回報。", reversed: "工作流於安逸，缺乏積極度。" } },
-            "The Emperor": { nameCN: "皇帝", general: { upright: "權力、穩定、控制、秩序。", reversed: "暴政、軟弱、控制狂。" }, love: { upright: "感情關係穩定、具有安全感。", reversed: "感情中一方過於專斷、固執。" }, work: { upright: "有望晉升主管職、建立制度。", reversed: "職場遇到僵化的體制。" } },
-            "default": { nameCN: "未知卡牌", general: { upright: "事情正朝著積極的方向發展。", reversed: "當前可能面臨短暫的阻礙。" }, love: { upright: "感情方面請順應內心。", reversed: "情感可能出現短暫停滯。" }, work: { upright: "工作學業推進順利。", reversed: "發展受制於環境。" } }
+            "The Fool": {
+                nameCN: "愚者",
+                general: { 
+                    upright: "代表一個全新的開始、純真與冒險精神。現在的你擁有無限的潛能，不需要被過去的規則所束縛。信任你的直覺，帶著冒險的心大膽跳入未知的數據流中，能量將會指引你前行。",
+                    reversed: "警告你可能過於魯莽或缺乏計劃。雖然你想突破，但目前的腳步可能過於輕率，甚至是在逃避某些現實責任。盲目的樂觀可能會導致系統崩潰，建議先冷靜檢視地基。"
+                },
+                love: {
+                    upright: "一段充滿新鮮感、無拘無束的新戀情即將展開。你現在不追求承諾，而是享受當下的火花與精神自由。如果你已經在一段關係中，這暗示著彼此將嘗試全新的互動模式。",
+                    reversed: "感情中出現了不負責任的跡象。一方可能害怕給予承諾，或者是雙方都過於盲目，忽略了關係中潛在的風險與危機。小心這可能只是一場虛幻的數位泡沫。"
+                },
+                work: {
+                    upright: "適合挑戰全新的領域、創業或跳槽。現在是拋開傳統職業框架的黃金期。你的創造力處於巔峰，只要你敢於創新，市場將會給你極佳的回饋。",
+                    reversed: "工作上缺乏規劃導致混難。你可能在沒準備好的情況下就切換跑道，或是目前的專案存在巨大的安全漏洞。不建議在此時進行未經評估的高風險投資。"
+                }
+            },
+            "The Magician": {
+                nameCN: "魔術師",
+                general: { 
+                    upright: "你掌握著強大的資源與行動力。這是一張萬事俱備的卡牌，代表你已經擁有達成目標所需的所有工具。將你的想法轉化為現實的時機已成熟，你就是矩陣的操縱者。",
+                    reversed: "注意你掌握的力量是否被誤用。可能存在操縱、欺騙或空有才華卻缺乏執行力的情況。目前你的計畫不夠踏實，甚至可能在自欺欺人。需警惕身邊帶有目的性的小人。"
+                },
+                love: {
+                    upright: "關係中溝通流暢，充滿魅力與趣味。單身者有望憑藉自身強大的能量吸引到優秀對象。這是一段心智與情感同步頻率極高的關係。",
+                    reversed: "注意感情中的甜言蜜語背後是否藏有隱瞞、欺騙，或者是對方在試圖情緒勒索你。這段關係目前流於表面，缺乏真心的深度交流。"
+                },
+                work: {
+                    upright: "展現強大工作能力的黃金時期。你能完美掌握新技術、新專案。無論在溝通還是實作上，你都能展現出令人信服的專家風範。升職與加薪的能量非常旺盛。",
+                    reversed: "職場上被主管、同事話術欺騙或操縱。雖然你很有能力，但目前的環境限制了你的發揮，或者是你自己的專注力過於分散，導致專案進度停滯不前。"
+                }
+            },
+            "The High Priestess": {
+                nameCN: "女祭司",
+                general: { 
+                    upright: "直覺與潛意識正處於高頻共振期。現在不適合向外尋求答案，而是應該向內探索、傾聽心靈深處的聲音。保持冷靜與沈默，那些被屏蔽的真相即將浮現。",
+                    reversed: "你可能過於壓抑自己的情感，或者是因為過度理智而忽略了直覺的警訊。目前的資訊不透明，你感到困惑與迷茫。建議停止猜忌，誠實面對內心的恐懼。"
+                },
+                love: {
+                    upright: "感情上較為被動、注重精神交流。你正處於一種冷靜觀察的狀態，不需要急著確定關係。單身者目前享受獨處，對感情抱持審慎且神聖的態度。",
+                    reversed: "情感壓抑過度導致彼此的隔閡加深。或者是你過度敏感、多疑，無法坦率地面對自己的真實感受，這讓對方感到難以靠近，關係陷入僵局。"
+                },
+                work: {
+                    upright: "適合從事研究、企劃、分析等靜態工作。靠著精準的直覺與理性分析，你能在複雜的數據中找出正確的抉擇。目前不宜強出頭，靜待時機方為上策。",
+                    reversed: "面對職場決策時過度猶豫不決，或是資訊不透明導致你做出了錯誤的研判。小心隱藏在檯面下的鬥爭影響你的判斷力，目前不適合簽署任何重要契約。"
+                }
+            },
+            "The Empress": {
+                nameCN: "皇后",
+                general: { 
+                    upright: "代表豐收、繁榮與物質的富足。你正處於能量飽滿、感官敏銳的收穫期。這是一個充滿溫暖、滋養與創造力的階段。無論是生活還是計畫，都將迎來豐碩的回報。",
+                    reversed: "目前你可能感到缺乏安全感，或者是對環境有過度的控制慾。創造力受到阻塞，甚至有過度揮霍、怠惰的傾向。注意不要將自己的情感價值建立在他人的認同上。"
+                },
+                love: {
+                    upright: "感情生活充滿甜蜜與溫馨，彼此包容與支持。這是一段非常滋養、甚至有望走向家庭或穩定長期發展的吉兆。單身者近期桃花能量強勁，極具女性魅力。",
+                    reversed: "在關係中表現得過度控制或佔有慾過強，這讓對方感到窒息。或者是因為物質、金錢問題導致感情產生摩擦，需要注意情感勒索的傾向。"
+                },
+                work: {
+                    upright: "職場發展順遂，你的努力將迎來實質的回報或業績大紅利。團隊氛圍和諧，合作專案能如期推進。現在是擴張業務與享受成果的絕佳時機。",
+                    reversed: "工作流於安逸、怠惰，缺乏前進的積極度。亦可能因為過度鋪張浪費、預算控管不佳導致專案出問題。注意職場上不要過於感情用事。"
+                }
+            },
+            "The Emperor": {
+                nameCN: "皇帝",
+                general: { 
+                    upright: "你掌握著秩序與權力。擁有堅強的意志力、領導力與清晰的掌控架構。目前的局勢在你的掌控之中，穩定與紀律是成功的唯一關鍵。你是體制的建立者。",
+                    reversed: "注意不要流於專橫霸道。目前的權力架構可能過於僵化，或你正逐漸失去對局勢的掌控力。小心過度的控制狂傾向導致身邊的人離去。目前需要重新審視紀律。"
+                },
+                love: {
+                    upright: "感情關係穩定、具有安全感，對方可能是一位較有主導權、願意承擔責任的人。這是一段以責任感與忠誠為基石的關係，雖少了一點浪漫，但非常可靠。",
+                    reversed: "感情中一方過於專斷、固執、難以溝通，互動充滿壓迫感。缺乏浪漫與柔情，彼此的關係更像是在履行義務而非真心的交流，容易產生權力鬥爭。"
+                },
+                work: {
+                    upright: "有望晉升主管職、建立制度，在專案中扮演核心決策者。你能夠穩定推進權力基礎，並獲得下屬或團隊的信任。專注於架構優化，成功將近在咫尺。",
+                    reversed: "職場遇到僵化的體制、遭遇暴君型主管壓榨，或自身領導不當導致計畫停滯。過於守舊而不願接受新技術，會讓你的矩陣節點逐漸落後於競爭者。"
+                }
+            },
+            "default": { nameCN: "未知數據", general: { upright: "事情正朝著積極的方向發展，請保持信心與熱情。", reversed: "當前可能面臨短暫的阻礙，建議調整步伐。" }, love: { upright: "感情方面請順應內心。", reversed: "情感可能出現短暫停滯。" }, work: { upright: "工作學業推進順利。", reversed: "發展受制於環境。" } }
         };
 
-        let currentHandData = []; 
-        let currentFlipIndex = 0; 
-        let selectedType = 'general';
+        let currentHandData = []; let currentFlipIndex = 0; let selectedType = 'general';
 
-        function switchView(viewId) {
-            document.querySelectorAll('.view-node').forEach(node => node.classList.remove('active-node'));
-            document.getElementById(viewId).classList.add('active-node');
-        }
-
-        function resetDivinationEngine() {
-            document.getElementById('question').value = '';
-            document.getElementById('user-question-display').innerText = '';
-            document.getElementById('flow-hint').innerText = '';
-            document.getElementById('deck').innerHTML = '';
-        }
-
-        function resetToHome() {
-            resetDivinationEngine();
-            switchView('home-view');
-        }
+        function switchView(viewId) { document.querySelectorAll('.view-node').forEach(node => node.classList.remove('active-node')); document.getElementById(viewId).classList.add('active-node'); }
+        function resetDivinationEngine() { document.getElementById('question').value = ''; document.getElementById('user-question-display').innerText = ''; document.getElementById('flow-hint').innerText = ''; document.getElementById('deck').innerHTML = ''; }
+        function resetToHome() { resetDivinationEngine(); switchView('home-view'); }
 
         function startTarotSession() {
             const questionInput = document.getElementById('question').value.trim();
             selectedType = document.getElementById('question-type').value;
-
-            if (questionInput === "") {
-                playSound('error');
-                alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！");
-                return;
-            }
-
-            playSound('click'); 
-
+            if (questionInput === "") { playSound('error'); alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！"); return; }
+            playSound('click');
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ MATRIX_TARGET // ${typeNames[selectedType]} : ${questionInput} ]`;
             document.getElementById('flow-hint').innerText = "DECRYPTING_SUB_NODES...";
-            
             initStaticDeck();
-            
             currentFlipIndex = 0;
             const shuffled = [...tarotData.cards].sort(() => 0.5 - Math.random());
-            currentHandData = shuffled.slice(0, 3).map(card => {
-                return { ...card, isReversed: Math.random() < 0.5 };
-            });
-            
+            currentHandData = shuffled.slice(0, 3).map(card => { return { ...card, isReversed: Math.random() < 0.5 }; });
             runDigitalShuffle(); 
         }
 
         function initStaticDeck() {
-            const deckDiv = document.getElementById('deck');
-            deckDiv.innerHTML = '';
+            const deckDiv = document.getElementById('deck'); deckDiv.innerHTML = '';
             const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
-
             for (let i = 0; i < 3; i++) {
-                const cardBox = document.createElement('div');
-                cardBox.className = 'card-box';
-                cardBox.innerHTML = `
-                    <h3>${positions[i]}</h3>
-                    <div class="card" id="card-${i}" onclick="handleCardFlip(${i})">
-                        <div class="card-inner">
-                            <div class="card-back">⚝</div>
-                            <div class="card-front" id="front-slot-${i}"></div>
-                        </div>
-                    </div>
-                `;
+                const cardBox = document.createElement('div'); cardBox.className = 'card-box';
+                cardBox.innerHTML = `<h3>${positions[i]}</h3><div class="card" id="card-${i}" onclick="handleCardFlip(${i})"><div class="card-inner"><div class="card-back">⚝</div><div class="card-front" id="front-slot-${i}"></div></div></div>`;
                 deckDiv.appendChild(cardBox);
             }
         }
 
         function runDigitalShuffle() {
             let step = 0;
-            
             const shuffleTimer = setInterval(() => {
                 if (step < 3) {
                     const card = document.getElementById(`card-${step}`);
-                    if (card) {
-                        card.classList.add('scanning');
-                        playSound('shuffle_tick', step); 
-                    }
+                    if (card) { card.classList.add('scanning'); playSound('shuffle_tick', step); }
                     step++;
                 } else {
                     clearInterval(shuffleTimer);
-                    
                     setTimeout(() => {
                         currentHandData.forEach((card, i) => {
                             const cardEl = document.getElementById(`card-${i}`);
                             if (cardEl) cardEl.classList.remove('scanning');
-                            
                             const slot = document.getElementById('front-slot-' + i);
-                            if (slot) {
-                                slot.innerHTML = `<img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">`;
-                            }
+                            if (slot) slot.innerHTML = `<img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">`;
                         });
                         unlockNextCard();
                     }, 300);
@@ -417,19 +358,15 @@
                 document.getElementById('flow-hint').innerText = `👉 請點擊翻開【${posName}】數據節點`;
             } else {
                 document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 矩陣分析完成...";
-                playSound('success');
-                setTimeout(() => { compileAndShowResultView(); }, 1000);
+                playSound('success'); setTimeout(() => { compileAndShowResultView(); }, 1000);
             }
         }
 
         function handleCardFlip(index) {
             const cardEl = document.getElementById(`card-${index}`);
             if (cardEl && cardEl.classList.contains('playable') && !cardEl.classList.contains('flipped')) {
-                playSound('flip', index); 
-                cardEl.classList.add('flipped');
-                cardEl.classList.remove('playable');
-                currentFlipIndex++;
-                setTimeout(() => { unlockNextCard(); }, 600);
+                playSound('flip', index); cardEl.classList.add('flipped'); cardEl.classList.remove('playable');
+                currentFlipIndex++; setTimeout(() => { unlockNextCard(); }, 600);
             }
         }
 
@@ -437,102 +374,45 @@
             const questionInput = document.getElementById('question').value.trim();
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
-            
-            const resultDeckDiv = document.getElementById('result-deck-display');
-            resultDeckDiv.innerHTML = '';
-            
+            const resultDeckDiv = document.getElementById('result-deck-display'); resultDeckDiv.innerHTML = '';
             const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
+            
             currentHandData.forEach((card, index) => {
                 const cardMeaning = tarotMeanings[card.name] || tarotMeanings["default"];
                 const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
+                
+                // 【核心修正點】：調用完整長版解釋
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
-                const orientationText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
-                const orientationClass = card.isReversed ? "reversed-text" : "upright-text";
-
-                const cardBox = document.createElement('div');
-                cardBox.className = 'card-box';
-                cardBox.innerHTML = `
-                    <h3>${positions[index]}</h3>
-                    <div class="result-card-static">
-                        <img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
-                    </div>
-                    <div class="result-info">
-                        <span class="card-title-en">${card.name}</span>
-                        <span class="card-title-cn">${cardMeaning.nameCN}</span>
-                        <div class="orientation ${orientationClass}">${orientationText}</div>
-                        <p style="margin:5px 0; font-size:12px;">${explanation}</p>
-                    </div>
-                `;
+                
+                const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
+                const cardBox = document.createElement('div'); cardBox.className = 'card-box';
+                cardBox.innerHTML = `<h3>${positions[index]}</h3><div class="result-card-static"><img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}"></div><div class="result-info"><span class="card-title-en">${card.name}</span><span class="card-title-cn">${cardMeaning.nameCN}</span><div class="orientation ${card.isReversed ? 'reversed-text' : 'upright-text'}">${oriText}</div><p style="margin:5px 0; font-size:12px;">${explanation}</p></div>`;
                 resultDeckDiv.appendChild(cardBox);
             });
-
-            generateComprehensiveSummary();
-            switchView('result-view');
+            generateComprehensiveSummary(); switchView('result-view');
         }
 
-        // ==================== 【修復重點】：還原深度綜合分析結論邏輯 ====================
         function generateComprehensiveSummary() {
-            // 1. 提取抽到的三張牌與其正逆位狀態
-            const pCard = currentHandData[0];
-            const prCard = currentHandData[1];
-            const fCard = currentHandData[2];
-
+            const pCard = currentHandData[0]; const prCard = currentHandData[1]; const fCard = currentHandData[2];
             const pName = (tarotMeanings[pCard.name] || tarotMeanings["default"]).nameCN + (pCard.isReversed ? "逆位" : "正位");
             const prName = (tarotMeanings[prCard.name] || tarotMeanings["default"]).nameCN + (prCard.isReversed ? "逆位" : "正位");
             const fName = (tarotMeanings[fCard.name] || tarotMeanings["default"]).nameCN + (fCard.isReversed ? "逆位" : "正位");
-
-            // 2. 計算總體正位率來決定大方向基調
             const totalUprights = currentHandData.filter(c => !c.isReversed).length; 
-            
-            let introText = "";
-            let coreAnalysis = "";
-            let adviceText = "";
-
-            if (totalUprights === 3) {
-                introText = `本次矩陣解構呈現極為罕見且強大的全正位線性流動。從過去的【${pName}】到現在的【${prName}】，你的潛意識能量一直處於高速擴張的狀態。`;
-                coreAnalysis = `這代表你當前詢問的事情，脈絡極其清晰，外界的干擾非常微弱。隨著未來的【${fName}】落座，這股正向動能將會順理成章地推向高潮。`;
-                adviceText = "此時不需要任何一絲猶豫。信任你的直覺，配合你現有的資源與行動力，大膽地向前推進，果斷做出決策。";
-            } else if (totalUprights === 2) {
-                introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在時間軸的某個節點上伴隨著些微的遲滯或調整，但主流能量仍由正位牌主導。`;
-                coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然有一些盲點或過去殘留的課題需要消化，但並不足以阻擋未來的【${fName}】所帶來的全新氣象。`;
-                adviceText = "建議保持現有的步調，並對目前的計劃進行微調。不需要大刀闊斧的改變，只需要保持耐心，當前的微小阻礙自然會迎刃而解。";
-            } else if (totalUprights === 1) {
-                introText = `當前牌陣中出現了較多的逆位能量，這是一份來自潛意識的深度提醒。目前的局勢中隱藏著較多的制約、焦慮或是能量受阻的情況。`;
-                coreAnalysis = `雖然有【${pName}】或【${prName}】其中一者試圖提供支撐，但從整體時間軸來看，逆位的張力壓過了前進的動能，這意味著內部盲點或外界環境帶來的拉扯正處於高峰期。`;
-                adviceText = "目前不宜盲目推展與強求結果。建議先將焦點從外在轉回內心，停下腳步沉澱情緒。徹底找出當前的核心盲點進行整頓，才是突破僵局的唯一解法。";
-            } else {
-                introText = `三數據節點全數呈現逆位（【${pName}】➔【${prName}】➔【${fName}】）。這意味著當前的潛意識矩陣正經歷著一場徹底的重組與能量低潮。`;
-                coreAnalysis = `這並非全然的壞事，而是局勢在強烈暗示：你過去習慣的應對模式或思考方向已經完全行不通了。內在的壓抑、混亂或是外界的巨大阻力此時正交織在一起。`;
-                adviceText = "這是最需要徹底放手與臣服的時刻。請立刻停止所有高風險的試探或勉強的行動，給自己充足的時間進行內部大掃除，等待矩陣能量重新自我修復。";
-            }
-            
+            let introText = "", coreAnalysis = "", adviceText = "";
+            if (totalUprights === 3) { introText = `本次矩陣解構呈現強大的全正位線性流動。從過去的【${pName}】到現在的【${prName}】，能量一直處於高速擴張狀態。`; coreAnalysis = `脈絡極其清晰，外界干擾微弱。隨著未來的【${fName}】落座，這股正向動能將會順理成章地推向高潮。`; adviceText = "信任你的直覺，大膽地向前推進。"; }
+            else if (totalUprights === 2) { introText = `整體局勢正朝著積極方向靠攏。雖然節點上伴隨著微小調整，但主流能量仍由正位牌主導。`; coreAnalysis = `【${pName}】與【${prName}】相互交織，顯示出盲點需要消化，但不足以阻擋未來的【${fName}】。`; adviceText = "保持耐心，當前微小阻礙自然會迎刃而解。"; }
+            else if (totalUprights === 1) { introText = `當前牌陣出現較多逆位提醒。局勢中隱藏著較多的制約、焦慮或是能量受阻的情況。`; coreAnalysis = `逆位的張力壓過了前進動能，這意味著內部盲點或外界環境拉扯正處於高峰期。`; adviceText = "目前不宜強求結果。徹底找出盲點進行整頓，才是突破僵局的唯一解法。"; }
+            else { introText = `三數據節點全數呈現逆位（【${pName}】➔【${prName}】➔【${fName}】）。當前的潛意識矩陣正經歷著一場徹底的能量低潮。`; coreAnalysis = `這暗示：你習慣的模式已經行不通了。內在壓抑與外界巨大阻力交織在一起。`; adviceText = "這是最需要徹底放手與臣服的時刻。停止試探，給自己充足的時間進行內部大掃除。"; }
             const summaryDiv = document.getElementById('summary-section');
-            summaryDiv.innerHTML = `
-                <h2>🔮 [ 綜合矩陣點評 ]</h2>
-                <p>${introText}</p>
-                <p>${coreAnalysis}</p>
-                <p>${adviceText}</p>
-            `;
+            summaryDiv.innerHTML = `<h2>🔮 [ 綜合矩陣點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
         }
 
         function generateCardAndRedirect() {
-            playSound('capture');
-            const targetNode = document.getElementById('capture-node');
-            
-            html2canvas(targetNode, {
-                backgroundColor: "#050505",
-                scale: 2, 
-                useCORS: true
-            }).then(canvas => {
-                const image = canvas.toDataURL("image/png");
-                const link = document.createElement('a');
-                link.download = 'Tarot-Matrix-Report.png';
-                link.href = image;
-                link.click();
+            playSound('capture'); const targetNode = document.getElementById('capture-node');
+            html2canvas(targetNode, { backgroundColor: "#050505", scale: 2, useCORS: true }).then(canvas => {
+                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Report.png'; link.href = image; link.click();
                 setTimeout(() => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; }, 1000);
-            }).catch(err => {
-                window.location.href = "https://s.shopee.tw/40eMd6bUyk";
-            });
+            }).catch(err => { window.location.href = "https://s.shopee.tw/40eMd6bUyk"; });
         }
     </script>
 </body>
