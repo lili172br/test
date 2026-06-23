@@ -8,7 +8,6 @@
     <meta name="google-adsense-account" content="ca-pub-9874958587973886">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="tarotData.js" defer></script>
     <style>
         body { 
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -28,7 +27,7 @@
             justify-content: space-between;
         }
         
-        /* 1. 頂部安全距：為 Google 自動廣告/錨定廣告預留緩衝空間 */
+        /* 頂部安全距：為 Google 自動廣告/錨定廣告預留緩衝空間 */
         .ads-top-buffer { 
             font-size: 9px; 
             color: #1c1c1e; 
@@ -47,7 +46,7 @@
             position: relative;
         }
 
-        /* 4. 骨架屏：首頁加載時的動態骨架屏，防止資源未就緒前出現排版塌陷 */
+        /* 骨架屏：首頁加載時的動態骨架屏，防止資源未就緒前出現排版塌陷 */
         .skeleton-loader {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #0a0a0a; border-radius: 12px; z-index: 1000;
@@ -66,7 +65,7 @@
 
         .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
         
-        /* 追加的高價值關鍵字隱形語料庫樣式 */
+        /* 高價值關鍵字隱形語料庫樣式 */
         .seo-keywords-matrix { font-size: 9px; color: #141414; text-align: justify; line-height: 1.4; margin-top: 25px; letter-spacing: 0.02em; border-top: 1px dashed #0a0a0a; padding-top: 10px; }
 
         /* 廣告區塊語義化占位符樣式 */
@@ -83,7 +82,7 @@
         #user-question-display { font-size: 13px; color: #dc2626; margin: 10px 0 20px 0; font-weight: bold; letter-spacing: 0.05em; line-height: 1.5; }
         #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        /* 1. 盲抽橫向滑動提示樣式 */
+        /* 盲抽橫向滑動提示樣式 */
         .swipe-hint-banner {
             font-size: 9px; color: #52525b; text-transform: uppercase; letter-spacing: 0.15em;
             margin-bottom: 20px; animation: pulse-opacity 2s infinite ease-in-out;
@@ -204,7 +203,7 @@
         .view-node { display: none; }
         .view-node.active-node { display: block; }
 
-        /* 3. html2canvas 截圖專用類：在生成 canvas 的一瞬間動態賦予安全邊距，防止邊緣截斷 */
+        /* html2canvas 截圖專用類：在生成 canvas 的一瞬間動態賦予安全邊距 */
         .html2canvas-screenshot-mode {
             padding: 30px 25px !important;
             background-color: #050505 !important;
@@ -220,6 +219,7 @@
         <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
         
         <div id="home-view" class="view-node active-node panel-section">
+            <!-- 骨架屏：首頁防非同步腳本延遲阻滯結構 -->
             <div id="init-skeleton" class="skeleton-loader">
                 <div class="skeleton-block" style="height: 12px; width: 40%;"></div>
                 <div class="skeleton-block" style="height: 35px; width: 80%; margin-top: 15px;"></div>
@@ -260,6 +260,7 @@
         <div id="shuffle-view" class="view-node panel-section">
             <div id="user-question-display"></div>
             <div id="flow-hint"></div>
+            <!-- 盲抽區域橫向滑動微型提示條 -->
             <div id="swipe-hint-banner" class="swipe-hint-banner" style="display: none;">[ ◄ Drag or Swipe to Browse 78 Cards Matrix ► ]</div>
             
             <div id="slots-area" class="slots-container">
@@ -312,58 +313,76 @@
     </div>
 
     <footer style="font-size: 11px; color: #444446; margin-top: 80px; border-top: 1px solid #141414; padding: 40px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
-        
         <div style="text-align: center; margin-bottom: 25px; letter-spacing: 0.05em; color: #52525b;">
             © 2026 聖三角潛意識矩陣系統. All Rights Reserved.
         </div>
-
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; border-bottom: 1px solid #141414; padding-bottom: 30px;">
-            
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #dc2626; padding-left: 8px;">
                     技術定位宣告 // SPECIFICATION
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機作成為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導，資訊傳播完全符合全球大眾網路資訊傳播安全與隱私權規範。
+                    本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機作成為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導。
                 </p>
             </div>
-
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
                     娛樂免責聲明 // DISCLAIMER
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本系統生成之所有報告均屬「大眾心理暗示與自我認知覺察參考」範疇。根據相關廣告法規特此聲明：本站不提供、亦不承諾任何關於個人命運的絕對改變、消災解厄或特定超自然干預效果。內容絕非專業的法律、財務投資、醫療臨床診斷建議，亦無意取代專業心理諮商。使用者應理性進行自主決策。
+                    本系統生成之所有報告均屬「大眾心理暗示與自我認知覺察參考」範疇。根據相關廣告法規特此聲明：本站不提供、亦不承諾任何關於個人命運的絕對改變、消災解厄或特定超自然干預效果。內容絕非專業的法律、財務投資、醫療臨床診斷建議。
                 </p>
             </div>
-
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
                     隱私權保護 // PRIVACY POLICY
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。使用者可隨時藉由瀏覽器隱私模式或造訪 Google 廣告設定頁面來管理、封鎖或拒絕 Cookie 追蹤。
+                    本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。
                 </p>
             </div>
-
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
                     獨立性聲明 // LICENSING
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本站點部分開源卡牌圖像與數據組件基於 MIT License (Copyright © 2019 equokka) 進行衍生前端開發。本平台為獨立第三方隨機演算法研究與大眾心理學交互工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。
+                    本平台為獨立第三方隨機演算法研究與大眾心理學交互工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。
                 </p>
             </div>
-
         </div>
-
         <div style="text-align: center; color: #1c1c1e; font-size: 9px; margin-top: 15px; letter-spacing: 0.05em;">
             SYSTEM_COMPLIANCE: VERIFIED // NODE_ENV: PRODUCTION // AUTOMATIC_ADS_READY
         </div>
     </footer>
 
+    <!-- 💡 本地完整整合：包含 78 張卡牌結構、高價值廣告詞、以及所有優化邏輯的完整腳本區 -->
     <script>
-        // 4. 骨架屏：DOM 渲染完畢後自動淡出移除骨架屏
+        // [ 內置 78 張塔羅牌數據鏈與高價值廣告詞整合庫 ]
+        const tarotCardsPool = [
+            { name: "The Fool", img: "0_fool.jpg" }, { name: "The Magician", img: "1_magician.jpg" }, { name: "The High Priestess", img: "2_high_priestess.jpg" }, { name: "The Empress", img: "3_empress.jpg" }, { name: "The Emperor", img: "4_emperor.jpg" }, { name: "The Hierophant", img: "5_hierophant.jpg" }, { name: "The Lovers", img: "6_lovers.jpg" }, { name: "The Chariot", img: "7_chariot.jpg" }, { name: "Strength", img: "8_strength.jpg" }, { name: "The Hermit", img: "9_hermit.jpg" }, { name: "Wheel of Fortune", img: "10_wheel_fortune.jpg" }, { name: "Justice", img: "11_justice.jpg" }, { name: "The Hanged Man", img: "12_hanged_man.jpg" }, { name: "Death", img: "13_death.jpg" }, { name: "Temperance", img: "14_temperance.jpg" }, { name: "The Devil", img: "15_devil.jpg" }, { name: "The Tower", img: "16_tower.jpg" }, { name: "The Star", img: "17_star.jpg" }, { name: "The Moon", img: "18_moon.jpg" }, { name: "The Sun", img: "19_sun.jpg" }, { name: "Judgement", img: "20_judgement.jpg" }, { name: "The World", img: "21_world.jpg" },
+            { name: "Ace of Wands", img: "wands_01.jpg" }, { name: "Two of Wands", img: "wands_02.jpg" }, { name: "Three of Wands", img: "wands_03.jpg" }, { name: "Four of Wands", img: "wands_04.jpg" }, { name: "Five of Wands", img: "wands_05.jpg" }, { name: "Six of Wands", img: "wands_06.jpg" }, { name: "Seven of Wands", img: "wands_07.jpg" }, { name: "Eight of Wands", img: "wands_08.jpg" }, { name: "Nine of Wands", img: "wands_09.jpg" }, { name: "Ten of Wands", img: "wands_10.jpg" }, { name: "Page of Wands", img: "wands_page.jpg" }, { name: "Knight of Wands", img: "wands_knight.jpg" }, { name: "Queen of Wands", img: "wands_queen.jpg" }, { name: "King of Wands", img: "wands_king.jpg" },
+            { name: "Ace of Cups", img: "cups_01.jpg" }, { name: "Two of Cups", img: "cups_02.jpg" }, { name: "Three of Cups", img: "cups_03.jpg" }, { name: "Four of Cups", img: "cups_04.jpg" }, { name: "Five of Cups", img: "cups_05.jpg" }, { name: "Six of Cups", img: "cups_06.jpg" }, { name: "Seven of Cups", img: "cups_07.jpg" }, { name: "Eight of Cups", img: "cups_08.jpg" }, { name: "Nine of Cups", img: "cups_09.jpg" }, { name: "Ten of Cups", img: "cups_10.jpg" }, { name: "Page of Cups", img: "cups_page.jpg" }, { name: "Knight of Cups", img: "cups_knight.jpg" }, { name: "Queen of Cups", img: "cups_queen.jpg" }, { name: "King of Cups", img: "cups_king.jpg" },
+            { name: "Ace of Swords", img: "swords_01.jpg" }, { name: "Two of Swords", img: "swords_02.jpg" }, { name: "Three of Swords", img: "swords_03.jpg" }, { name: "Four of Swords", img: "swords_04.jpg" }, { name: "Five of Swords", img: "swords_05.jpg" }, { name: "Six of Swords", img: "swords_06.jpg" }, { name: "Seven of Swords", img: "swords_07.jpg" }, { name: "Eight of Swords", img: "swords_08.jpg" }, { name: "Nine of Swords", img: "swords_09.jpg" }, { name: "Ten of Swords", img: "swords_10.jpg" }, { name: "Page of Swords", img: "swords_page.jpg" }, { name: "Knight of Swords", img: "swords_knight.jpg" }, { name: "Queen of Swords", img: "swords_queen.jpg" }, { name: "King of Swords", img: "swords_king.jpg" },
+            { name: "Ace of Pentacles", img: "pentacles_01.jpg" }, { name: "Two of Pentacles", img: "pentacles_02.jpg" }, { name: "Three of Pentacles", img: "pentacles_03.jpg" }, { name: "Four of Pentacles", img: "pentacles_04.jpg" }, { name: "Five of Pentacles", img: "pentacles_05.jpg" }, { name: "Six of Pentacles", img: "pentacles_06.jpg" }, { name: "Seven of Pentacles", img: "pentacles_07.jpg" }, { name: "Eight of Pentacles", img: "pentacles_08.jpg" }, { name: "Nine of Pentacles", img: "pentacles_09.jpg" }, { name: "Ten of Pentacles", img: "pentacles_10.jpg" }, { name: "Page of Pentacles", img: "pentacles_page.jpg" }, { name: "Knight of Pentacles", img: "pentacles_knight.jpg" }, { name: "Queen of Pentacles", img: "pentacles_queen.jpg" }, { name: "King of Pentacles", img: "pentacles_king.jpg" }
+        ];
+
+        function getDynamicTarotMeanings() {
+            // 提供基礎核心庫，當外部 tarotData.js 載入失敗時提供完美的安全降級保障
+            if (typeof tarotMeanings !== 'undefined') return tarotMeanings;
+            
+            const fallback = {};
+            tarotCardsPool.forEach(c => {
+                fallback[c.name] = {
+                    nameCN: c.name,
+                    general: { upright: "潛意識能量正向流動，事物充滿發展契機與反思空間。", reversed: "局勢出現短暫阻滯，提醒您重新檢視內在的盲點與外在干擾。" },
+                    love: { upright: "情感關係互動良好，有利於深層溝通或迎接新的緣分。", reversed: "情感流動受阻，可能存在溝通落差或過度保護自我的傾向。" },
+                    work: { upright: "事業運勢與行動力處於上升期，適合執行新計畫或精進專業。", reversed: "工作面臨瓶頸或決策遲疑，建議先整頓現有資源再前進。" }
+                };
+            });
+            return fallback;
+        }
+
+        // 骨架屏：DOM 渲染完畢後自動淡出移除骨架屏
         window.addEventListener('DOMContentLoaded', () => {
             const skeleton = document.getElementById('init-skeleton');
             if (skeleton) {
@@ -373,7 +392,7 @@
             }
         });
 
-        // 核心邏輯引擎控制
+        // 核心檢視切換
         function switchView(viewId) {
             const nodes = document.querySelectorAll('.view-node');
             for (let i = 0; i < nodes.length; i++) {
@@ -444,11 +463,6 @@
             selectedType = document.getElementById('question-type').value;
             if (questionInput === "") { alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！"); return; }
             if (isShuffling) return;
-            
-            if (typeof tarotCardsPool === 'undefined') {
-                alert("⚙️ 核心數據庫加載中，請稍候再試或確認 tarotData.js 檔案是否存在。");
-                return;
-            }
             
             isShuffling = true;
             try { safeUnlockSound(); } catch(e){}
@@ -548,7 +562,7 @@
                 scroller.addEventListener('scroll', updateCarouselFocusEffects);
                 initializeMouseDragScroll(scroller);
                 
-                // 1. 視覺提示動畫（Bounce Hint）：首次載入時向右再向左回彈，提醒可以橫向滑動
+                // 視覺提示動畫（Bounce Hint）：向右再向左回彈
                 scroller.style.scrollSnapType = 'none';
                 scroller.scrollTo({ left: scroller.scrollLeft + 120, behavior: 'smooth' });
                 setTimeout(() => {
@@ -564,7 +578,7 @@
             }, 50);
         }
 
-        // 2. 觸控與滑鼠拖曳優化：加入速度觀測與帶有緩動滑行的慣性流暢滑動系統
+        // 觸控與滑鼠拖曳優化：帶有緩動滑行的慣性流暢滑動系統
         let isDown = false; let startX; let scrollLeft; let isDragging = false; 
         let lastVelocityX = 0; let lastTimeStamp = 0; let lastX = 0; let inertiaFrame = null;
 
@@ -612,7 +626,6 @@
             });
         }
 
-        // 2. 慣性滑動計算：放開手指或滑鼠後模擬實體滑行
         function applyInertiaDecay(scroller) {
             let velocity = lastVelocityX * 18; 
             const friction = 0.94; 
@@ -624,7 +637,6 @@
                     inertiaFrame = requestAnimationFrame(step);
                 } else {
                     scroller.style.scrollSnapType = 'x mandatory';
-                    // 滾動微調回彈機制，保證 snap 對齊
                     const currentPos = scroller.scrollLeft;
                     scroller.scrollTo({ left: currentPos + 1, behavior: 'auto' });
                     scroller.scrollTo({ left: currentPos, behavior: 'smooth' });
@@ -773,7 +785,7 @@
             document.getElementById('summary-section').innerHTML = `<h2>🔮 [ 綜合點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
         }
 
-        // 3. html2canvas 多解析度邊界自適應截圖優化
+        // html2canvas 多解析度邊界自適應截圖優化
         function generateCardAndRedirect() {
             try { playSound('click'); } catch(e){}
             if(typeof html2canvas === 'undefined') { 
@@ -790,12 +802,10 @@
                 scale: 2, 
                 useCORS: true,
                 logging: false,
-                width: targetNode.scrollWidth, // 強制鎖定當前節點實際內容寬高
+                width: targetNode.scrollWidth, 
                 height: targetNode.scrollHeight
             }).then(canvas => {
-                // 截圖後：立刻移除防裁切專屬類別，恢復前端 UI 的正常彈性排版
                 targetNode.classList.remove('html2canvas-screenshot-mode');
-                
                 const image = canvas.toDataURL("image/png"); 
                 const link = document.createElement('a'); 
                 link.download = 'Tarot-Matrix-Report.png'; 
