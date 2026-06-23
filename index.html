@@ -35,23 +35,24 @@
 
         .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
         
-        .panel-section label { display: block; margin: 12px 0 6px 0; font-size: 12px; color: #a1a1aa; }
+        .panel-section label { display: block; margin: 15px 0 8px 0; font-size: 12px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
         .panel-section input, .panel-section select { 
             width: 90%; padding: 12px; font-size: 13px; border: 1px solid #27272a; border-radius: 6px; 
             background: #050505; color: #fff; text-align: center; outline: none; transition: 0.3s; box-sizing: border-box;
-            font-family: inherit;
+            font-family: inherit; margin-bottom: 15px;
         }
         .panel-section input:focus, .panel-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
         
-        #user-question-display { font-size: 14px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 22px; }
+        #user-question-display { font-size: 13px; color: #dc2626; margin: 10px 0 20px 0; font-weight: bold; letter-spacing: 0.05em; line-height: 1.5; }
         #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
 
+        /* 槽位區塊 */
         .slots-container { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
             gap: 10px; 
             justify-content: center; 
-            margin: 20px auto; 
+            margin: 0 auto 25px auto; 
             min-height: 155px; 
             max-width: 500px; 
             width: 100%; 
@@ -63,17 +64,18 @@
         .slot-card-venue {
             width: 100%; max-width: 84px; height: 144px; border: 1px dashed #27272a; border-radius: 8px;
             position: relative; display: flex; align-items: center; justify-content: center; color: #3f3f46; font-size: 11px;
+            background: #050505;
         }
 
+        /* 洗牌抽取卡牌區 */
         .deck-zone { 
-            margin-top: 20px; 
+            margin-top: 10px; 
             min-height: 220px; 
             position: relative; 
-            border-top: 1px solid #1f1f1f; 
-            padding-top: 20px;
+            padding-top: 10px;
         }
         
-        .pile-master { width: 84px; height: 144px; margin: 20px auto 0 auto; position: relative; cursor: pointer; }
+        .pile-master { width: 84px; height: 144px; margin: 40px auto; position: relative; }
 
         .fan-scroller {
             width: 100%;
@@ -176,6 +178,7 @@
         
         button { 
             background-color: #0a0a0a; color: #d1d1d1; border: 1px solid #27272a; padding: 12px 35px; font-size: 12px; font-weight: bold; border-radius: 9999px; cursor: pointer; transition: 0.2s; font-family: inherit; letter-spacing: 0.1em;
+            margin-top: 5px;
         }
         button:hover { background-color: #111; border-color: #dc2626; color: #fff; }
         .btn-primary { background-color: #dc2626; color: #fff; border-color: #dc2626; }
@@ -191,32 +194,38 @@
 
     <div class="main-content">
         <h1>🔮 聖三角潛意識矩陣占卜</h1>
-        <div class="sys-status">SYS_STATUS: ACTIVE // CROSS_PLATFORM_MATRIX</div>
+        <div class="sys-status">SYS_STATUS: ACTIVE // FOUR_PAGES_MATRIX</div>
         
+        <!-- 🎯 視圖1：首頁 (主頁) -->
         <div id="home-view" class="view-node active-node panel-section">
             <div class="intro-text">
-                <p>歡迎來到大阿爾克那動態占卜系統。本介面支援手機滑動與電腦滑鼠拖曳、點擊導覽，洗牌後牌組將進入盲抽矩陣，每次僅聚焦流動5張牌。</p>
+                <p>歡迎來到大阿爾克那動態占卜系統。本介面全面優化為四階段獨立引導矩陣，支援手機滑動與電腦滑鼠拖曳，洗牌後牌組將進入盲抽矩陣。</p>
             </div>
-            <button class="btn-primary" onclick="switchView('divination-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
+            <button class="btn-primary" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
         </div>
 
-        <div id="divination-view" class="view-node panel-section">
+        <!-- 🎯 視圖2：輸入問題、類別、開始洗牌 -->
+        <div id="input-view" class="view-node panel-section">
             <label for="question">[ INITIALIZE_INPUT ] 請輸入你的問題：</label>
             <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
             
-            <label for="question-type">[ SELECT_MATRIX_NODE ] 請選擇占卜類別：</label>
+            <label for="question-type">( SELECT_MATRIX_NODE ) 請選擇占卜類別：</label>
             <select id="question-type">
                 <option value="general">綜合運勢分析 // GENERAL</option>
                 <option value="love">感情桃花發展 // LOVE</option>
                 <option value="work">工作學業事業 // WORK</option>
             </select>
-            <br>
+            <br><br>
             <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">啟動全面洗牌 // SHUFFLE</button>
+        </div>
 
+        <!-- 🎯 視圖3：洗牌畫面、抽取卡牌 -->
+        <div id="shuffle-view" class="view-node panel-section">
             <div id="user-question-display"></div>
             <div id="flow-hint"></div>
             
-            <div id="slots-area" class="slots-container" style="display: none;">
+            <!-- 三個主要槽位 -->
+            <div id="slots-area" class="slots-container">
                 <div class="slot-box">
                     <h3>過去 // PAST</h3>
                     <div id="slot-0" class="slot-card-venue">等待選牌</div>
@@ -231,13 +240,17 @@
                 </div>
             </div>
 
-            <div id="deck-zone" class="deck-zone" style="display: none;">
+            <!-- 卡牌舞台區 -->
+            <div id="deck-zone" class="deck-zone">
+                <!-- 洗牌效果 -->
                 <div id="pile-master" class="pile-master"></div>
                 
+                <!-- 🎯 傳送帶外圍 -->
                 <div class="scroller-wrapper" id="scroller-wrapper" style="display: none;">
                     <div class="nav-arrow arrow-left" onclick="scrollCarousel('left')">◀</div>
                     <div class="nav-arrow arrow-right" onclick="scrollCarousel('right')">▶</div>
                     
+                    <!-- 滾筒扇形滑動外殼 -->
                     <div class="fan-scroller" id="fan-scroller">
                         <div id="spread-fan-stage" class="spread-fan-stage"></div>
                     </div>
@@ -245,6 +258,7 @@
             </div>
         </div>
 
+        <!-- 🎯 視圖4：結果 -->
         <div id="result-view" class="view-node panel-section">
             <div id="capture-node">
                 <div id="result-question-title" class="result-title-node"></div>
@@ -255,7 +269,7 @@
             <div class="action-container">
                 <button class="btn-secondary" style="width:100%" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
                 <div class="sub-btn-group">
-                    <button class="btn-secondary" onclick="switchView('divination-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
+                    <button class="btn-secondary" onclick="switchView('input-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
                     <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
                 </div>
             </div>
@@ -335,10 +349,9 @@
             document.getElementById('question').value = '';
             document.getElementById('user-question-display').innerText = '';
             document.getElementById('flow-hint').innerText = '';
-            document.getElementById('slots-area').style.display = 'none';
-            document.getElementById('deck-zone').style.display = 'none';
-            document.getElementById('scroller-wrapper').style.display = 'none';
             document.getElementById('pile-master').innerHTML = '';
+            document.getElementById('pile-master').style.display = 'block';
+            document.getElementById('scroller-wrapper').style.display = 'none';
             document.getElementById('spread-fan-stage').innerHTML = '';
             document.getElementById('spread-fan-stage').style.opacity = '0';
             for(let i=0; i<3; i++) document.getElementById(`slot-${i}`).innerHTML = '等待選牌';
@@ -353,14 +366,15 @@
             if (isShuffling) return;
             
             isShuffling = true;
-            try { playSound('click'); } catch(e){}
+            try { safeUnlockSound(); } catch(e){}
+            
+            // 跳轉到獨立的第三頁：洗牌與選牌畫面
+            switchView('shuffle-view');
             
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
-            document.getElementById('user-question-display').innerText = `[ MATRIX_TARGET // ${typeNames[selectedType]} : ${questionInput} ]`;
-            document.getElementById('flow-hint').innerText = "⚡ 潛意識矩陣大洗牌中 (CORE_SHUFFLING)...";
+            document.getElementById('user-question-display').innerText = `[ 矩陣目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
+            document.getElementById('flow-hint').innerText = "⚡ 潛意識矩陣清洗中 (CORE_SHUFFLING)...";
             
-            document.getElementById('slots-area').style.display = 'grid';
-            document.getElementById('deck-zone').style.display = 'block';
             document.getElementById('pile-master').style.display = 'block';
             document.getElementById('scroller-wrapper').style.display = 'none';
             
@@ -414,7 +428,7 @@
             stage.innerHTML = ''; 
             stage.style.display = 'flex';
             
-            document.getElementById('flow-hint').innerText = `👉 請按滑鼠拖曳或使用兩側箭頭，點擊中央焦點牌盲抽 【過去 // PAST】`;
+            document.getElementById('flow-hint').innerText = `👉 請左右滑動，點擊中央焦點牌盲抽 【過去 // PAST】`;
 
             processedDeck.forEach((cardData, index) => {
                 const cardEl = document.createElement('div'); 
@@ -556,9 +570,9 @@
 
             currentSlotIndex++;
             if (currentSlotIndex === 1) {
-                document.getElementById('flow-hint').innerText = `👉 請繼續探索，點擊中央焦點牌盲抽第 2 張牌 【現在 // PRESENT】`;
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【現在 // PRESENT】`;
             } else if (currentSlotIndex === 2) {
-                document.getElementById('flow-hint').innerText = `👉 請繼續探索，點擊中央焦點牌盲抽第 3 張牌 【未來 // FUTURE】`;
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【未來 // FUTURE】`;
             } else {
                 document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
                 try { playSound('success'); } catch(e){}
@@ -589,6 +603,8 @@
                 resultDeckDiv.appendChild(cardBox);
             });
             generateComprehensiveSummary(meaningsPool); 
+            
+            // 跳轉到第四頁：結果畫面
             switchView('result-view');
         }
 
@@ -646,7 +662,7 @@
                 "The Hanged Man": { nameCN: "倒吊人", general: { upright: "雖然當前處於被動受限狀態，但只要換個角度看世界，這是為了更高成就的犧犧。", reversed: "暗示正在進行無謂掙扎，或者你的犧牲並沒有得到應有價值。" }, love: { upright: "甘願為對方付出與等待。此時按兵不動是在深耕基礎默契。", reversed: "出現了單方面無底線的委曲求全，退讓只換來對方的得寸進尺。" }, work: { upright: "面臨過渡期。適合退居幕後默默耕耘、沉澱技術，大動作開拓無效。", reversed: "陷入無意義的瞎忙與盲目內耗。需要立刻停止無謂奉獻，重新審視。" } },
                 "Death": { nameCN: "死神", general: { upright: "徹底的終結與隨之而來的偉大新生。唯有清理掉冗餘，新代碼才能載入。", reversed: "死死抓著已經腐爛的過去不肯放手，拒絕接受改變。無限延長痛苦。" }, love: { upright: "不健康的關係將迎來徹底終結。空出雙手，新的人際矩陣才能成立。", reversed: "感情走到了冰點，因為恐懼孤單而選擇拖延，嚴重消耗能量。" }, work: { upright: "職場上面臨重大洗牌，劇變正是你建立全新王國的起點。", reversed: "事業發展面臨苟延殘喘，明知沒有前景依舊抱持幻想，錯失重生窗口." } },
                 "Temperance": { nameCN: "節制", general: { upright: "象徵完美的淨化與跨界融合。在動態平衡中創造出治癒能量。", reversed: "內在能量失去平衡，生活或人際關係出現溝通不良。" }, love: { upright: "交流達到精神完美契合。極具治癒感、細水長流的健康戀情。", reversed: "雙方溝通頻率完全不對盤。缺乏體貼與耐性，感情在瑣事中消磨。" }, work: { upright: "適合進行跨部門溝通或跨領域合作. 強大協調能力能完美平衡衝突。", reversed: "職場人際關係失調，協作卡關。可能在時間分配上出現嚴重失衡。" } },
-                "The Devil": { nameCN: "惡魔", general: { upright: "暗示正被強烈物質慾望、執念或不健康依賴關係束縛。直面陰暗面是關鍵。", reversed: "偉大的覺醒時刻。開始看清虛幻誘惑，潛意識自由代碼重新編寫。" }, love: { upright: "一段充滿致命肉體吸引力，但也伴隨強烈控制與嫉妒的關係。", reversed: "終於從充滿控制、冷暴力的虐戀中清醒。找回自主界線，勇敢抽身。" }, work: { upright: "能獲得巨大物質回報，但背後可能隱藏權謀鬥爭，高風險博弈。", reversed: "拒絕職場上的不正當誘惑或壓榨條款。決定離開血汗環境，奪回自主權。" } },
+                "The Devil": { nameCN: "惡魔", general: { upright: "暗示正被強烈物質慾望、執念 or 不健康依賴關係束縛。直面陰暗面是關鍵。", reversed: "偉大的覺醒時刻。開始看清虛幻誘惑，潛意識自由代碼重新編寫。" }, love: { upright: "一段充滿致命肉體吸引力，但也伴隨強烈控制與嫉妒的關係。", reversed: "終於從充滿控制、冷暴力的虐戀中清醒。找回自主界線，勇敢抽身。" }, work: { upright: "能獲得巨大物質回報，但背後可能隱藏權謀鬥爭，高風險博弈。", reversed: "拒絕職場上的不正當誘惑或壓榨條款。決定離開血汗環境，奪回自主權。" } },
                 "The Tower": { nameCN: "高塔", general: { upright: "警告！一場突如來、無法抗拒的毀滅性劇變即將震撼生活。強行系統重塑。", reversed: "危機雖然即將爆發，但衝擊已被降到最低；或代表粉飾太平。" }, love: { upright: "感情面臨毫無預警的重大衝擊，隱藏的秘密曝光，關係瞬間分崩離析。", reversed: "矛盾到了隨時爆炸邊緣，勉強維持表面和平更讓人折磨。" }, work: { upright: "職場上面臨突發性災難。不要試圖挽救，強迫你徹底更換全新賽道。", reversed: "工作中雷聲大雨點小，危機擦身而過，根本漏洞未解決，下次更致命。" } },
                 "The Star": { nameCN: "星星", general: { upright: "風暴過後，亮起了代表希望與療癒的星光。內心焦慮平息，光明在望。", reversed: "正被失望與悲觀情緒籠罩。可能設定了過於虛無飄渺、不切實際的目標。" }, love: { upright: "意來一段充滿精神共鳴、純潔且具高度治癒感的戀情。", reversed: "對感情抱持過於脫離現實的完美幻想，對伴侶產生無謂的挑剔。" }, work: { upright: "靈感爆發黃金期，利於藝術創作、設計或品牌建立。才華吸引目光。", reversed: "計劃流於紙上談兵，缺乏執行可行性。高估資源、低估市場。" } },
                 "The Moon": { nameCN: "月亮", general: { upright: "進入充滿迷霧、焦慮與未知恐懼的幽暗海域。資訊不透明，勿盲目決策。", reversed: "恐懼與焦慮開始逐漸消散。那些誤解與秘密即將水落石出。" }, love: { upright: "充滿不安、猜忌與情緒起伏的曖昧期。信任基礎極其脆弱。", reversed: "誤會與謊言即將被拆穿，不再逃避問題。隱藏的不安正逐步退場。" }, work: { upright: "環境充滿爾虞我詐。現階段專案合約細節極不透明，暗藏陷阱。", reversed: "原本混亂、拉扯不清的人事糾紛落幕。終於看清專案真實走向。" } },
