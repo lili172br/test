@@ -11,7 +11,7 @@
             background-color: #050505;
             color: #d1d1d1; 
             text-align: center; 
-            padding: 20px;
+            padding: 15px;
             margin: 0;
             min-height: 100vh;
             background-image: radial-gradient(circle at 2px 2px, #161616 1px, transparent 0);
@@ -25,89 +25,110 @@
         }
         
         .main-content { flex-grow: 1; width: 100%; }
-        h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 20px; }
+        h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 20px; font-size: 20px; }
         .sys-status { font-size: 9px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 25px; }
         
         .panel-section { 
-            margin: 20px auto; max-width: 650px; background: #0a0a0a; padding: 30px 25px; 
+            margin: 20px auto; max-width: 650px; background: #0a0a0a; padding: 25px 20px; 
             border-radius: 12px; border: 1px solid #1f1f1f; box-shadow: 0 8px 32px rgba(0,0,0,0.8); box-sizing: border-box;
         }
 
-        .intro-text { text-align: left; font-size: 14px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
+        .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
         
-        .panel-section label { display: block; margin: 12px 0 6px 0; font-size: 13px; color: #a1a1aa; tracking: 0.05em; }
+        .panel-section label { display: block; margin: 12px 0 6px 0; font-size: 12px; color: #a1a1aa; tracking: 0.05em; }
         .panel-section input, .panel-section select { 
-            width: 85%; padding: 12px; font-size: 14px; border: 1px solid #27272a; border-radius: 6px; 
+            width: 90%; padding: 12px; font-size: 13px; border: 1px solid #27272a; border-radius: 6px; 
             background: #050505; color: #fff; text-align: center; outline: none; transition: 0.3s; box-sizing: border-box;
             font-family: inherit;
         }
         .panel-section input:focus, .panel-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
         
-        #user-question-display { font-size: 15px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 27px; }
-        #flow-hint { color: #52525b; font-style: italic; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; tracking: 0.1em; }
+        #user-question-display { font-size: 14px; color: #ffffff; margin: 25px 0 10px 0; font-weight: bold; min-height: 22px; }
+        #flow-hint { color: #52525b; font-style: italic; font-size: 11px; margin-bottom: 20px; text-transform: uppercase; tracking: 0.1em; }
 
-        .container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; min-height: 340px; width: 100%; box-sizing: border-box; }
-        .card-box { width: 180px; text-align: center; box-sizing: border-box; vertical-align: top; }
-        .card-box h3 { color: #71717a; font-size: 11px; margin-bottom: 12px; tracking: 0.1em; text-transform: uppercase; }
+        /* 【核心修正】：使用 Grid 強制 3 欄等寬橫排，絕不換行 */
+        .container { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            justify-content: center; 
+            margin: 20px auto; 
+            min-height: 340px; 
+            max-width: 600px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        .card-box { width: 100%; text-align: center; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+        .card-box h3 { color: #71717a; font-size: 10px; margin-bottom: 12px; tracking: 0.1em; text-transform: uppercase; white-space: nowrap; }
         
+        /* 縮小卡牌基本尺寸以完美相容手機版橫排 */
         .card { 
-            width: 160px; height: 274px; perspective: 1000px; margin: 0 auto 15px auto; 
-            pointer-events: none; opacity: 0.2; transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s; box-sizing: border-box;
+            width: 100%; max-width: 150px; height: 257px; perspective: 1000px; margin: 0 auto 15px auto; 
+            pointer-events: none; opacity: 0.2; transition: opacity 0.4s, border-color 0.4s, box-shadow 0.4s; box-sizing: border-box;
         }
         
-        .card.scanning { opacity: 0.9; }
+        /* 【洗牌動畫優化】：加入高頻流光呼吸與震盪浮動效果 */
+        .card.scanning { 
+            opacity: 0.95; 
+            animation: matrixScan 0.5s infinite alternate ease-in-out;
+        }
+        
+        @keyframes matrixScan {
+            0% { transform: translateY(0px); filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)); }
+            100% { transform: translateY(-8px); filter: drop-shadow(0 0 18px rgba(220, 38, 38, 0.8)); }
+        }
         
         .card.playable { 
             pointer-events: auto; opacity: 1; cursor: pointer;
             animation: cardPulse 2s infinite ease-in-out;
         }
-        .card.playable:hover { transform: translateY(-6px); filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.4)); }
+        .card.playable:hover { transform: translateY(-6px); filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.5)); }
         .card.flipped { opacity: 1; }
         
         @keyframes cardPulse {
-            0%, 100% { filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.15)); }
-            50% { filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.4)); }
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.15)); }
+            50% { filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.40)); }
         }
         
-        .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+        .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); box-sizing: border-box; }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.9); box-sizing: border-box; }
         
-        .card-back { background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-size: 36px; }
-        .card.scanning .card-back { border-color: #dc2626; color: #fff; box-shadow: 0 0 15px rgba(220, 38, 38, 0.5); }
-        .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; border-radius: 10px; }
-        .card-front img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
+        .card-back { background: #0d0d0d; border: 1px solid #3f3f46; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-size: 28px; }
+        .card.scanning .card-back { border-color: #dc2626; color: #fff; }
+        .card-front { transform: rotateY(180deg); background-color: #000; border: 1px solid #52525b; }
+        .card-front img { width: 100%; height: 100%; border-radius: 7px; object-fit: cover; }
         
         .result-card-static {
-            width: 160px; height: 274px; margin: 0 auto 15px auto; background-color: #000; border: 1px solid #52525b; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); overflow: hidden; box-sizing: border-box;
+            width: 100%; max-width: 150px; height: 257px; margin: 0 auto 15px auto; background-color: #000; border: 1px solid #52525b; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.9); overflow: hidden; box-sizing: border-box;
         }
         .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
         .reversed { transform: rotate(180deg); }
         
-        .result-info { font-size: 13px; line-height: 1.6; padding: 5px; box-sizing: border-box; color: #a1a1aa; text-align: left; margin-top: 10px; }
-        .card-title-en { display: block; color: #ffffff; font-size: 14px; font-weight: 700; margin-top: 5px; }
-        .card-title-cn { display: block; color: #a1a1aa; font-size: 12px; margin-top: 2px; margin-bottom: 5px; }
+        .result-info { font-size: 11px; line-height: 1.6; padding: 2px; box-sizing: border-box; color: #a1a1aa; text-align: left; margin-top: 8px; width: 100%; }
+        .card-title-en { display: block; color: #ffffff; font-size: 12px; font-weight: 700; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-title-cn { display: block; color: #a1a1aa; font-size: 11px; margin-top: 1px; margin-bottom: 4px; }
         
-        .orientation { font-weight: bold; margin: 5px 0; font-size: 11px; }
+        .orientation { font-weight: bold; margin: 4px 0; font-size: 10px; }
         .upright-text { color: #10b981; }
         .reversed-text { color: #ef4444; }
         
         .summary-box {
-            max-width: 600px; margin: 30px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 25px; border-radius: 12px; text-align: left; line-height: 1.8; box-sizing: border-box;
+            max-width: 600px; margin: 25px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 20px; border-radius: 12px; text-align: left; line-height: 1.8; box-sizing: border-box;
         }
-        .summary-box h2 { color: #ffffff; text-align: center; margin-top: 0; font-size: 15px; letter-spacing: 2px; border-bottom: 1px solid #1f1f1f; padding-bottom: 10px; }
-        .summary-box p { margin: 15px 0 0 0; font-size: 13px; color: #d1d1d1; text-indent: 2em; }
+        .summary-box h2 { color: #ffffff; text-align: center; margin-top: 0; font-size: 14px; letter-spacing: 2px; border-bottom: 1px solid #1f1f1f; padding-bottom: 10px; }
+        .summary-box p { margin: 12px 0 0 0; font-size: 12px; color: #d1d1d1; text-indent: 2em; text-align: justify; }
 
-        #capture-node { padding: 15px; background: #050505; border-radius: 16px; }
-        .result-title-node { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 20px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; line-height: 1.5; }
+        #capture-node { padding: 10px; background: #050505; border-radius: 16px; }
+        .result-title-node { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 20px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; line-height: 1.5; }
 
-        .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 15px; max-width: 420px; width: 100%; box-sizing: border-box; }
-        .sub-btn-group { display: flex; gap: 15px; justify-content: center; width: 100%; }
-        .sub-btn-group button { flex: 1; padding: 14px 0; }
+        .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 420px; width: 100%; box-sizing: border-box; }
+        .sub-btn-group { display: flex; gap: 12px; justify-content: center; width: 100%; }
+        .sub-btn-group button { flex: 1; padding: 12px 0; }
         .btn-alignment-wide { width: 100%; }
         
         button { 
-            background-color: #0a0a0a; color: #d1d1d1; border: 1px solid #27272a; padding: 14px 40px; font-size: 13px; font-weight: bold; border-radius: 9999px; cursor: pointer; transition: 0.2s; font-family: inherit; letter-spacing: 0.1em;
+            background-color: #0a0a0a; color: #d1d1d1; border: 1px solid #27272a; padding: 12px 35px; font-size: 12px; font-weight: bold; border-radius: 9999px; cursor: pointer; transition: 0.2s; font-family: inherit; letter-spacing: 0.1em;
         }
         button:hover { background-color: #111; border-color: #dc2626; color: #fff; }
         
@@ -119,7 +140,7 @@
         .view-node { display: none; }
         .view-node.active-node { display: block; }
 
-        footer { font-size: 10px; color: #444446; margin-top: 60px; border-top: 1px solid #141416; padding-top: 20px; line-height: 1.6; }
+        footer { font-size: 9px; color: #444446; margin-top: 50px; border-top: 1px solid #141416; padding-top: 15px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -175,34 +196,49 @@
     </footer>
 
     <script>
-        // ==================== 音效引擎 ====================
+        // ==================== 【優化優級】：重配音效引擎 ====================
         const AudioEngine = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type, step = 0) {
             if (AudioEngine.state === 'suspended') { AudioEngine.resume(); }
             const now = AudioEngine.currentTime;
+            
             if (type === 'click') {
                 const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
                 osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
                 gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                 osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.05);
-            } else if (type === 'shuffle_tick') {
+            } 
+            else if (type === 'shuffle_tick') {
+                // 優化點：引入輕微隨機微調(Jitter)，使卡牌掃描聲更有機械卡嗒顆粒感
                 const osc = AudioEngine.createOscillator(); const filter = AudioEngine.createBiquadFilter(); const gain = AudioEngine.createGain();
-                osc.type = 'sine'; let freq = 1600 + (step * 250); osc.frequency.setValueAtTime(freq, now); osc.frequency.exponentialRampToValueAtTime(freq - 600, now + 0.05);
-                filter.type = 'bandpass'; filter.frequency.setValueAtTime(freq, now); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-                osc.connect(filter); filter.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.05);
-            } else if (type === 'flip') {
+                osc.type = 'sine'; 
+                let jitter = (Math.random() - 0.5) * 80;
+                let freq = 1400 + (step * 300) + jitter; 
+                osc.frequency.setValueAtTime(freq, now); 
+                osc.frequency.exponentialRampToValueAtTime(freq - 700, now + 0.04);
+                filter.type = 'bandpass'; filter.frequency.setValueAtTime(freq, now); 
+                gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                osc.connect(filter); filter.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.04);
+            } 
+            else if (type === 'flip') {
+                // 優化點：高低雙振盪器融合。Sine提供科幻沉悶重音，Triangle提供能量解鎖的清脆感
                 const oscBase = AudioEngine.createOscillator(); const oscTop = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
-                let baseFreq = 329.63; if (step === 1) baseFreq = 392.00; if (step === 2) baseFreq = 523.25;
-                oscBase.type = 'triangle'; oscBase.frequency.setValueAtTime(baseFreq, now); oscBase.frequency.exponentialRampToValueAtTime(baseFreq * 0.5, now + 0.3);
-                oscTop.type = 'sine'; oscTop.frequency.setValueAtTime(baseFreq * 2, now); oscTop.frequency.exponentialRampToValueAtTime(baseFreq * 4, now + 0.25);
-                gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-                oscBase.connect(gain); oscTop.connect(gain); gain.connect(AudioEngine.destination); oscBase.start(now); oscTop.start(now); oscBase.stop(now + 0.35); oscTop.stop(now + 0.35);
-            } else if (type === 'error') {
+                let baseFreq = 220.00; if (step === 1) baseFreq = 261.63; if (step === 2) baseFreq = 329.63;
+                
+                oscBase.type = 'sine'; oscBase.frequency.setValueAtTime(baseFreq, now); oscBase.frequency.exponentialRampToValueAtTime(baseFreq * 0.4, now + 0.4);
+                oscTop.type = 'triangle'; oscTop.frequency.setValueAtTime(baseFreq * 3, now); oscTop.frequency.exponentialRampToValueAtTime(baseFreq * 5, now + 0.3);
+                
+                gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+                oscBase.connect(gain); oscTop.connect(gain); gain.connect(AudioEngine.destination); 
+                oscBase.start(now); oscTop.start(now); oscBase.stop(now + 0.45); oscTop.stop(now + 0.45);
+            } 
+            else if (type === 'error') {
                 const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
                 osc.type = 'sine'; osc.frequency.setValueAtTime(140, now); gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
                 osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.15);
-            } else if (type === 'success') {
+            } 
+            else if (type === 'success') {
                 const notes = [523.25, 659.25, 783.99, 1046.5];
                 notes.forEach((freq, index) => {
                     const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
@@ -210,14 +246,15 @@
                     gain.gain.setValueAtTime(0.06, now + index * 0.05); gain.gain.exponentialRampToValueAtTime(0.002, now + index * 0.05 + 0.15);
                     osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now + index * 0.05); osc.stop(now + index * 0.05 + 0.15);
                 });
-            } else if (type === 'capture') {
+            } 
+            else if (type === 'capture') {
                 const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
                 osc.type = 'sine'; osc.frequency.setValueAtTime(1800, now); gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
                 osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.08);
             }
         }
 
-        // ==================== 完整 22 張大牌數據庫 ====================
+        // ==================== 完整大牌數據庫 ====================
         const tarotData = {
           "cards": [
             { "name": "The Fool", "img": "m00.jpg" }, { "name": "The Magician", "img": "m01.jpg" },
@@ -256,7 +293,7 @@
             "The Empress": {
                 nameCN: "皇后",
                 general: { upright: "代表豐收、繁榮與物質的富足。你正處於能量飽滿、感官敏銳的收穫期。這是一個充滿溫暖、滋養與創造力的階段。無論是生活還是計畫，都將迎來豐碩的回報。", reversed: "目前你可能感到缺乏安全感，或者是對環境有過度的控制慾。創造力受到阻塞，甚至有過度揮霍、怠惰的傾向。注意不要將自己的情感價值建立在他人的認同上。" },
-                love: { upright: "感情生活充滿甜蜜與溫馨，彼此包容與支持。這是一段非常滋養、甚至有望走向家庭或穩定長期發展的吉兆。單身者近期桃花能量強勁，極具女性魅力。", reversed: "在關係中表現得過度控制或佔有慾過強，這讓對方感到窒息。或者是因為物質、金錢問題導致感情產生摩擦，需要注意情感勒索的傾向。" },
+                love: { upright: "感情生活充滿甜蜜與溫馨，彼此包容與支持。這是一段非常滋養、甚至有望走向家庭或穩定長期發展的吉兆。單身者近期桃花能量強勁，極具女性魅力。", reversed: "在關係中表現得過度控制或佔有慾過強，這讓對方感到窒息。或者是開出物質、金錢問題導致感情產生摩擦，需要注意情感勒索的傾向。" },
                 work: { upright: "職場發展順遂，你的努力將迎來實質的回報或業績大紅利。團隊氛圍和諧，合作專案能如期推進。現在是擴張業務與享受成果的絕佳時機。", reversed: "工作流於安逸、怠惰，缺乏前進的積極度。亦可能因為過度鋪張浪費、預算控管不佳導致專案出問題。注意職場上不要過於感情用事。" }
             },
             "The Emperor": {
@@ -285,8 +322,8 @@
             },
             "Strength": {
                 nameCN: "力量",
-                general: { upright: "內心的堅韌與溫柔的控制力達到了完美平衡。你不需要依賴粗暴的手段，而是憑藉著無比的耐心、自信與包容心，就能感化並馴服生命中所有的野獸。", reversed: "暗示你當前可能陷入了自我懷疑，或是情緒失控、被內心的焦慮與恐懼所吞噬。你可能正在用不理智的對抗方式處理問題，導致內在能量大量虛耗。", },
-                love: { upright: "在感情中展現出極高的情商。你能夠用溫柔與包容化解對方的壞脾氣與不安，建立起一段基於深度信任與靈魂尊重的成熟健康關係。", reversed: "在關係中感到無力與疲憊，或是佔有慾與控制慾失控，試圖用強硬的手腕逼迫對方就範。需注意這種不對等的張力會加速消磨彼此的愛意。" },
+                general: { upright: "內心的堅韌與溫柔的控制力達到了完美平衡。你不需要依賴粗暴的手段，而是憑藉著無比的耐心、自信與包容心，就能感化並馴服生命中所有的野獸。", reversed: "暗示你當前可能陷入了自我懷疑，或是情緒失控、被內心的焦慮與恐懼所吞噬。你可能正在用不理智的對抗方式處理問題，導致內在能量大量虛耗。" },
+                love: { upright: "在感情中展現出極高的情商。你能夠用溫柔與包容化解對方的壞脾氣與不安，建立起一段基於深度信任與靈魂尊重的成熟健康關係。", reversed: "在關係中感到無力與疲憊，或者是佔有慾與控制慾失控，試圖用強硬的手腕逼迫對方就範。需注意這種不對等的張力會加速消磨彼此的愛意。" },
                 work: { upright: "面對職場的危機或棘手難題時，展現出臨危不亂的沉著智慧。你強大的協調能力與內在抗壓性，能讓你贏得長官與團隊最高層級的敬佩。", reversed: "工作中面臨巨大的精神內耗，你感到自己的才華或心力被環境榨乾。此時容易因缺乏自信而選擇退縮，或是因過度急躁而把原本好轉的局勢搞砸。" }
             },
             "The Hermit": {
@@ -298,7 +335,7 @@
             "Wheel of Fortune": {
                 nameCN: "命運之輪",
                 general: { upright: "不可抗拒的命運齒輪開始加速轉動。這是一張代表好運、轉機與順應天時的卡牌。轉折點即將到來，局勢將朝著對你極為有利的方向產生量子躍遷。", reversed: "暗示你正處於運勢波動的低谷期，或試圖強行對抗環境的大趨勢。此時容易遇到突如其來的阻礙，建議保持彈性，不要在錯誤的時機強求盲目的擴張。" },
-                love: { upright: "感情上迎來宿命般的緣分。單身者極易在毫無準備的情況下遇見一見鍾情的靈魂伴侶；有伴侶者則會經歷一個讓關係產生正向飛躍的關鍵契機。", reversed: "感情發展面臨外部不可抗力的干擾，或者是雙方陷入了不斷重複同一個矛盾的惡性循環之中。目前不宜急於做出承諾，靜待風暴過去。" },
+                love: { upright: "感情上迎來宿命般的緣分。單身者極易在毫無準備的情況下遇見一見幽鐘的靈魂伴侶；有伴侶者則會經歷一個讓關係產生正向飛躍的關鍵契機。", reversed: "感情發展面臨外部不可抗力的干擾，或者是雙方陷入了不斷重複同一個矛盾的惡性循環之中。目前不宜急於做出承諾，靜待風暴過去。" },
                 work: { upright: "職場運勢迎來大洗牌式的轉機，原本停滯不前的專案將獲得驚人的外部助力。此時非常適合把握新機會，順應潮流做出的變革將迎來翻倍的回報。", reversed: "工作中出現意料之外的變故或預算被砍的危機。目前的市場環境對你較為不利，不建議進行大刀闊斧的盲目投資，需做好防守型的備份機制。" }
             },
             "Justice": {
@@ -418,9 +455,9 @@
                             if (slot) slot.innerHTML = `<img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}" alt="${card.name}">`;
                         });
                         unlockNextCard();
-                    }, 300);
+                    }, 400); // 略微增加延遲，給予掃描動畫視覺緩衝
                 }
-            }, 250); 
+            }, 300); // 拉長每次切換的時間間隔，讓音效與動畫更有層次
         }
 
         function unlockNextCard() {
@@ -457,7 +494,7 @@
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 
                 const cardBox = document.createElement('div'); cardBox.className = 'card-box';
-                cardBox.innerHTML = `<h3>${positions[index]}</h3><div class="result-card-static"><img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}"></div><div class="result-info"><span class="card-title-en">${card.name}</span><span class="card-title-cn">${cardMeaning.nameCN}</span><div class="orientation ${card.isReversed ? 'reversed-text' : 'upright-text'}">${oriText}</div><p style="margin:5px 0; font-size:12px; text-align:justify;">${explanation}</p></div>`;
+                cardBox.innerHTML = `<h3>${positions[index]}</h3><div class="result-card-static"><img src="cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}"></div><div class="result-info"><span class="card-title-en">${card.name}</span><span class="card-title-cn">${cardMeaning.nameCN}</span><div class="orientation ${card.isReversed ? 'reversed-text' : 'upright-text'}">${oriText}</div><p style="margin:5px 0; font-size:11px; text-align:justify; letter-spacing:0.02em;">${explanation}</p></div>`;
                 resultDeckDiv.appendChild(cardBox);
             });
             generateComprehensiveSummary(); switchView('result-view');
