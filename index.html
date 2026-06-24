@@ -2,497 +2,1045 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聖三角潛意識矩陣占卜 // Sacred Triangle Matrix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔮 聖三角潛意識占卜 // Cross-Platform Matrix</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9874958587973886" crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-9874958587973886">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="tarotData.js" defer></script>
     <style>
-        :root {
-            --bg-color: #0b0c10;
-            --text-color: #c5c6c7;
-            --primary-color: #66fcf1;
-            --secondary-color: #45f3ff;
-            --dark-accent: #1f2833;
-            --border-color: #2f3944;
-            --text-muted: #858687;
-            --font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
+        body { 
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            background-color: #050505;
+            color: #d1d1d1; 
+            text-align: center; 
+            padding: 15px;
             margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-family);
-            line-height: 1.8;
-            padding: 60px 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 850px;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 2px 2px, #161616 1px, transparent 0);
+            background-size: 24px 24px;
+            -webkit-user-select: none;
+            user-select: none;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            gap: 80px;
+            justify-content: space-between;
+        }
+        
+        .ads-top-buffer { 
+            font-size: 9px; 
+            color: #1c1c1e; 
+            letter-spacing: 0.1em; 
+            margin-top: 15px; 
+            text-transform: uppercase; 
         }
 
-        /* 區塊通用樣式 */
-        section {
-            border: 1px solid var(--border-color);
-            background-color: rgba(31, 40, 51, 0.2);
-            padding: 50px 40px;
-            border-radius: 4px;
+        .main-content { flex-grow: 1; width: 100%; }
+        h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-size: 20px; }
+        .sys-status { font-size: 9px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 25px; }
+        
+        .panel-section { 
+            margin: 20px auto; max-width: 650px; background: #0a0a0a; padding: 25px 20px; 
+            border-radius: 12px; border: 1px solid #1f1f1f; box-shadow: 0 8px 32px rgba(0,0,0,0.8); box-sizing: border-box;
         }
 
-        h1, h2, h3 {
-            color: #ffffff;
-            font-weight: 500;
-            letter-spacing: 2px;
+        .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
+        
+        .seo-keywords-matrix { font-size: 9px; color: #141414; text-align: justify; line-height: 1.4; margin-top: 25px; letter-spacing: 0.02em; border-top: 1px dashed #0a0a0a; padding-top: 10px; }
+        .ads-native-placeholder { margin: 25px auto; max-width: 600px; padding: 12px; border: 1px dashed #141414; border-radius: 6px; font-size: 9px; color: #27272a; letter-spacing: 0.05em; text-transform: uppercase; background: #070707; }
+
+        .panel-section label { display: block; margin: 15px 0 8px 0; font-size: 12px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
+        .panel-section input, .panel-section select { 
+            width: 90%; padding: 12px; font-size: 13px; border: 1px solid #27272a; border-radius: 6px; 
+            background: #050505; color: #fff; text-align: center; outline: none; transition: 0.3s; box-sizing: border-box;
+            font-family: inherit; margin-bottom: 15px;
+        }
+        .panel-section input:focus, .panel-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
+        
+        #user-question-display { font-size: 13px; color: #dc2626; margin: 10px 0 20px 0; font-weight: bold; letter-spacing: 0.05em; line-height: 1.5; }
+        #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* 槽位區塊 */
+        .slots-container { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            justify-content: center; 
+            margin: 0 auto 25px auto; 
+            min-height: 155px; 
+            max-width: 500px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        .slot-box { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .slot-box h3 { color: #71717a; font-size: 10px; margin-bottom: 8px; text-transform: uppercase; }
+        
+        .slot-card-venue {
+            width: 100%; max-width: 84px; height: 144px; border: 1px dashed #27272a; border-radius: 8px;
+            position: relative; display: flex; align-items: center; justify-content: center; color: #3f3f46; font-size: 11px;
+            background: #050505;
         }
 
-        h2 {
-            font-size: 1.4rem;
-            margin-bottom: 30px;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 15px;
-            text-transform: uppercase;
+        /* 洗牌抽取卡牌區 */
+        .deck-zone { margin-top: 10px; min-height: 220px; position: relative; padding-top: 10px; }
+        .pile-master { width: 84px; height: 144px; margin: 40px auto; position: relative; }
+
+        .fan-scroller {
+            width: 100%; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory; padding: 30px 0; box-sizing: border-box; cursor: grab;
+        }
+        .fan-scroller:active { cursor: grabbing; }
+        .fan-scroller::-webkit-scrollbar { display: none; }
+
+        .scroller-wrapper { position: relative; width: 100%; }
+
+        .nav-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(10,10,10,0.8);
+            border: 1px solid #27272a; border-radius: 50%; color: #71717a; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 500; font-size: 14px; transition: 0.2s;
+        }
+        .nav-arrow:hover { border-color: #dc2626; color: #fff; background: #000; box-shadow: 0 0 10px rgba(220,38,38,0.3); }
+        .arrow-left { left: 5px; }
+        .arrow-right { right: 5px; }
+
+        .spread-fan-stage { 
+            display: flex; 
+            padding: 0 calc(50% - 42px); 
+            gap: 15px; 
+            width: max-content; 
+            opacity: 0; 
+            transition: opacity 0.5s ease, gap 0.35s ease; 
         }
 
-        p {
-            margin-bottom: 16px;
-            font-size: 0.95rem;
-            text-align: justify;
+        /* 卡牌樣式 */
+        .card { 
+            width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
+            transform-origin: center center; 
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease, filter 0.35s ease, z-index 0.35s, width 0.35s cubic-bezier(0.25, 1, 0.5, 1), margin 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            filter: blur(2px); opacity: 0.3;
+        }
+        .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: none; opacity: 1; }
+        
+        /* 飛升落座軌跡 */
+        .card.flying-to-slot {
+            position: fixed !important;
+            z-index: 9999 !important;
+            pointer-events: none !important;
+            transition: all 0.65s cubic-bezier(0.25, 1, 0.35, 1) !important;
+            transform: scale(1.05) rotate(5deg) !important;
+            filter: drop-shadow(0 12px 24px rgba(220,38,38,0.5)) !important;
         }
 
-        /* 標頭區塊 */
-        header {
-            text-align: center;
-            padding: 60px 0 40px 0;
-            border-bottom: 1px dashed var(--border-color);
+        .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        
+        .card-back { 
+            background: #0d0d0d; border: 2px solid #3f3f46; border-radius: 8px; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; color: #dc2626; box-shadow: 0 6px 15px rgba(0,0,0,0.6); box-sizing: border-box; padding: 4px;
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; top: 0; left: 0;
+        }
+        .card-back::before { content: ''; position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px; border: 1px solid #27272a; border-radius: 5px; pointer-events: none; }
+        .tarot-symbol { font-size: 24px; line-height: 1; font-weight: normal; text-shadow: 0 0 8px rgba(220,38,38,0.4); }
+
+        .card.is-focused .card-back { border-color: #dc2626; color: #fff; box-shadow: 0 0 20px rgba(220, 38, 38, 0.7); }
+
+        .card-front { 
+            transform: rotateY(180deg); background-color: #000; border: 2px solid #52525b; border-radius: 8px; overflow: hidden; box-sizing: border-box;
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; top: 0; left: 0;
+        }
+        .card-front img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* 槽位內登場動畫 */
+        .card-in-slot { 
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; 
+            animation: slotBounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes slotBounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        header h1 {
-            font-size: 2.4rem;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 4px;
-        }
+        /* 結果頁面 */
+        .result-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-content: center; margin: 20px auto; max-width: 600px; width: 100%; }
+        .result-card-box { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+        .result-card-static { width: 100%; max-width: 90px; height: 154px; background-color: #000; border: 2px solid #52525b; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.9); }
+        .result-card-static img { width: 100%; height: 100%; object-fit: cover; }
+        .reversed { transform: rotate(180deg); }
+        
+        .result-info { font-size: 11px; line-height: 1.6; color: #a1a1aa; text-align: center; margin-top: 10px; width: 100%; }
+        .card-title-en { display: block; color: #ffffff; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+        .card-title-cn { display: block; color: #a1a1aa; font-size: 11px; margin-top: 2px; }
+        .orientation { font-weight: bold; margin: 6px 0; font-size: 10px; letter-spacing: 0.1em; }
+        .upright-text { color: #10b981; }
+        .reversed-text { color: #ef4444; }
+        
+        .card-desc-text { margin: 8px auto 0 auto; font-size: 11px; text-align: justify; letter-spacing: 0.02em; max-width: 140px; color: #a1a1aa; line-height: 1.7; }
+        
+        .summary-box { max-width: 600px; margin: 30px auto; background: #0d0d0d; border: 1px dashed #dc2626; padding: 22px; border-radius: 12px; text-align: left; line-height: 1.8; box-sizing: border-box; }
+        .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
+        .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
 
-        header p {
-            font-size: 1rem;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-        }
+        .capture-wrapper { padding: 25px 20px; background: #050505; border-radius: 16px; border: 1px solid #1f1f1f; box-shadow: 0 20px 50px rgba(0,0,0,0.9); position: relative; }
+        .capture-footer-matrix { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #27272a; display: flex; justify-content: space-between; align-items: center; font-size: 9px; color: #52525b; letter-spacing: 0.05em; text-transform: uppercase; }
 
-        /* 1. 聖三角矩陣解構表 */
-        .matrix-intro {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 30px;
+        .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 420px; width: 100%; }
+        .sub-btn-group { display: flex; gap: 12px; justify-content: center; width: 100%; }
+        .sub-btn-group button { flex: 1; padding: 12px 0; }
+        
+        button { 
+            background-color: #0a0a0a; color: #d1d1d1; border: 1px solid #27272a; padding: 12px 35px; font-size: 12px; font-weight: bold; border-radius: 9999px; cursor: pointer; transition: 0.2s; font-family: inherit; letter-spacing: 0.1em;
+            margin-top: 5px;
         }
+        button:hover { background-color: #111; border-color: #dc2626; color: #fff; }
+        .btn-primary { background-color: #dc2626; color: #fff; border-color: #dc2626; }
+        .btn-primary:hover { background-color: #b91c1c; border-color: #b91c1c; }
+        .btn-secondary { background-color: #050505; border-color: #3f3f46; color: #a1a1aa; }
 
-        .matrix-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 24px;
-        }
+        .view-node { display: none; }
+        .view-node.active-node { display: block; }
 
-        .matrix-table th, .matrix-table td {
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            text-align: left;
-            font-size: 0.95rem;
-            vertical-align: top;
-        }
-
-        .matrix-table th {
-            background-color: var(--dark-accent);
-            color: #ffffff;
-            font-weight: 500;
-            width: 25%;
-            line-height: 1.4;
-        }
-
-        .matrix-table td ul {
-            margin-top: 10px;
-            padding-left: 20px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* 2. 四大元素心理映射說明 */
-        .elements-container {
-            display: flex;
-            flex-direction: column;
-            gap: 35px;
-        }
-
-        .element-row {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 30px;
-            border-bottom: 1px solid rgba(47, 57, 68, 0.4);
-            padding-bottom: 35px;
-        }
-
-        .element-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        @media (max-width: 650px) {
-            .element-row {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-        }
-
-        .element-title {
-            font-size: 1.1rem;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .element-title span {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            font-family: monospace;
-            margin-top: 4px;
-        }
-
-        .element-desc h4 {
-            color: #ffffff;
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        /* 3. 啟動前調頻儀式時間軸 */
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        .timeline-item {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .timeline-item {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-        }
-
-        .timeline-node {
-            font-family: monospace;
-            color: var(--primary-color);
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        .timeline-content h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-
-        /* 4. 全牌組流動面板 */
-        .deck-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .deck-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .deck-box {
-            background: rgba(19, 26, 36, 0.6);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 4px;
-        }
-
-        .deck-box h4 {
-            color: #ffffff;
-            font-size: 1rem;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .deck-box p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0;
-        }
-
-        /* 輸入與核心操作區 */
-        .interactive-section {
-            border: 1px solid var(--primary-color);
-            box-shadow: 0 0 25px rgba(102, 252, 241, 0.03);
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        label {
-            font-size: 0.95rem;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            background-color: var(--dark-accent);
-            border: 1px solid var(--border-color);
-            color: #ffffff;
-            padding: 18px;
-            font-size: 1rem;
-            border-radius: 4px;
-            outline: none;
-            transition: border-color 0.3s;
-            letter-spacing: 1px;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--primary-color);
-        }
-
-        .btn-submit {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            padding: 18px 36px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 4px;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            margin-top: 15px;
-            font-weight: 500;
-            text-transform: uppercase;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--primary-color);
-            color: var(--bg-color);
-        }
-
-        /* 頁尾 */
-        footer {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #4a5560;
-            padding: 40px 0 80px 0;
-            border-top: 1px dashed var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        /* 新增專屬動態特效 */
+        @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        @keyframes breathAnimation {
+            0%, 100% { transform: scale(1); background: rgba(220, 38, 38, 0.08); box-shadow: 0 0 12px rgba(220, 38, 38, 0.15); }
+            33.33% { transform: scale(1.35); background: rgba(220, 38, 38, 0.25); box-shadow: 0 0 25px rgba(220, 38, 38, 0.55); }
+            66.66% { transform: scale(1.35); background: rgba(220, 38, 38, 0.25); }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="ads-top-buffer">[ CONNECTION_NODE: SECURE_HOST ]</div>
 
-        <!-- 標頭區塊 -->
-        <header>
-            <h1>Sacred Triangle Matrix</h1>
-            <p>聖三角潛意識矩陣占卜 // 全牌組解構流動終端</p>
-        </header>
+    <div class="main-content">
+        <h1>🔮 聖三角潛意識矩陣占卜</h1>
+        <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
+        
+        <div id="home-view" class="view-node active-node panel-section">
+            <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
+                <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
+                <div>[ CURRENT_VERSION: v2.6.8-DYNAMIC_MATRIX ]</div>
+            </div>
 
-        <!-- 區塊 1：聖三角矩陣解構表 -->
-        <section>
-            <h2>三時空位階映射解構 // MATRIX GRID</h2>
-            <p class="matrix-intro">聖三角牌陣（The Sacred Triangle）是榮格心理學中「共時性原理」與古典神祕學交會的經典矩陣結構。本系統透過三種獨立的時空節點，投射個體當前所處的動態軌跡。這並非預知不可更改的宿命，而是透過潛意識的鏡面，解析因果結構的演變趨勢。</p>
-            <table class="matrix-table">
-                <thead>
-                    <tr>
-                        <th>時空位階</th>
-                        <th>心理學與神祕學維度深度解讀</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>過去位階<br><small>(PAST NODE)</small></th>
-                        <td>
-                            代表事件的潛伏因果、已形成的心理制約，以及不可逆的資源基底。它揭示了問題的根源動能，是當前困境的潛意識基石。
-                            <ul>
-                                <li>正位含意：過去累積的正面經驗、已確立的優勢、自覺的選擇。</li>
-                                <li>逆位拉扯：未解決的潛意識陰影、過去事件的執念、重複陷入的行為迴圈。</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>現在位階<br><small>(PRESENT NODE)</small></th>
-                        <td>
-                            代表當下顯性意識與無意識的交會點。映射出環境現狀的真實拉扯、個體的防禦機制，以及盲點所在的能量核心。
-                            <ul>
-                                <li>正位含意：當下清晰的現狀、正在發揮核心影響力的事件、可控的外部環境。</li>
-                                <li>逆位拉扯：內在認知與現實的割裂、情緒的過度代償、受困於盲點而不自知。</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>未來位階<br><small>(FUTURE NODE)</small></th>
-                        <td>
-                            代表在不改變現有行為慣性與潛意識動能的前提下，順流演變機率最大的軌跡投影。此處並非終點，而是提供修正與預警的自由意志空間。
-                            <ul>
-                                <li>正位含意：順應當前動能將迎來的自然結果、轉機的顯化、意識格局的擴張。</li>
-                                <li>逆位拉扯：潛在的動能阻礙、預期目標的延遲、需要主動介入修正的偏差軌跡。</li>
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- 區塊 2：四大元素心理映射說明 -->
-        <section>
-            <h2>小阿爾克那四大元素心理映射 // ELEMENTAL ASPECT</h2>
-            <p class="matrix-intro">塔羅牌中的四組小牌（Minor Arcana）分別對應了構成物質與精神世界的四大基石。在矩陣隨機抽樣中，元素的分布比例直接反映了使用者精神能量在物質、情感、心智與行動四個維度的傾斜程度。</p>
+            <div class="intro-text" style="margin-bottom: 25px;">
+                <p>歡迎來到全功能盲抽占卜系統。本介面全面整合大/小阿爾克那共 78 張完整卡牌，支援手機滑動與電腦滑飾拖曳，洗牌後牌組將進入盲抽矩陣。</p>
+            </div>
             
-            <div class="elements-container">
-                <div class="element-row">
-                    <div class="element-title">
-                        <h3>權杖牌組</h3>
-                        <span>Wands / 火元素</span>
+            <button class="btn-primary" style="width: 100%; max-width: 320px; margin: 10px auto 30px auto; display: block;" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">🌐 當前時空能量觀測 // ENERGY_MONITOR</h3>
+                <div style="background: #070707; border: 1px dashed #27272a; padding: 15px; border-radius: 8px; font-size: 11px; line-height: 1.7; color: #a1a1aa;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px;">
+                        <span style="color: #71717a;">全球集體無意識共振指數：</span>
+                        <span id="resonance-val" style="color: #10b981; font-weight: bold;">--.-- Hz [INITIALIZING]</span>
                     </div>
-                    <div class="element-desc">
-                        <h4>核心動能、熱情、意志實踐與生命力投影</h4>
-                        <p>火元素是純粹的行動力與意志展現。在潛意識矩陣中，權杖代表個體對自我實現的渴望、職業生涯的擴張動機，以及面對挑戰時的直覺防禦機制。當權杖大量出現，暗示當前事件高度依賴執行力與決心；若呈現逆位拉扯，則需警惕能量耗竭（Burnout）或盲目衝動帶來的反噬。</p>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px;">
+                        <span style="color: #71717a;">本日隨機亂數熵值流動：</span>
+                        <span id="entropy-val" style="color: #dc2626; font-weight: bold;">λ-0.0000 (CALCULATING)</span>
                     </div>
+                    <p style="margin: 8px 0 0 0; font-size: 10px; color: #52525b; text-align: justify;">
+                        *提示：當前宇宙微波背景輻射與本地隨機數序列處於高度同步狀態。此時段進行關於「職涯跨越」與「深層情感拉扯」的諮詢，盲抽矩陣將能捕捉到更精準的潛意識邊界投影。
+                    </p>
+                </div>
+            </div>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">⚡ 熱門解構範疇 // MATRIX_NODES</h3>
+                
+                <div style="background: #050505; border: 1px solid #1c1c1e; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[01] 職涯與流動資產 // CAREER & WEALTH</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">適用於面臨轉職抉擇、職場人際拉扯、或創業者觀測未來決策走向，深度剖析環境盲點。</div>
                 </div>
 
-                <div class="element-row">
-                    <div class="element-title">
-                        <h3>聖杯牌組</h3>
-                        <span>Cups / 水元素</span>
-                    </div>
-                    <div class="element-desc">
-                        <h4>情感流動、直覺連結、人際紐帶與無意識防禦</h4>
-                        <p>水元素主導情感、直覺與內在的安全感邊界。聖杯牌組顯化出個體在親密關係、家庭或合作中的情緒緩衝能力，以及未曾覺察的依附型態。正位代表情感的順暢交融與直覺的敏銳度；逆位拉扯則往往對應內在情緒的壓抑、對幻象的執著、或是人際邊界模糊導致的能量過度消耗。</p>
-                    </div>
+                <div style="background: #050505; border: 1px solid #1c1c1e; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[02] 情感連結與張力 // LOVE & RELATIONSHIP</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">解構個體間的潛意識張力，探索曖昧對象的內在真實態度，以及雙方未來三個時空的軌跡演變。</div>
                 </div>
 
-                <div class="element-row">
-                    <div class="element-title">
-                        <h3>寶劍牌組</h3>
-                        <span>Swords / 風元素</span>
-                    </div>
-                    <div class="element-desc">
-                        <h4>理性思維、邏輯分析、衝突制衡與精神壓力</h4>
-                        <p>風元素代表語言、心智思維與理性的雙面刃。寶劍牌組在矩陣中往往伴隨著思考的過度權衡、現實體制中的制約衝突，或是言語觀念上的摩擦。它映射出個體如何透過邏輯去解構困境，但也暗示了心智面臨的焦慮與割裂。逆位時，通常代表著思緒的混亂、溝通的失焦或陷入主觀的受害者心態。</p>
-                    </div>
+                <div style="background: #050505; border: 1px solid #1c1c1e; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[03] 學業發展與核心決策 // EDUCATION & DECISION</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">針對大型考評、畢業展演規劃、或複雜專案的執行瓶頸進行沙盤推演，找出潛在的資源阻礙。</div>
                 </div>
+            </div>
 
-                <div class="element-row">
-                    <div class="element-title">
-                        <h3>金幣牌組</h3>
-                        <span>Pentacles / 土元素</span>
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">📊 聖三角位階深度對照 // MATRIX_GRID</h3>
+                <div style="overflow-x: auto; background: #070707; border: 1px solid #1f1f1f; border-radius: 8px; padding: 10px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; color: #a1a1aa; min-width: 500px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #1f1f1f; color: #fff; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em;">
+                                <th style="padding: 10px 5px;">時空位階 (NODE)</th>
+                                <th style="padding: 10px 5px;">潛意識投影面</th>
+                                <th style="padding: 10px 5px;">核心解碼維度</th>
+                                <th style="padding: 10px 5px;">矩陣張力權重</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #141414;">
+                                <td style="padding: 10px 5px; color: #dc2626; font-weight: bold;">[PAST] 過去節點</td>
+                                <td style="padding: 10px 5px;">既定因果 / 經驗慣性</td>
+                                <td style="padding: 10px 5px;">隱含的底層動機、事件起因與資源盲點</td>
+                                <td style="padding: 10px 5px; font-family: monospace;">25% (STATIC)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #141414;">
+                                <td style="padding: 10px 5px; color: #dc2626; font-weight: bold;">[PRESENT] 現在節點</td>
+                                <td style="padding: 10px 5px;">當前能量 / 核心拉扯</td>
+                                <td style="padding: 10px 5px;">現狀顯化的焦點、阻礙與主觀認知盲區</td>
+                                <td style="padding: 10px 5px; font-family: monospace;">45% (DYNAMIC)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 5px; color: #dc2626; font-weight: bold;">[FUTURE] 未來節點</td>
+                                <td style="padding: 10px 5px;">機率演變 / 潛在落座</td>
+                                <td style="padding: 10px 5px;">順應現有動能衍生之最可能結局與對策</td>
+                                <td style="padding: 10px 5px; font-family: monospace;">30% (PROBABLE)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">🗂️ 78張全牌組流動狀態 // HYBRID_DECK_REGISTRY</h3>
+                <div style="background: #070707; border: 1px dashed #27272a; padding: 15px; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #71717a; border-bottom: 1px solid #141414; padding-bottom: 8px; margin-bottom: 12px; text-transform: uppercase;">
+                        <span>矩陣模組: TRADITIONAL_78_HYBRID</span>
+                        <span>動態狀態: <span style="color: #10b981; animation: blink 1.5s infinite;">● STABLE_READY</span></span>
                     </div>
-                    <div class="element-desc">
-                        <h4>物質資產、現實體系、感官體驗與長期沉澱</h4>
-                        <p>土元素是最終的實體顯化與安全感錨定。金幣牌組對應三維物質世界中的具體成果，包括財務狀況、身體健康、職業穩定度以及世俗秩序的框架。它評估的是個體在現實世界紮根的深度。正位意指穩定的累積與資源的落實；逆位拉扯則暗示了物質層面的卡頓、對變動的恐懼、或過度沉溺於物質制約而喪失精神靈活性。</p>
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size: 11px; color: #e4e4e7; font-weight: bold; margin-bottom: 6px;">[01] MAJOR_ARCANANA (大阿爾克那核心元組)</div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 4px; font-size: 9px; font-family: monospace; color: #52525b; text-align: center;">
+                            <div style="background: #050505; border: 1px solid #1c1c1e; padding: 3px; border-radius: 3px; color: #a1a1aa;">M00_FOOL</div>
+                            <div style="background: #050505; border: 1px solid #1c1c1e; padding: 3px; border-radius: 3px; color: #a1a1aa;">M01_MAGI</div>
+                            <div style="background: #050505; border: 1px solid #1c1c1e; padding: 3px; border-radius: 3px; color: #a1a1aa;">M02_PRIE</div>
+                            <div style="background: #050505; border: 1px solid #1c1c1e; padding: 3px; border-radius: 3px; color: #a1a1aa;">M03_EMPR</div>
+                            <div style="background: #050505; border: 1px solid #1c1c1e; padding: 3px; border-radius: 3px; color: #a1a1aa;">M04_EMPO</div>
+                            <div style="background: #050505; border: 1px solid #1c1c1e; padding: 3px; border-radius: 3px; color: #a1a1aa;">M05_HIER</div>
+                            <div style="background: #050505; border: 1px solid #1c1c1e; padding: 3px; border-radius: 3px; color: #52525b;">... [M06-M21]</div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div>
+                            <div style="font-size: 10px; color: #dc2626; font-weight: bold; margin-bottom: 4px;">🔥 WANDS (權杖/火)</div>
+                            <div style="font-size: 9px; font-family: monospace; color: #71717a; background: #050505; border: 1px solid #1c1c1e; padding: 5px; border-radius: 4px;">W01_Ace - W14_King [ACTIVE]</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: #dc2626; font-weight: bold; margin-bottom: 4px;">💧 CUPS (聖杯/水)</div>
+                            <div style="font-size: 9px; font-family: monospace; color: #71717a; background: #050505; border: 1px solid #1c1c1e; padding: 5px; border-radius: 4px;">C01_Ace - C14_King [ACTIVE]</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: #dc2626; font-weight: bold; margin-bottom: 4px;">⚔️ SWORDS (寶劍/風)</div>
+                            <div style="font-size: 9px; font-family: monospace; color: #71717a; background: #050505; border: 1px solid #1c1c1e; padding: 5px; border-radius: 4px;">S01_Ace - S14_King [ACTIVE]</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: #dc2626; font-weight: bold; margin-bottom: 4px;">🪙 PENTACLES (錢幣/土)</div>
+                            <div style="font-size: 9px; font-family: monospace; color: #71717a; background: #050505; border: 1px solid #1c1c1e; padding: 5px; border-radius: 4px;">P01_Ace - P14_King [ACTIVE]</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 區塊 3：78張全牌組流動狀態表 -->
-        <section>
-            <h2>牌組配置結構觀測 // DECK STRUCTURE</h2>
-            <p class="matrix-intro">本終端採用經典偉特體系完整 78 張卡牌進行空間採樣。牌組結構由精神核心與現象界兩大層次交織而成，確保每一次盲抽解碼都具備完整的敘事縱深。</p>
-            <div class="deck-grid">
-                <div class="deck-box">
-                    <h4>大阿爾克那 (22張)</h4>
-                    <p>代表人生原型的重大轉折點、原型能量的介入、集體潛意識的宏觀軌跡。當大牌出現在時空位階上，暗示該節點屬於不可迴避的核心課題。</p>
-                </div>
-                <div class="deck-box">
-                    <h4>宮廷牌組 (16張)</h4>
-                    <p>代表矩陣中涉入的人物特質、人格面具（Persona）的轉換，或特定能量階段的成熟度（侍者、騎士、皇后、國王），暗示個體應採取的處事姿態。</p>
-                </div>
-                <div class="deck-box">
-                    <h4>數字牌組 (40張)</h4>
-                    <p>代表日常現象界的具體情境、情緒起伏與事件發展的微觀階段（從 1 的種子萌芽到 10 的能量滿溢與轉化），揭示日常生活的細節演變。</p>
-                </div>
-            </div>
-        </section>
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">🧘 潛意識調頻與呼吸安定 // COHERENCE_BREATHING</h3>
+                <div style="background: #070707; border: 1px solid #1f1f1f; padding: 20px; border-radius: 12px; text-align: center;">
+                    <p style="font-size: 11px; color: #a1a1aa; margin-top: 0; margin-bottom: 15px; text-align: justify;">
+                        在進入隨機洗牌前，請跟隨下方的動態光圈提示進行一次「4-4-4 核心相干呼吸法」，使混亂的腦波頻率與本地隨機數熵值流動達成深度共振。
+                    </p>
+                    
+                    <div style="width: 70px; height: 70px; border-radius: 50%; background: rgba(220, 38, 38, 0.08); border: 2px solid #dc2626; margin: 15px auto; display: flex; align-items: center; justify-content: center; animation: breathAnimation 12s infinite ease-in-out;">
+                        <span id="breath-status-text" style="font-size: 10px; color: #fff; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">吸氣</span>
+                    </div>
 
-        <!-- 區塊 4：啟動前調頻儀式時間軸 -->
-        <section>
-            <h2>矩陣連結調頻引導 // COHERENCE BREATHING</h2>
-            <p class="matrix-intro">隨意且浮躁的提問，只會投射出混亂的無效數據。在進入數據抽樣前，請務必完成以下三個階段的意念調頻，使大腦皮質電位趨於穩定，這將直接決定解碼文字與你真實潛意識的共振精確度。</p>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-node">[PHASE 01]</div>
-                    <div class="timeline-content">
-                        <h3>吐納淨化 // RESPIRATION (60s)</h3>
-                        <p>請暫時閉上雙眼，緩慢地進行深度的腹式呼吸。吸氣四秒，屏氣四秒，呼氣四秒。將多餘的外在訊息干擾與情緒焦慮隨呼氣徹底排出，將全身的專注力由外在世界完整移回呼吸的本體與眉心之間。</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-node">[PHASE 02]</div>
-                    <div class="timeline-content">
-                        <h3>意念聚焦 // CORE INQUIRY (60s)</h3>
-                        <p>在心中緩慢梳理你當下最核心的困惑（如情感拉扯、職涯轉折、重大抉擇）。請嘗試抽離繁雜的情節細節，將其濃縮為一句結構清晰、不帶主觀評判與預設立場的核心提問，字數建議精準控制在 20 字以內。</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-node">[PHASE 03]</div>
-                    <div class="timeline-content">
-                        <h3>啟動矩陣 // TERMINAL LINK (30s)</h3>
-                        <p>睜開雙眼。保持全然開放、不試圖操控答案、冷靜且不帶評判的心態，將你聚焦後的意念完整灌注於下方輸入框中。當按鈕按下的瞬間，即代表潛意識數據隨機抽樣的正式啟動。</p>
+                    <div style="position: relative; height: 4px; background: #1c1c1e; border-radius: 2px; margin: 25px 10px 10px 10px;">
+                        <div id="breath-progress" style="position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: #dc2626; border-radius: 2px; transition: width 0.1s linear;"></div>
+                        
+                        <div style="display: flex; justify-content: space-between; position: absolute; width: 100%; top: -15px; font-size: 8px; font-family: monospace; color: #52525b;">
+                            <span>IN (4s)</span>
+                            <span>HOLD (4s)</span>
+                            <span>OUT (4s)</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 區塊 5：輸入與核心操作區 -->
-        <section class="interactive-section">
-            <h2>潛意識數據抽樣終端 // OPERATING TERMINAL</h2>
-            <div class="input-group">
-                <label for="question">請輸入你聚焦後的潛意識核心提問：</label>
-                <input type="text" id="question" placeholder="例如：近期轉換職涯軌道的潛在能量流向為何？" autocomplete="off">
-                <button class="btn-submit" id="startBtn">啟動矩陣抽樣</button>
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">🧘 潛意識調頻引導 // ALIGNMENT_RITUAL</h3>
+                <ol style="font-size: 11px; color: #a1a1aa; line-height: 1.8; padding-left: 18px; margin: 0;">
+                    <li style="margin-bottom: 8px;"><strong style="color: #fff;">排除物理干擾</strong>：請確保當前環境在接下來的 3 分鐘內不受到外部訊息或噪音打擾，將感知聚焦於呼吸。</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #fff;">精確化你的提問</strong>：潛意識對模糊的指令不敏感。請將問題具體化（例如：不要問「我會發財嗎」，而是問「我未來三個月內推動的新專案發展走向如何」）。</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #fff;">接受機率的本質</strong>：隨機亂數矩陣是宇宙隨機性的數位映射，保持開放、不帶評判的心態，解碼結果才能與你的內在產生最高強度的共鳴。</li>
+                </ol>
             </div>
-        </section>
 
-        <!-- 頁尾 -->
-        <footer>
-            <span>QUANTUM TAROT MATRIX // SYSTEM VERSION 2.6.8</span>
-            <span>All psychic data mapping adheres to classical analytical psychology projection theory.</span>
-        </footer>
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">⚙️ 矩陣核心演算原理 // CORE_LOGIC</h3>
+                <p style="font-size: 11px; color: #a1a1aa; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
+                    本系統揚棄傳統網頁粗糙的單純亂數表，採用**非對稱三維隨機矩陣演算法**。當您點擊開始時，系統會在本地端瀏覽器即時渲染 78 張卡牌的能量軌跡。
+                </p>
+                <p style="font-size: 11px; color: #a1a1aa; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
+                    **動態物理補位機制（Dynamic Removal）**：本系統嚴格遵循實體塔羅的物理守恆定律。被您抽出的卡牌將即時從 DOM 樹中徹底銷毀，兩側卡牌隨即向中心平滑靠攏。這種無縫的物理補位確保了後續抽牌絕無重複可能，完美復刻實體盲抽的純粹潛意識投射。
+                </p>
+            </div>
 
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">💡 常見問題 // FAQ</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 11px; color: #e4e4e7; font-weight: bold; margin-bottom: 4px;">Q: 為什麼抽牌時有些牌角度傾斜或模糊？</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">A: 這是 3D 焦點擬真效果。當您滑動牌庫時，只有正中央的卡牌會清晰放大，其餘邊緣卡牌會自然失焦與傾斜，提示您此時的潛意識焦點。</div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 11px; color: #e4e4e7; font-weight: bold; margin-bottom: 4px;">Q: 正位與逆位是如何決定的？</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">A: 在洗牌矩陣啟動時，每張卡牌皆有獨立 50% 的隨機率觸發 180 度翻轉（逆位），完全交由當下的矩陣數據流隨機生成。</div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 11px; color: #e4e4e7; font-weight: bold; margin-bottom: 4px;">Q: 我的占卜問題與結果會被保存在伺服器嗎？</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">A: 絕對不會。本系統基於隱私保護，所有運算、文字輸入與小卡生成皆在您的本機瀏覽器完成，無任何後端資料庫儲存，請安心諮詢。</div>
+                </div>
+            </div>
+
+            <div class="seo-keywords-matrix">
+                [ ARCHITECTURE_LOG ] 本交互式資訊系統技術模型全面整合大眾心理學（Psychology）、現代隨機決策科學（Decision-making Science）、認知行為學（Cognitive Science）與個體潛意識流動（Subconscious Flow）數據解碼模組。前端架構採非對稱矩陣運算法，旨在協助使用者完成邏輯反思、內在焦慮覺察、職場生涯規劃（Career Planning）與人際關係動態分析。本站內容僅供大眾學術研究與大眾心理暗示參考。
+            </div>
+        </div>
+
+        <div id="input-view" class="view-node panel-section">
+            <label for="question">[ INITIALIZE_INPUT ] 請輸入問題並在心中默念3次：</label>
+            <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
+            
+            <label for="question-type">( SELECT_MATRIX_NODE ) 請選擇占卜類別：</label>
+            <select id="question-type">
+                <option value="general">綜合運勢 analysis // GENERAL</option>
+                <option value="love">感情桃花發展 // LOVE</option>
+                <option value="work">工作學業事業 // WORK</option>
+            </select>
+            <br><br>
+            <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">開始占卜 // START</button>
+        </div>
+
+        <div id="shuffle-view" class="view-node panel-section">
+            <div id="user-question-display"></div>
+            <div id="flow-hint"></div>
+            
+            <div id="slots-area" class="slots-container">
+                <div class="slot-box">
+                    <h3>過去 // PAST</h3>
+                    <div id="slot-0" class="slot-card-venue">等待選牌</div>
+                </div>
+                <div class="slot-box">
+                    <h3>現在 // PRESENT</h3>
+                    <div id="slot-1" class="slot-card-venue">等待選牌</div>
+                </div>
+                <div class="slot-box">
+                    <h3>未來 // FUTURE</h3>
+                    <div id="slot-2" class="slot-card-venue">等待選牌</div>
+                </div>
+            </div>
+
+            <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 系統安全廣告加載節點 ]</div>
+
+            <div id="deck-zone" class="deck-zone">
+                <div id="pile-master" class="pile-master"></div>
+                <div class="scroller-wrapper" id="scroller-wrapper" style="display: none;">
+                    <div class="nav-arrow arrow-left" onclick="scrollCarousel('left')">◀</div>
+                    <div class="nav-arrow arrow-right" onclick="scrollCarousel('right')">▶</div>
+                    <div class="fan-scroller" id="fan-scroller">
+                        <div id="spread-fan-stage" class="spread-fan-stage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-view" class="view-node panel-section">
+            <div id="capture-node" class="capture-wrapper">
+                <div id="result-question-title" class="result-title-node"></div>
+                <div id="result-deck-display" class="result-container"></div>
+                
+                <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 數據解碼關聯廣告 ]</div>
+
+                <div id="summary-section" class="summary-box"></div>
+                
+                <div class="capture-footer-matrix">
+                    <span id="matrix-timestamp"></span>
+                    <span id="matrix-serial"></span>
+                </div>
+            </div>
+
+            <div class="action-container">
+                <button class="btn-secondary" style="width:100%" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
+                <div class="sub-btn-group">
+                    <button class="btn-secondary" onclick="switchView('input-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
+                    <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <footer style="font-size: 11px; color: #444446; margin-top: 80px; border-top: 1px solid #141414; padding: 40px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
+        <div style="text-align: center; margin-bottom: 25px; letter-spacing: 0.05em; color: #52525b;">
+            © 2026 聖三角潛意識矩陣系統. All Rights Reserved.
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; border-bottom: 1px solid #141414; padding-bottom: 30px;">
+            <div>
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #dc2626; padding-left: 8px;">技術定位宣告 // SPECIFICATION</h4>
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機作成為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導，資訊傳播完全符合全球大眾網路資訊傳播安全與隱私權規範。</p>
+            </div>
+            <div>
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">娛樂免責聲明 // DISCLAIMER</h4>
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本系統生成之所有報告均屬「大眾心理暗示與自我認知覺察參考」範疇。根據相關廣告法規特此聲明：本站不提供、亦不承諾任何關於個人命運的絕對改變、消災解厄或特定超自然干預效果。內容絕非專業的法律、財務投資、醫療臨床診斷建議，亦無意取代專業心理諮商。使用者應理性進行自主決策。</p>
+            </div>
+            <div>
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">隱私權保護 // PRIVACY POLICY</h4>
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。使用者可隨時藉由瀏覽器隱私模式或造訪 Google 廣告設定頁面來管理、封鎖或拒現 Cookie 追蹤。</p>
+            </div>
+            <div>
+                <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">獨立性聲明 // LICENSING</h4>
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本站點部分開源卡牌圖像與數據組件基於 MIT License (Copyright © 2019 equokka) 進行衍生前端開發。本平台為獨立第三方隨機演算法研究與大眾心理學互動工具專案，與 Alphabet Inc. (Google Ads), Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。</p>
+            </div>
+        </div>
+        <div style="text-align: center; color: #1c1c1e; font-size: 9px; margin-top: 15px; letter-spacing: 0.05em;">SYSTEM_COMPLIANCE: VERIFIED // NODE_ENV: PRODUCTION // AUTOMATIC_ADS_READY</div>
+    </footer>
+
     <script>
-        document.getElementById('startBtn').addEventListener('click', function() {
-            const questionVal = document.getElementById('question').value.trim();
-            if(!questionVal) {
-                alert('請先輸入你的核心提問，以完成意念聚焦。');
+        function switchView(viewId) {
+            const nodes = document.querySelectorAll('.view-node');
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].classList.remove('active-node');
+            }
+            const target = document.getElementById(viewId);
+            if (target) target.classList.add('active-node');
+        }
+
+        let AudioEngine = null;
+        function safeUnlockSound() {
+            try {
+                if (!AudioEngine) AudioEngine = new (window.AudioContext || window.webkitAudioContext)();
+                if (AudioEngine && AudioEngine.state === 'suspended') AudioEngine.resume();
+                playSound('click');
+            } catch(e) {}
+        }
+
+        function playSound(type, step = 0) {
+            try {
+                if (!AudioEngine) return;
+                const now = AudioEngine.currentTime;
+                if (type === 'click') {
+                    const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                    osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                    gain.gain.setValueAtTime(0.1, now); osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.05);
+                } else if (type === 'shuffle_tick') {
+                    const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(120 + Math.random()*50, now); gain.gain.setValueAtTime(0.08, now);
+                    osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.04);
+                } else if (type === 'flip') {
+                    const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                    osc.frequency.setValueAtTime(300 + step*100, now); osc.frequency.exponentialRampToValueAtTime(150, now + 0.3);
+                    gain.gain.setValueAtTime(0.1, now); osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'success') {
+                    [523.25, 659.25, 783.99].forEach((f, i) => {
+                        const osc = AudioEngine.createOscillator(); const gain = AudioEngine.createGain();
+                        osc.frequency.setValueAtTime(f, now + i*0.08); gain.gain.setValueAtTime(0.05, now + i*0.08);
+                        osc.connect(gain); gain.connect(AudioEngine.destination); osc.start(now + i*0.08); osc.stop(now + i*0.08 + 0.2);
+                    });
+                }
+            } catch(e) {}
+        }
+
+        function mapCardImgName(cardName) {
+            if (!cardName) {
+                console.error("🚨 [Matrix Warning]: Card name is empty! Defaulted to m00.jpg.");
+                return "m00.jpg";
+            }
+            
+            const key = cardName.trim().toLowerCase();
+            const majors = [
+                "the fool", "the magician", "the high priestess", "the emperor", "the empress", 
+                "the hierophant", "the lovers", "the chariot", "strength", "the hermit",
+                "wheel of fortune", "justice", "the hanged man", "death", "temperance",
+                "the devil", "the tower", "the star", "the moon", "the sun", "judgement", "the world"
+            ];
+            const baseMajors = majors.map(m => m.replace(/^the\s+/, ""));
+            
+            let idx = majors.indexOf(key);
+            if (idx === -1) idx = baseMajors.indexOf(key.replace(/^the\s+/, ""));
+            if (idx === -1 && (key === "empress" || key === "the empress")) idx = 4;
+            if (idx === -1 && (key === "emperor" || key === "the emperor")) idx = 3;
+            
+            if (idx !== -1) {
+                return `m${String(idx).padStart(2, '0')}.jpg`;
+            }
+            
+            let suitPrefix = "";
+            if (key.includes("cups")) suitPrefix = "c";
+            else if (key.includes("wands")) suitPrefix = "w";
+            else if (key.includes("swords")) suitPrefix = "s";
+            else if (key.includes("pentacles")) suitPrefix = "p";
+            
+            if (suitPrefix) {
+                let num = 0;
+                if (key.startsWith("ace")) num = 1;
+                else if (key.startsWith("two")) num = 2;
+                else if (key.startsWith("three")) num = 3;
+                else if (key.startsWith("four")) num = 4;
+                else if (key.startsWith("five")) num = 5;
+                else if (key.startsWith("six")) num = 6;
+                else if (key.startsWith("seven")) num = 7;
+                else if (key.startsWith("eight")) num = 8;
+                else if (key.startsWith("nine")) num = 9;
+                else if (key.startsWith("ten")) num = 10;
+                else if (key.startsWith("page")) num = 11;
+                else if (key.startsWith("knight")) num = 12;
+                else if (key.startsWith("queen")) num = 13;
+                else if (key.startsWith("king")) num = 14;
+                
+                if (num > 0) {
+                    return `${suitPrefix}${String(num).padStart(2, '0')}.jpg`;
+                }
+            }
+            
+            console.warn(`⚠️ [Matrix Warning]: Unrecognized card name "${cardName}". Redirected to fallback node (m00.jpg).`);
+            return "m00.jpg"; 
+        }
+
+        let processedDeck = []; 
+        let selectedHand = []; 
+        let currentSlotIndex = 0; 
+        let selectedType = 'general';
+        let isShuffling = false;
+        
+        function resetDivinationEngine() {
+            document.getElementById('question').value = '';
+            document.getElementById('user-question-display').innerText = '';
+            document.getElementById('flow-hint').innerText = '';
+            document.getElementById('pile-master').innerHTML = '';
+            document.getElementById('pile-master').style.display = 'block';
+            document.getElementById('scroller-wrapper').style.display = 'none';
+            document.getElementById('spread-fan-stage').innerHTML = '';
+            document.getElementById('spread-fan-stage').style.opacity = '0';
+            for(let i=0; i<3; i++) document.getElementById(`slot-${i}`).innerHTML = '等待選牌';
+            selectedHand = []; currentSlotIndex = 0; isShuffling = false;
+        }
+        function resetToHome() { resetDivinationEngine(); switchView('home-view'); }
+
+        function startTarotShuffle() {
+            const questionInput = document.getElementById('question').value.trim();
+            selectedType = document.getElementById('question-type').value;
+            if (questionInput === "") { alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！"); return; }
+            if (isShuffling) return;
+            
+            if (typeof tarotCardsPool === 'undefined') {
+                alert("⚙️ 核心數據庫加載中，請稍候再試或確認 tarotData.js 檔案是否存在。");
                 return;
             }
-            console.log('已錨定潛意識問題：', questionVal);
-            // 這裡接入你原本的洗牌跳轉邏輯
-            // location.href = 'shuffle.html?q=' + encodeURIComponent(questionVal);
+            
+            isShuffling = true;
+            try { safeUnlockSound(); } catch(e){}
+            
+            switchView('shuffle-view');
+            
+            const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
+            document.getElementById('user-question-display').innerText = `[ 矩陣目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
+            document.getElementById('flow-hint').innerText = "⚡ 正在串聯 78 節點潛意識能量...";
+            
+            document.getElementById('pile-master').style.display = 'block';
+            document.getElementById('scroller-wrapper').style.display = 'none';
+            
+            const pile = document.getElementById('pile-master'); pile.innerHTML = '';
+            for(let i=0; i<78; i++) {
+                const pCard = document.createElement('div'); pCard.className = 'card';
+                pCard.style.top = `-${i * 0.5}px`; pCard.style.left = `${i * 0.05}px`;
+                pCard.innerHTML = `<div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div></div>`;
+                pile.appendChild(pCard);
+            }
+
+            let poolCopy = [...tarotCardsPool].sort(() => 0.5 - Math.random());
+            processedDeck = poolCopy.map(c => ({ ...c, isReversed: Math.random() < 0.5 }));
+
+            setTimeout(() => {
+                document.getElementById('flow-hint').innerText = "⚡ 潛意識矩陣清洗中 (CORE_SHUFFLING)...";
+                let startTime = performance.now(); let duration = 1800; let lastTick = 0;
+                const pileCards = pile.querySelectorAll('.card');
+
+                function physicsShuffle(now) {
+                    let elapsed = now - startTime;
+                    if(elapsed < duration) {
+                        if (now - lastTick > 90) { try { playSound('shuffle_tick'); } catch(e){} lastTick = now; }
+                        pileCards.forEach((c, idx) => {
+                            let offsetX = 40 * Math.sin(now * 0.02 + idx);
+                            let offsetY = (idx * -0.5) + (12 * Math.cos(now * 0.015 + idx));
+                            c.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${8 * Math.sin(now * 0.01 + idx)}deg)`;
+                        });
+                        requestAnimationFrame(physicsShuffle);
+                    } else {
+                        pileCards.forEach((c, idx) => c.style.transform = `translate(0px, -${idx * 0.5}px) rotate(0deg)`);
+                        setTimeout(() => spread3DCarouselDeck(), 300);
+                    }
+                }
+                requestAnimationFrame(physicsShuffle);
+            }, 600);
+        }
+
+        function getCardOffsetFromCenter(card) {
+            const scroller = document.getElementById('fan-scroller');
+            if(!scroller) return 0;
+            const scrollerCenter = scroller.getBoundingClientRect().left + (scroller.offsetWidth / 2);
+            const cardRect = card.getBoundingClientRect();
+            return (cardRect.left + (cardRect.width / 2)) - scrollerCenter;
+        }
+
+        function spread3DCarouselDeck() {
+            document.getElementById('pile-master').style.display = 'none';
+            document.getElementById('scroller-wrapper').style.display = 'block';
+            
+            const stage = document.getElementById('spread-fan-stage'); 
+            const scroller = document.getElementById('fan-scroller');
+            
+            stage.innerHTML = ''; 
+            stage.style.display = 'flex';
+            
+            document.getElementById('flow-hint').innerText = `👉 請左右滑動，點擊中央焦點牌盲抽 【過去 // PAST】`;
+
+            processedDeck.forEach((cardData, index) => {
+                const cardEl = document.createElement('div'); 
+                cardEl.className = 'card'; 
+                cardEl.setAttribute('id', `deck-card-${index}`);
+                cardEl.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-back">
+                            <div style="font-size: 8px; opacity: 0.4; letter-spacing: 1px;">TAROT</div>
+                            <div style="flex-grow: 1; display: flex; align-items: center;" class="tarot-symbol">⚝</div>
+                            <div style="font-size: 7px; opacity: 0.3;">${index + 1}</div>
+                        </div>
+                    </div>`;
+                
+                cardEl.onclick = (e) => {
+                    if (isDragging) return; 
+                    if(cardEl.classList.contains('is-focused') || Math.abs(getCardOffsetFromCenter(cardEl)) < 60) {
+                        selectCardFromCarousel(index);
+                    } else {
+                        cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                };
+                stage.appendChild(cardEl);
+            });
+            
+            setTimeout(() => {
+                stage.style.opacity = '1';
+                scroller.addEventListener('scroll', updateCarouselFocusEffects);
+                initializeMouseDragScroll(scroller);
+                
+                const midCard = document.getElementById(`deck-card-38`);
+                if(midCard) midCard.scrollIntoView({ block: 'nearest', inline: 'center' });
+                updateCarouselFocusEffects();
+            }, 50);
+        }
+
+        let isDown = false; let startX; let scrollLeft; let isDragging = false; 
+
+        function initializeMouseDragScroll(scroller) {
+            scroller.addEventListener('mousedown', (e) => {
+                isDown = true; isDragging = false;
+                scroller.style.scrollSnapType = 'none'; 
+                startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft;
+            });
+            scroller.addEventListener('mouseleave', () => {
+                if (!isDown) return; isDown = false; scroller.style.scrollSnapType = 'x mandatory'; 
+            });
+            scroller.addEventListener('mouseup', () => {
+                isDown = false; scroller.style.scrollSnapType = 'x mandatory'; 
+                setTimeout(() => { isDragging = false; }, 50);
+            });
+            scroller.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - scroller.offsetLeft; const walk = (x - startX) * 1.5; 
+                if (Math.abs(walk) > 5) isDragging = true; 
+                scroller.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        function scrollCarousel(direction) {
+            const scroller = document.getElementById('fan-scroller');
+            const cardWidthWithGap = 84 + 15; 
+            if (direction === 'left') {
+                scroller.scrollBy({ left: -cardWidthWithGap, behavior: 'smooth' });
+            } else {
+                scroller.scrollBy({ left: cardWidthWithGap, behavior: 'smooth' });
+            }
+        }
+
+        function updateCarouselFocusEffects() {
+            const scroller = document.getElementById('fan-scroller');
+            const cards = document.querySelectorAll('.spread-fan-stage .card');
+            if(!scroller || cards.length === 0) return;
+
+            const scrollerCenter = scroller.getBoundingClientRect().left + (scroller.offsetWidth / 2);
+
+            cards.forEach(card => {
+                if(card.classList.contains('flying-to-slot')) return;
+
+                const cardRect = card.getBoundingClientRect();
+                const cardCenter = cardRect.left + (cardRect.width / 2);
+                const distanceFromCenter = cardCenter - scrollerCenter;
+                const absDistance = Math.abs(distanceFromCenter);
+
+                if (absDistance < 50) {
+                    card.style.transform = `scale(1.15) translateY(-18px) rotate(0deg)`;
+                    card.style.opacity = `1`; 
+                    card.style.filter = `blur(0px)`;
+                    card.style.zIndex = `100`;
+                    card.classList.add('is-focused');
+                } else if (absDistance >= 50 && absDistance < 140) {
+                    const direction = distanceFromCenter > 0 ? 8 : -8;
+                    card.style.transform = `scale(0.95) translateY(-5px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.7`; 
+                    card.style.filter = `blur(1.5px)`;
+                    card.style.zIndex = `50`;
+                    card.classList.remove('is-focused');
+                } else if (absDistance >= 140 && absDistance < 240) {
+                    const direction = distanceFromCenter > 0 ? 15 : -15;
+                    card.style.transform = `scale(0.8) translateY(8px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.3`; 
+                    card.style.filter = `blur(2.5px)`;
+                    card.style.zIndex = `20`;
+                    card.classList.remove('is-focused');
+                } else {
+                    const direction = distanceFromCenter > 0 ? 22 : -22;
+                    card.style.transform = `scale(0.6) translateY(20px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.02`; 
+                    card.style.filter = `blur(4px)`;
+                    card.style.zIndex = `1`;
+                    card.classList.remove('is-focused');
+                }
+            });
+        }
+
+        function selectCardFromCarousel(index) {
+            if (currentSlotIndex >= 3) return;
+            const targetCard = document.getElementById(`deck-card-${index}`);
+            if (!targetCard || targetCard.classList.contains('flying-to-slot')) return;
+
+            try { playSound('flip', currentSlotIndex); } catch(e){}
+            const cardData = processedDeck[index]; selectedHand.push(cardData);
+            
+            const originRect = targetCard.getBoundingClientRect();
+            const slotVenue = document.getElementById(`slot-${currentSlotIndex}`);
+            const destinationRect = slotVenue.getBoundingClientRect();
+
+            const animatedProxy = targetCard.cloneNode(true);
+            animatedProxy.className = 'card flying-to-slot';
+            animatedProxy.style.top = `${originRect.top}px`;
+            animatedProxy.style.left = `${originRect.left}px`;
+            animatedProxy.style.width = `${originRect.width}px`;
+            animatedProxy.style.height = `${originRect.height}px`;
+            document.body.appendChild(animatedProxy);
+
+            // 物理補位空間收縮
+            targetCard.style.width = '0px';
+            targetCard.style.margin = '0px';
+            targetCard.style.opacity = '0';
+            targetCard.style.pointerEvents = 'none';
+
+            requestAnimationFrame(() => {
+                animatedProxy.style.top = `${destinationRect.top}px`;
+                animatedProxy.style.left = `${destinationRect.left}px`;
+                animatedProxy.style.width = `${destinationRect.width}px`;
+                animatedProxy.style.height = `${destinationRect.height}px`;
+                animatedProxy.style.transform = `scale(1) rotate(0deg)`;
+            });
+
+            currentSlotIndex++;
+
+            if (currentSlotIndex === 1) {
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【現在 // PRESENT】`;
+            } else if (currentSlotIndex === 2) {
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【未來 // FUTURE】`;
+            } else {
+                document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
+                try { playSound('success'); } catch(e){}
+                setTimeout(() => compileAndShowResultView(), 1200);
+            }
+
+            setTimeout(() => {
+                animatedProxy.remove();
+                targetCard.remove(); 
+                
+                const realImgFile = mapCardImgName(cardData.name);
+                slotVenue.innerHTML = `
+                    <div class="card card-in-slot flipped">
+                        <div class="card-inner">
+                            <div class="card-back"><div class="tarot-symbol">⚝</div></div>
+                            <div class="card-front">
+                                <img src="cards/${realImgFile}" class="${cardData.isReversed ? 'reversed' : ''}">
+                            </div>
+                        </div>
+                    </div>`;
+            }, 650);
+            
+            setTimeout(() => updateCarouselFocusEffects(), 200);
+        }
+
+        function compileAndShowResultView() {
+            const questionInput = document.getElementById('question').value.trim();
+            const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
+            document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
+            
+            const now = new Date();
+            document.getElementById('matrix-timestamp').innerText = `解碼時間: ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')} : ${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+            document.getElementById('matrix-serial').innerText = `MATRIX_SN: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+            const resultDeckDiv = document.getElementById('result-deck-display'); resultDeckDiv.innerHTML = '';
+            const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
+            
+            const meaningsPool = getDynamicTarotMeanings();
+
+            selectedHand.forEach((card, index) => {
+                const cardMeaning = meaningsPool[card.name] || { nameCN: "未知", general: { upright: "無數據", reversed: "無數據" } };
+                
+                let typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
+                if (!typeMeaning) {
+                    typeMeaning = cardMeaning["general"] || { upright: "無數據說明", reversed: "無數據說明" };
+                }
+                
+                const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
+                const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
+                
+                const realImgFile = mapCardImgName(card.name);
+                
+                const cardBox = document.createElement('div'); cardBox.className = 'result-card-box';
+                cardBox.innerHTML = `
+                    <h3>${positions[index]}</h3>
+                    <div class="result-card-static">
+                        <img src="cards/${realImgFile}" class="${card.isReversed ? 'reversed' : ''}">
+                    </div>
+                    <div class="result-info">
+                        <span class="card-title-en">${card.name}</span>
+                        <span class="card-title-cn">${cardMeaning.nameCN}</span>
+                        <div class="orientation ${card.isReversed ? 'reversed-text' : 'upright-text'}">${oriText}</div>
+                        <p class="card-desc-text">${explanation}</p>
+                    </div>`;
+                resultDeckDiv.appendChild(cardBox);
+            });
+            generateComprehensiveSummary(meaningsPool); 
+            
+            switchView('result-view');
+        }
+
+        function generateComprehensiveSummary(meaningsPool) {
+            const pCard = selectedHand[0]; const prCard = selectedHand[1]; const fCard = selectedHand[2];
+            const pName = (meaningsPool[pCard.name] || {nameCN:"未知"}).nameCN + (pCard.isReversed ? "逆位" : "正位");
+            const prName = (meaningsPool[prCard.name] || {nameCN:"未知"}).nameCN + (prCard.isReversed ? "逆位" : "正位");
+            const fName = (meaningsPool[fCard.name] || {nameCN:"未知"}).nameCN + (fCard.isReversed ? "逆位" : "正位");
+            const totalUprights = selectedHand.filter(c => !c.isReversed).length; 
+            
+            let introText = "", coreAnalysis = "", adviceText = "";
+            if (totalUprights === 3) { 
+                introText = `本次矩陣解構呈現線性流動。從過去的【${pName}】到現在的【${prName}】，你的潛意識能量處於極其順暢的流通狀態。`; 
+                coreAnalysis = `這代表你詢問的事件發展脈絡非常清晰，外界雜訊微弱。隨著未來【${fName}】的正向落座，這股動能將會順理成章地推向理想結果。`; 
+                adviceText = "請完全信任內在直覺與現有資源，大膽且果斷地做出核心決策！"; 
+            } else if (totalUprights === 2) { 
+                introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在特定時間節點上伴隨著些微的能量阻滯或調整，但主流動能依然由正位主導。`; 
+                coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然仍有一些盲點或環境阻力需要時間消化， 但不足以阻擋未來的【${fName}】所帶來的破局氣象。`; 
+                adviceText = "建議維持現有的基礎步調並進行局部微調，保持足夠的耐心，短暫的遲滯將自然迎痕而解。"; 
+            } else if (totalUprights === 1) { 
+                introText = `當前牌陣中出現了較多的逆位能量拉扯。目前的局勢中隱藏著較多的制約、焦慮、不確定性或是能量嚴重受阻的情況。`; 
+                coreAnalysis = `從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或環境帶來的拉扯正處於需要被重視的關鍵期。`; 
+                adviceText = "時機尚未完全成熟，不宜盲目強求實質結果。建議先將焦點轉回內部，徹底找出核心系統盲點進行整頓。"; 
+            } else { 
+                introText = `三數據節點全數呈現逆位（【${pName}】 ➔ 【${prName}】 ➔ 【${fName}】）。這意味著當前的潛意識矩陣正經歷著一場徹底的底層重組與能量低潮期。`; 
+                coreAnalysis = `這並非全然是壞事，而是局勢在強烈暗示：過往習慣的應對模式或執念此時已經不適用了。內在壓抑與外界阻力此時正交織在一起。`; 
+                adviceText = "這是最需要徹底放手與臣服的時刻。請立刻停止所有高風險的強求行動，靜靜等待矩陣能量重新完成自我修復。"; 
+            }
+            document.getElementById('summary-section').innerHTML = `<h2>🔮 [ 綜合點評 ]</h2><p>${introText}</p><p>${coreAnalysis}</p><p>${adviceText}</p>`;
+        }
+
+        function generateCardAndRedirect() {
+            try { playSound('click'); } catch(e){}
+            if(typeof html2canvas === 'undefined') { 
+                alert("⚙️ 截圖組件尚未加載完成，請稍候再試。");
+                return; 
+            }
+            const targetNode = document.getElementById('capture-node');
+            
+            html2canvas(targetNode, { 
+                backgroundColor: "#050505", 
+                scale: 2, 
+                useCORS: true,
+                allowTaint: false,
+                logging: false
+            }).then(canvas => {
+                const image = canvas.toDataURL("image/png"); 
+                const link = document.createElement('a'); 
+                link.download = 'Tarot-Matrix-Report.png'; 
+                link.href = image; 
+                link.click();
+            }).catch(err => {
+                console.error("html2canvas error:", err);
+                alert("📸 圖片生成失敗，建議使用手機內建截圖功能保存報告。");
+            });
+        }
+
+        // 🔮 能量觀測面板動態數據模擬引擎
+        function initEnergyMonitorEngine() {
+            const resEl = document.getElementById('resonance-val');
+            const entEl = document.getElementById('entropy-val');
+            if(!resEl || !entEl) return;
+
+            let baseResonance = 60 + Math.random() * 15; 
+            let baseEntropy = 0.9 + Math.random() * 0.08; 
+            
+            function updateValues() {
+                const deltaRes = (Math.random() - 0.5) * 0.6; 
+                const deltaEnt = (Math.random() - 0.5) * 0.004;
+
+                baseResonance = Math.max(40, Math.min(95, baseResonance + deltaRes));
+                baseEntropy = Math.max(0.7, Math.min(0.9999, baseEntropy + deltaEnt));
+
+                let resStatus = baseResonance > 70 ? 'HIGH_TENSION' : 'STABLE';
+                let entStatus = baseEntropy > 0.95 ? 'CRITICAL_ENTROPY' : 'HIGH_RANDOM';
+
+                resEl.innerHTML = `${baseResonance.toFixed(2)} Hz <span style="font-size:10px; opacity:0.7;">[${resStatus}]</span>`;
+                entEl.innerText = `λ-${baseEntropy.toFixed(4)} (${entStatus})`;
+            }
+
+            updateValues();
+            setInterval(updateValues, 2500);
+        }
+
+        // 🧘 4-4-4 核心相干呼吸引導動態引擎 // COHERENCE_BREATHING_TIMELINE
+        function initBreathingTimelineEngine() {
+            const statusText = document.getElementById('breath-status-text');
+            const progressLine = document.getElementById('breath-progress');
+            if (!statusText || !progressLine) return;
+
+            const totalDuration = 12000; // 總循環 12 秒 (4秒吸、4秒留、4秒呼)
+            const startTime = Date.now();
+
+            setInterval(() => {
+                const elapsed = (Date.now() - startTime) % totalDuration;
+                const percentage = (elapsed / totalDuration) * 100;
+                progressLine.style.width = percentage + '%';
+
+                if (elapsed < 4000) {
+                    statusText.innerText = "吸氣 // IN";
+                    statusText.style.color = "#10b981"; // 吸氣：綠色高相干
+                } else if (elapsed >= 4000 && elapsed < 8000) {
+                    statusText.innerText = "屏息 // HOLD";
+                    statusText.style.color = "#eab308"; // 留氣：黃色凝聚
+                } else {
+                    statusText.innerText = "呼氣 // OUT";
+                    statusText.style.color = "#dc2626"; // 吐氣：紅色釋放
+                }
+            }, 100);
+        }
+
+        // 確保網頁 DOM 樹載入完畢後自動啟動引擎
+        document.addEventListener('DOMContentLoaded', () => {
+            initEnergyMonitorEngine();
+            initBreathingTimelineEngine();
         });
     </script>
 </body>
