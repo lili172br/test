@@ -226,11 +226,11 @@
                 <div style="background: #070707; border: 1px dashed #27272a; padding: 15px; border-radius: 8px; font-size: 11px; line-height: 1.7; color: #a1a1aa;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px;">
                         <span style="color: #71717a;">全球集體無意識共振指數：</span>
-                        <span style="color: #10b981; font-weight: bold;">68.42 Hz [STABLE]</span>
+                        <span id="resonance-val" style="color: #10b981; font-weight: bold;">--.-- Hz [INITIALIZING]</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px;">
                         <span style="color: #71717a;">本日隨機亂數熵值流動：</span>
-                        <span style="color: #dc2626; font-weight: bold;">λ-0.9721 (HIGH_RANDOM)</span>
+                        <span id="entropy-val" style="color: #dc2626; font-weight: bold;">λ-0.0000 (CALCULATING)</span>
                     </div>
                     <p style="margin: 8px 0 0 0; font-size: 10px; color: #52525b; text-align: justify;">
                         *提示：當前宇宙微波背景輻射與本地隨機數序列處於高度同步狀態。此時段進行關於「職涯跨越」與「深層情感拉扯」的諮詢，盲抽矩陣將能捕捉到更精準的潛意識邊界投影。
@@ -391,7 +391,7 @@
             </div>
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">獨立性聲明 // LICENSING</h4>
-                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本站點部分開源卡牌圖像與數據組件基於 MIT License (Copyright © 2019 equokka) 進行衍生前端開發。本平台為獨立第三方隨機演算法研究與大眾心理學互動工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。</p>
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本站點部分開源卡牌圖像與數據組件基於 MIT License (Copyright © 2019 equokka) 進行衍生前端開發。本平台為獨立第三方隨機演算法研究與大眾心理學互動工具專案，與 Alphabet Inc. (Google Ads), Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。</p>
             </div>
         </div>
         <div style="text-align: center; color: #1c1c1e; font-size: 9px; margin-top: 15px; letter-spacing: 0.05em;">SYSTEM_COMPLIANCE: VERIFIED // NODE_ENV: PRODUCTION // AUTOMATIC_ADS_READY</div>
@@ -875,6 +875,42 @@
                 alert("📸 圖片生成失敗，建議使用手機內建截圖功能保存報告。");
             });
         }
+
+        // 🔮 能量觀測面板動態數據模擬引擎
+        function initEnergyMonitorEngine() {
+            const resEl = document.getElementById('resonance-val');
+            const entEl = document.getElementById('entropy-val');
+            if(!resEl || !entEl) return;
+
+            // 網頁初始化時隨機生成一組基礎值
+            let baseResonance = 60 + Math.random() * 15; // 60.00 ~ 75.00 Hz
+            let baseEntropy = 0.9 + Math.random() * 0.08; // 0.9000 ~ 0.9800
+            
+            function updateValues() {
+                // 每秒模擬微幅的宇宙能量擾動
+                const deltaRes = (Math.random() - 0.5) * 0.6; 
+                const deltaEnt = (Math.random() - 0.5) * 0.004;
+
+                baseResonance = Math.max(40, Math.min(95, baseResonance + deltaRes));
+                baseEntropy = Math.max(0.7, Math.min(0.9999, baseEntropy + deltaEnt));
+
+                // 決定狀態標籤
+                let resStatus = baseResonance > 70 ? 'HIGH_TENSION' : 'STABLE';
+                let entStatus = baseEntropy > 0.95 ? 'CRITICAL_ENTROPY' : 'HIGH_RANDOM';
+
+                resEl.innerHTML = `${baseResonance.toFixed(2)} Hz <span style="font-size:10px; opacity:0.7;">[${resStatus}]</span>`;
+                entEl.innerText = `λ-${baseEntropy.toFixed(4)} (${entStatus})`;
+            }
+
+            // 立刻執行一次，隨後每 2.5 秒微幅跳動一次
+            updateValues();
+            setInterval(updateValues, 2500);
+        }
+
+        // 確保網頁 DOM 樹載入完畢後自動啟動引擎
+        document.addEventListener('DOMContentLoaded', () => {
+            initEnergyMonitorEngine();
+        });
     </script>
 </body>
 </html>
