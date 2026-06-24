@@ -106,7 +106,7 @@
 
         .spread-fan-stage { display: flex; padding: 0 calc(50% - 42px); gap: 15px; width: max-content; opacity: 0; transition: opacity 0.5s ease; }
 
-        /* 優化點 1：增強景深特效（模糊與過渡效果） */
+        /* 增強景深特效（模糊與過渡效果） */
         .card { 
             width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
             transform-origin: center center; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease, filter 0.35s ease, z-index 0.35s;
@@ -114,7 +114,7 @@
         }
         .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: none; opacity: 1; }
         
-        /* 優化點 2：平滑的飛升落座物理動畫軌跡 */
+        /* 平滑的飛升落座物理動畫軌跡 */
         .card.flying-to-slot {
             position: fixed !important;
             z-index: 9999 !important;
@@ -173,7 +173,7 @@
         .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
         .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
 
-        /* 優化點 4：精緻化的隱形截圖專用容器（保證生成小卡不跑版且美觀） */
+        /* 精緻化的隱形截圖專用容器（保證生成小卡不跑版且美觀） */
         .capture-wrapper {
             padding: 25px 20px;
             background: #050505;
@@ -380,7 +380,6 @@
             } catch(e) {}
         }
 
-        // 優化點 3：內建容錯機制與自動安全網（附帶開發主控台除錯回報機制）
         function mapCardImgName(cardName) {
             if (!cardName) {
                 console.error("🚨 [Matrix Warning]: Card name is empty! Defaulted to m00.jpg.");
@@ -604,7 +603,6 @@
             }
         }
 
-        // 優化點 1：增強景深與焦點變形，非焦點卡牌進行自動模糊（CSS Blur）處理
         function updateCarouselFocusEffects() {
             const scroller = document.getElementById('fan-scroller');
             const cards = document.querySelectorAll('.spread-fan-stage .card');
@@ -651,7 +649,6 @@
             });
         }
 
-        // 優化點 2：平滑的卡牌飛升物理軌跡動畫邏輯
         function selectCardFromCarousel(index) {
             if (currentSlotIndex >= 3) return;
             const targetCard = document.getElementById(`deck-card-${index}`);
@@ -660,12 +657,10 @@
             try { playSound('flip', currentSlotIndex); } catch(e){}
             const cardData = processedDeck[index]; selectedHand.push(cardData);
             
-            // 獲取起點與終點槽位的視窗絕對座標
             const originRect = targetCard.getBoundingClientRect();
             const slotVenue = document.getElementById(`slot-${currentSlotIndex}`);
             const destinationRect = slotVenue.getBoundingClientRect();
 
-            // 複製一個動畫專用的代理節點，脫離滾動容器的排版限制
             const animatedProxy = targetCard.cloneNode(true);
             animatedProxy.className = 'card flying-to-slot';
             animatedProxy.style.top = `${originRect.top}px`;
@@ -674,11 +669,9 @@
             animatedProxy.style.height = `${originRect.height}px`;
             document.body.appendChild(animatedProxy);
 
-            // 隱藏原本滑動軸裡的卡牌
             targetCard.style.opacity = '0';
             targetCard.style.pointerEvents = 'none';
 
-            // 觸發下一幀動畫，計算拋物線與落座位置
             requestAnimationFrame(() => {
                 animatedProxy.style.top = `${destinationRect.top}px`;
                 animatedProxy.style.left = `${destinationRect.left}px`;
@@ -691,16 +684,15 @@
             currentSlotIndex++;
 
             if (currentSlotIndex === 1) {
-                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點幕中央焦點牌盲抽 【現在 // PRESENT】`;
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【現在 // PRESENT】`;
             } else if (currentSlotIndex === 2) {
-                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點幕中央焦點牌盲抽 【未來 // FUTURE】`;
+                document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【未來 // FUTURE】`;
             } else {
                 document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
                 try { playSound('success'); } catch(e){}
                 setTimeout(() => compileAndShowResultView(), 1200);
             }
 
-            // 當飛行結束時，正式移入槽位內部
             setTimeout(() => {
                 animatedProxy.remove();
                 const realImgFile = mapCardImgName(cardData.name);
@@ -723,7 +715,6 @@
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
             
-            // 優化點 4：在結果渲染時，動態填入科技風安全戳記與唯一的隨機流水號
             const now = new Date();
             document.getElementById('matrix-timestamp').innerText = `解碼時間: ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
             document.getElementById('matrix-serial').innerText = `MATRIX_SN: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
@@ -735,7 +726,13 @@
 
             selectedHand.forEach((card, index) => {
                 const cardMeaning = meaningsPool[card.name] || { nameCN: "未知", general: { upright: "無數據", reversed: "無數據" } };
-                const typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
+                
+                // 安全防禦：如果特定類別不存在，自動降級相容使用 general 欄位
+                let typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
+                if (!typeMeaning) {
+                    typeMeaning = cardMeaning["general"] || { upright: "無數據說明", reversed: "無數據說明" };
+                }
+                
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 
@@ -790,11 +787,29 @@
 
         function generateCardAndRedirect() {
             try { playSound('click'); } catch(e){}
-            if(typeof html2canvas === 'undefined') { return; }
+            if(typeof html2canvas === 'undefined') { 
+                alert("⚙️ 截圖組件尚未加載完成，請稍候再試。");
+                return; 
+            }
             const targetNode = document.getElementById('capture-node');
-            html2canvas(targetNode, { backgroundColor: "#050505", scale: 2, useCORS: true }).then(canvas => {
-                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Matrix-Report.png'; link.href = image; link.click();
-            }).catch(err => {});
+            
+            // 優化跨網域圖片加載與清晰度，強制不污染畫布
+            html2canvas(targetNode, { 
+                backgroundColor: "#050505", 
+                scale: 2, 
+                useCORS: true,
+                allowTaint: false,
+                logging: false
+            }).then(canvas => {
+                const image = canvas.toDataURL("image/png"); 
+                const link = document.createElement('a'); 
+                link.download = 'Tarot-Matrix-Report.png'; 
+                link.href = image; 
+                link.click();
+            }).catch(err => {
+                console.error("html2canvas error:", err);
+                alert("📸 圖片生成失敗，建議使用手機內建截圖功能保存報告。");
+            });
         }
     </script>
 </body>
