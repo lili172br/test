@@ -26,13 +26,39 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            
+            /* ⚡ 為頂部固定式錨定廣告預留彈性推擠空間，防止內容被遮擋與版面跳動 (CLS) */
+            padding-top: 65px; 
+        }
+        
+        /* 📱 行動版頂部固定錨定廣告容器 (Mobile Top Anchor Ad Container) */
+        .mobile-top-anchor-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #0a0a0a;
+            border-bottom: 1px solid #1f1f1f;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            box-sizing: border-box;
+        }
+        .mobile-top-anchor-ad .ad-placeholder-text {
+            font-size: 9px;
+            color: #27272a;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
         
         .ads-top-buffer { 
             font-size: 9px; 
             color: #1c1c1e; 
             letter-spacing: 0.1em; 
-            margin-top: 15px; 
+            margin-top: 5px; 
             text-transform: uppercase; 
         }
 
@@ -211,6 +237,10 @@
 </head>
 <body>
 
+    <div class="mobile-top-anchor-ad">
+        <span class="ad-placeholder-text">[ ADVERTISEMENT // ACTION_TOP_ANCHOR ]</span>
+        </div>
+
     <div class="ads-top-buffer">[ CONNECTION_NODE: SECURE_HOST ]</div>
 
     <div class="main-content">
@@ -260,7 +290,7 @@
                 </div>
 
                 <div style="background: #050505; border: 1px solid #1c1c1e; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
-                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[03] 學業發展與核心決策 // EDUCATION & DECISION</div>
+                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[03] 学业发展与核心决策 // EDUCATION & DECISION</div>
                     <div style="font-size: 11px; color: #71717a; line-height: 1.6;">針對大型考評、畢業展演規劃、或複雜專案的執行瓶頸進行沙盤推演，找出潛在的資源阻礙。</div>
                 </div>
             </div>
@@ -889,7 +919,7 @@
             document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
             
             const now = new Date();
-            document.getElementById('matrix-timestamp').innerText = `解碼時間: ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')} : ${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+            document.getElementById('matrix-timestamp').innerText = `解碼時間: ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')} Flam-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')} : ${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
             document.getElementById('matrix-serial').innerText = `MATRIX_SN: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
             const resultDeckDiv = document.getElementById('result-deck-display'); resultDeckDiv.innerHTML = '';
