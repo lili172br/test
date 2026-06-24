@@ -104,7 +104,6 @@
         .arrow-left { left: 5px; }
         .arrow-right { right: 5px; }
 
-        /* 增強動態移除時的靠攏效果 */
         .spread-fan-stage { 
             display: flex; 
             padding: 0 calc(50% - 42px); 
@@ -114,7 +113,7 @@
             transition: opacity 0.5s ease, gap 0.35s ease; 
         }
 
-        /* 支援物理寬度與間距收縮 */
+        /* 支援動態寬度、外距收縮的卡牌樣式 */
         .card { 
             width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
             transform-origin: center center; 
@@ -213,14 +212,63 @@
         <div id="home-view" class="view-node active-node panel-section">
             <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
                 <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
-                <div>[ CURRENT_VERSION: v2.6.0-DYNAMIC_REMOVAL ]</div>
+                <div>[ CURRENT_VERSION: v2.6.5-DYNAMIC_MATRIX ]</div>
             </div>
 
-            <div class="intro-text">
+            <div class="intro-text" style="margin-bottom: 25px;">
                 <p>歡迎來到全功能盲抽占卜系統。本介面全面整合大/小阿爾克那共 78 張完整卡牌，支援手機滑動與電腦滑鼠拖曳，洗牌後牌組將進入盲抽矩陣。</p>
             </div>
             
-            <button class="btn-primary" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
+            <button class="btn-primary" style="width: 100%; max-width: 320px; margin: 10px auto 30px auto; display: block;" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">⚡ 熱門解構範疇 // MATRIX_NODES</h3>
+                
+                <div style="background: #050505; border: 1px solid #1c1c1e; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[01] 職涯與流動資產 // CAREER & WEALTH</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">適用於面臨轉職抉擇、職場人際拉扯、或創業者觀測未來決策走向，深度剖析環境盲點。</div>
+                </div>
+
+                <div style="background: #050505; border: 1px solid #1c1c1e; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[02] 情感連結與張力 // LOVE & RELATIONSHIP</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">解構個體間的潛意識張力，探索曖昧對象的內在真實態度，以及雙方未來三個時空的軌跡演變。</div>
+                </div>
+
+                <div style="background: #050505; border: 1px solid #1c1c1e; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="color: #dc2626; font-size: 11px; font-weight: bold; margin-bottom: 5px;">[03] 學業發展與核心決策 // EDUCATION & DECISION</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">針對大型考評、畢業展演規劃、或複雜專案的執行瓶頸進行沙盤推演，找出潛在的資源阻礙。</div>
+                </div>
+            </div>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">⚙️ 矩陣核心演裝原理 // CORE_LOGIC</h3>
+                
+                <p style="font-size: 11px; color: #a1a1aa; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
+                    本系統揚棄傳統網頁粗糙的單純亂數表，採用**非對稱三維隨機矩陣演算法**。當您點擊開始時，系統會在本地端瀏覽器即時渲染 78 張卡牌的能量軌跡。
+                </p>
+                <p style="font-size: 11px; color: #a1a1aa; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
+                    **動態物理補位機制（Dynamic Removal）**：本系統嚴格遵循實體塔羅的物理守恆定律。被您抽出的卡牌將即時從 DOM 樹中徹底銷毀，兩側卡牌隨即向中心平滑靠攏。這種無縫的物理補位確保了後續抽牌絕無重複可能，完美復刻實體盲抽的純粹潛意識投射。
+                </p>
+            </div>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">💡 常見問題 // FAQ</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 11px; color: #e4e4e7; font-weight: bold; margin-bottom: 4px;">Q: 為什麼抽牌時有些牌角度傾斜或模糊？</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">A: 這是 3D 焦點擬真效果。當您滑動牌庫時，只有正中央的卡牌會清晰放大，其餘邊緣卡牌會自然失焦與傾斜，提示您此時的潛意識焦點。</div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 11px; color: #e4e4e7; font-weight: bold; margin-bottom: 4px;">Q: 正位與逆位是如何決定的？</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">A: 在洗牌矩陣啟動時，每張卡牌皆有獨立 50% 的隨機率觸發 180 度翻轉（逆位），完全交由當下的矩陣數據流隨機生成。</div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 11px; color: #e4e4e7; font-weight: bold; margin-bottom: 4px;">Q: 我的占卜問題與結果會被保存在伺服器嗎？</div>
+                    <div style="font-size: 11px; color: #71717a; line-height: 1.6;">A: 絕對不會。本系統基於隱私保護，所有運算、文字輸入與小卡生成皆在您的本機瀏覽器完成，無任何後端資料庫儲存，請安心諮詢。</div>
+                </div>
+            </div>
 
             <div class="seo-keywords-matrix">
                 [ ARCHITECTURE_LOG ] 本交互式資訊系統技術模型全面整合大眾心理學（Psychology）、現代隨機決策科學（Decision-making Science）、認知行為學（Cognitive Science）與個體潛意識流動（Subconscious Flow）數據解碼模組。前端架構採非對稱矩陣運算法，旨在協助使用者完成邏輯反思、內在焦慮覺察、職場生涯規劃（Career Planning）與人際關係動態分析。本站內容僅供大眾學術研究與大眾心理暗示參考。
@@ -710,7 +758,7 @@
             document.getElementById('result-question-title').innerText = `[ 矩陣解構目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
             
             const now = new Date();
-            document.getElementById('matrix-timestamp').innerText = `解碼時間: ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+            document.getElementById('matrix-timestamp').innerText = `解碼時間: ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')} : ${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
             document.getElementById('matrix-serial').innerText = `MATRIX_SN: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
             const resultDeckDiv = document.getElementById('result-deck-display'); resultDeckDiv.innerHTML = '';
@@ -765,7 +813,7 @@
             } else if (totalUprights === 2) { 
                 introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在特定時間節點上伴隨著些微的能量阻滯或調整，但主流動能依然由正位主導。`; 
                 coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然仍有一些盲點或環境阻力需要時間消化， 但不足以阻擋未來的【${fName}】所帶來的破局氣象。`; 
-                adviceText = "建議維持現有的基礎步調並進行局部微調，保持足夠的耐心，短暫的遲滯將自然迎痕而解。"; 
+                adviceText = "建議維持現有的基礎步調並進行局部微調，保持足夠的耐心，短暫的遲滯將自然迎刃而解。"; 
             } else if (totalUprights === 1) { 
                 introText = `當前牌陣中出現了較多的逆位能量拉扯。目前的局勢中隱藏著較多的制約、焦慮、不確定性或是能量嚴重受阻的情況。`; 
                 coreAnalysis = `從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或環境帶來的拉扯正處於需要被重視的關鍵期。`; 
