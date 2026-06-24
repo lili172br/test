@@ -113,7 +113,7 @@
             transition: opacity 0.5s ease, gap 0.35s ease; 
         }
 
-        /* 支援動態寬度、外距收縮的卡牌樣式 */
+        /* 卡牌樣式 */
         .card { 
             width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
             transform-origin: center center; 
@@ -212,7 +212,7 @@
         <div id="home-view" class="view-node active-node panel-section">
             <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
                 <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
-                <div>[ CURRENT_VERSION: v2.6.5-DYNAMIC_MATRIX ]</div>
+                <div>[ CURRENT_VERSION: v2.6.8-DYNAMIC_MATRIX ]</div>
             </div>
 
             <div class="intro-text" style="margin-bottom: 25px;">
@@ -220,6 +220,23 @@
             </div>
             
             <button class="btn-primary" style="width: 100%; max-width: 320px; margin: 10px auto 30px auto; display: block;" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">🌐 當前時空能量觀測 // ENERGY_MONITOR</h3>
+                <div style="background: #070707; border: 1px dashed #27272a; padding: 15px; border-radius: 8px; font-size: 11px; line-height: 1.7; color: #a1a1aa;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px;">
+                        <span style="color: #71717a;">全球集體無意識共振指數：</span>
+                        <span style="color: #10b981; font-weight: bold;">68.42 Hz [STABLE]</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #141414; padding-bottom: 5px;">
+                        <span style="color: #71717a;">本日隨機亂數熵值流動：</span>
+                        <span style="color: #dc2626; font-weight: bold;">λ-0.9721 (HIGH_RANDOM)</span>
+                    </div>
+                    <p style="margin: 8px 0 0 0; font-size: 10px; color: #52525b; text-align: justify;">
+                        *提示：當前宇宙微波背景輻射與本地隨機數序列處於高度同步狀態。此時段進行關於「職涯跨越」與「深層情感拉扯」的諮詢，盲抽矩陣將能捕捉到更精準的潛意識邊界投影。
+                    </p>
+                </div>
+            </div>
 
             <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
                 <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">⚡ 熱門解構範疇 // MATRIX_NODES</h3>
@@ -241,8 +258,16 @@
             </div>
 
             <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
-                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">⚙️ 矩陣核心演裝原理 // CORE_LOGIC</h3>
-                
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">🧘 潛意識調頻引導 // ALIGNMENT_RITUAL</h3>
+                <ol style="font-size: 11px; color: #a1a1aa; line-height: 1.8; padding-left: 18px; margin: 0;">
+                    <li style="margin-bottom: 8px;"><strong style="color: #fff;">排除物理干擾</strong>：請確保當前環境在接下來的 3 分鐘內不受到外部訊息或噪音打擾，將感知聚焦於呼吸。</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #fff;">精確化你的提問</strong>：潛意識對模糊的指令不敏感。請將問題具體化（例如：不要問「我會發財嗎」，而是問「我未來三個月內推動的新專案發展走向如何」）。</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #fff;">接受機率的本質</strong>：隨機亂數矩陣是宇宙隨機性的數位映射，保持開放、不帶評判的心態，解碼結果才能與你的內在產生最高強度的共鳴。</li>
+                </ol>
+            </div>
+
+            <div style="text-align: left; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 25px;">
+                <h3 style="font-size: 12px; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px;">⚙️ 矩陣核心演算原理 // CORE_LOGIC</h3>
                 <p style="font-size: 11px; color: #a1a1aa; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
                     本系統揚棄傳統網頁粗糙的單純亂數表，採用**非對稱三維隨機矩陣演算法**。當您點擊開始時，系統會在本地端瀏覽器即時渲染 78 張卡牌的能量軌跡。
                 </p>
@@ -281,7 +306,7 @@
             
             <label for="question-type">( SELECT_MATRIX_NODE ) 請選擇占卜類別：</label>
             <select id="question-type">
-                <option value="general">綜合運勢分析 // GENERAL</option>
+                <option value="general">綜合運勢 analysis // GENERAL</option>
                 <option value="love">感情桃花發展 // LOVE</option>
                 <option value="work">工作學業事業 // WORK</option>
             </select>
@@ -706,7 +731,7 @@
             animatedProxy.style.height = `${originRect.height}px`;
             document.body.appendChild(animatedProxy);
 
-            // 【物理優化】：原牌庫節點空間立即收縮並隱藏，觸發兩側卡牌平滑靠攏補位
+            // 物理補位空間收縮
             targetCard.style.width = '0px';
             targetCard.style.margin = '0px';
             targetCard.style.opacity = '0';
@@ -734,7 +759,6 @@
 
             setTimeout(() => {
                 animatedProxy.remove();
-                // 動態飛升落座完成後，徹底將原牌庫節點從 HTML 樹中刪除
                 targetCard.remove(); 
                 
                 const realImgFile = mapCardImgName(cardData.name);
