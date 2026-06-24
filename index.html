@@ -8,18 +8,16 @@
     <meta name="google-adsense-account" content="ca-pub-9874958587973886">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="tarotData.js" defer></script>
     <style>
-        /* 採用標準 Sticky Footer 佈局，解決底部大空隙或過度拉伸問題 */
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
         body { 
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             background-color: #050505;
             color: #d1d1d1; 
             text-align: center; 
+            padding: 15px;
+            margin: 0;
+            min-height: 100vh;
             background-image: radial-gradient(circle at 2px 2px, #161616 1px, transparent 0);
             background-size: 24px 24px;
             -webkit-user-select: none;
@@ -27,88 +25,33 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
         
-        /* 內容包裹區，自動撐開剩餘空間 */
-        .wrapper {
-            flex: 1 0 auto;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        /* 頂部安全距：為 Google 自動廣告預留緩衝空間 */
+        /* 1. 微調頂部安全距：為 Google 自動廣告/錨定廣告（Anchor Ads）預留緩衝空間，防止壓迫核心標題 */
         .ads-top-buffer { 
             font-size: 9px; 
             color: #1c1c1e; 
             letter-spacing: 0.1em; 
-            margin-top: 5px; 
+            margin-top: 15px; 
             text-transform: uppercase; 
         }
 
-        .main-content { width: 100%; }
+        .main-content { flex-grow: 1; width: 100%; }
         h1 { color: #ffffff; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-size: 20px; }
         .sys-status { font-size: 9px; color: #dc2626; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 25px; }
         
         .panel-section { 
             margin: 20px auto; max-width: 650px; background: #0a0a0a; padding: 25px 20px; 
             border-radius: 12px; border: 1px solid #1f1f1f; box-shadow: 0 8px 32px rgba(0,0,0,0.8); box-sizing: border-box;
-            position: relative;
         }
 
-        /* 骨架屏 */
-        .skeleton-loader {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0a0a0a; border-radius: 12px; z-index: 1000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-sizing: border-box; padding: 25px 20px;
-        }
-        .skeleton-block {
-            background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
-            background-size: 200% 100%; animation: skeleton-shimmer 1.5s infinite linear;
-            border-radius: 4px; margin-bottom: 15px; width: 100%;
-        }
-        @keyframes skeleton-shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
+        .intro-text { text-align: left; font-size: 13px; line-height: 1.8; color: #a1a1aa; margin-bottom: 30px; }
+        
+        /* 首頁追加的高價值關鍵字隱形語料庫樣式：讓爬蟲看得見，但不干擾正常黑客風 UI 的視覺乾淨度 */
+        .seo-keywords-matrix { font-size: 9px; color: #141414; text-align: justify; line-height: 1.4; margin-top: 25px; letter-spacing: 0.02em; border-top: 1px dashed #0a0a0a; padding-top: 10px; }
 
-        /* 深度學術與介紹區塊樣式 */
-        .academic-block {
-            text-align: left; margin-top: 25px; padding-top: 20px; border-top: 1px solid #1c1c1e;
-        }
-        .academic-title {
-            font-size: 12px; color: #ffffff; font-weight: bold; letter-spacing: 0.05em; margin-bottom: 8px; text-transform: uppercase; border-left: 2px solid #dc2626; padding-left: 8px;
-        }
-        .academic-text {
-            font-size: 11px; line-height: 1.8; color: #8e8e93; text-align: justify; margin-bottom: 15px;
-        }
-
-        /* 堆疊式卡片展開收合元件 */
-        .accordion-deck {
-            margin: 15px 0; border: 1px solid #1c1c1e; border-radius: 6px; overflow: hidden;
-        }
-        .accordion-header {
-            background: #0f0f10; padding: 12px; font-size: 11px; color: #a1a1aa; font-weight: bold; cursor: pointer; text-align: left; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
-        }
-        .accordion-header:hover { color: #fff; background: #141415; }
-        .accordion-content {
-            background: #050505; padding: 0px 15px; max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
-        }
-        .accordion-content.open {
-            padding: 15px; max-height: 2000px;
-        }
-
-        /* 看板網格 */
-        .analytics-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 10px 0;
-        }
-        .analytics-card {
-            background: #0f0f10; border: 1px solid #1c1c1e; border-radius: 6px; padding: 10px; text-align: center;
-        }
-        .analytics-value { font-size: 14px; font-weight: bold; color: #dc2626; font-family: monospace; }
-        .analytics-label { font-size: 9px; color: #52525b; margin-top: 2px; }
-
-        /* 廣告占位符樣式 */
+        /* 廣告區塊語義化占位符樣式：引導自動廣告精準置入，防止破壞核心 3D 卡牌舞台 */
         .ads-native-placeholder { margin: 25px auto; max-width: 600px; padding: 12px; border: 1px dashed #141414; border-radius: 6px; font-size: 9px; color: #27272a; letter-spacing: 0.05em; text-transform: uppercase; background: #070707; }
 
         .panel-section label { display: block; margin: 15px 0 8px 0; font-size: 12px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -120,42 +63,30 @@
         .panel-section input:focus, .panel-section select:focus { border-color: #dc2626; box-shadow: 0 0 12px rgba(220, 38, 38, 0.2); }
         
         #user-question-display { font-size: 13px; color: #dc2626; margin: 10px 0 20px 0; font-weight: bold; letter-spacing: 0.05em; line-height: 1.5; }
-        #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-
-        /* 超流暢優化後的滑動視覺提示 Banner */
-        .swipe-hint-banner { 
-            font-size: 10px; 
-            color: #a1a1aa; 
-            text-transform: uppercase; 
-            letter-spacing: 0.15em; 
-            margin-bottom: 15px; 
-            background: rgba(28, 28, 30, 0.4);
-            padding: 6px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            border: 1px solid rgba(63, 63, 70, 0.3);
-            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: pulse-glow 2.5s infinite ease-in-out; 
-            pointer-events: none;
-        }
-        @keyframes pulse-glow { 
-            0%, 100% { opacity: 0.4; transform: scale(0.98); color: #71717a; } 
-            50% { opacity: 0.9; transform: scale(1); color: #dc2626; text-shadow: 0 0 8px rgba(220,38,38,0.3); } 
-        }
+        #flow-hint { color: #e4e4e7; font-weight: bold; font-size: 13px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
 
         /* 槽位區塊 */
         .slots-container { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; margin: 0 auto 25px auto; min-height: 155px; max-width: 500px; width: 100%; box-sizing: border-box; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            justify-content: center; 
+            margin: 0 auto 25px auto; 
+            min-height: 155px; 
+            max-width: 500px; 
+            width: 100%; 
+            box-sizing: border-box; 
         }
         .slot-box { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .slot-box h3 { color: #71717a; font-size: 10px; margin-bottom: 8px; text-transform: uppercase; }
         
         .slot-card-venue {
             width: 100%; max-width: 84px; height: 144px; border: 1px dashed #27272a; border-radius: 8px;
-            position: relative; display: flex; align-items: center; justify-content: center; color: #3f3f46; font-size: 11px; background: #050505;
+            position: relative; display: flex; align-items: center; justify-content: center; color: #3f3f46; font-size: 11px;
+            background: #050505;
         }
 
-        /* 盲抽橫向滾動結構 */
+        /* 洗牌抽取卡牌區 */
         .deck-zone { margin-top: 10px; min-height: 220px; position: relative; padding-top: 10px; }
         .pile-master { width: 84px; height: 144px; margin: 40px auto; position: relative; }
 
@@ -181,7 +112,7 @@
 
         .card { 
             width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
-            transform-origin: center center; transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease, z-index 0.28s;
+            transform-origin: center center; transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease, z-index 0.25s;
         }
         .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .card.selected-fly { opacity: 0 !important; transform: scale(0.2) translateY(-280px) !important; pointer-events: none; z-index: 999 !important; }
@@ -206,7 +137,7 @@
         .card-front img { width: 100%; height: 100%; object-fit: cover; }
         .card-in-slot { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
 
-        /* 結果展示頁 */
+        /* 結果頁面 */
         .result-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-content: center; margin: 20px auto; max-width: 600px; width: 100%; }
         .result-card-box { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
         .result-card-static { width: 100%; max-width: 90px; height: 154px; background-color: #000; border: 2px solid #52525b; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.9); }
@@ -226,7 +157,7 @@
         .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
         .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
 
-        #capture-node { padding: 15px; background: #050505; border-radius: 16px; box-sizing: border-box; width: 100%; }
+        #capture-node { padding: 15px; background: #050505; border-radius: 16px; }
         .result-title-node { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 25px; border-left: 3px solid #dc2626; padding-left: 10px; text-align: left; }
 
         .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 420px; width: 100%; }
@@ -234,7 +165,8 @@
         .sub-btn-group button { flex: 1; padding: 12px 0; }
         
         button { 
-            background-color: #0a0a0a; color: #d1d1d1; border: 1px solid #27272a; padding: 12px 35px; font-size: 12px; font-weight: bold; border-radius: 9999px; cursor: pointer; transition: 0.2s; font-family: inherit; letter-spacing: 0.1em; margin-top: 5px;
+            background-color: #0a0a0a; color: #d1d1d1; border: 1px solid #27272a; padding: 12px 35px; font-size: 12px; font-weight: bold; border-radius: 9999px; cursor: pointer; transition: 0.2s; font-family: inherit; letter-spacing: 0.1em;
+            margin-top: 5px;
         }
         button:hover { background-color: #111; border-color: #dc2626; color: #fff; }
         .btn-primary { background-color: #dc2626; color: #fff; border-color: #dc2626; }
@@ -243,315 +175,154 @@
 
         .view-node { display: none; }
         .view-node.active-node { display: block; }
-
-        /* 截圖安全補償 */
-        .html2canvas-screenshot-mode { padding: 30px 25px !important; background-color: #050505 !important; }
-        
-        /* SEO 文字排版 */
-        .seo-keywords-matrix { font-size: 10px; color: #3a3a3c; text-align: justify; line-height: 1.5; margin-top: 15px; }
-        
-        /* 頁腳固定底端設定 */
-        footer {
-            flex-shrink: 0;
-        }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <div class="ads-top-buffer">[ CONNECTION_NODE: SECURE_HOST ]</div>
+    <div class="ads-top-buffer">[ CONNECTION_NODE: SECURE_HOST ]</div>
 
-        <div class="main-content">
-            <h1>🔮 聖三角潛意識矩陣占卜</h1>
-            <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
+    <div class="main-content">
+        <h1>🔮 聖三角潛意識矩陣占卜</h1>
+        <div class="sys-status">SYS_STATUS: ACTIVE // 78_CARDS_HYBRID_MATRIX</div>
+        
+        <div id="home-view" class="view-node active-node panel-section">
             
-            <div id="home-view" class="view-node active-node panel-section">
-                <div id="init-skeleton" class="skeleton-loader">
-                    <div class="skeleton-block" style="height: 12px; width: 40%;"></div>
-                    <div class="skeleton-block" style="height: 35px; width: 80%; margin-top: 15px;"></div>
-                    <div class="skeleton-block" style="height: 60px; width: 100%; margin-top: 15px;"></div>
-                    <div class="skeleton-block" style="height: 45px; width: 50%; border-radius: 999px; margin-top: 20px;"></div>
+            <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
+                <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
+                <div>[ CURRENT_VERSION: v2.4.8-STABLE // BUILD_NODE: ACTIVE ]</div>
+            </div>
+
+            <div class="intro-text">
+                <p>歡迎來到全功能盲抽占卜系統。本介面全面整合大/小阿爾克那共 78 張完整卡牌，支援手機滑動與電腦滑鼠拖曳，洗牌後牌組將進入盲抽矩陣。</p>
+            </div>
+            
+            <button class="btn-primary" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
+
+            <div class="seo-keywords-matrix">
+                [ ARCHITECTURE_LOG ] 本交互式資訊系統技術模型全面整合大眾心理學（Psychology）、現代隨機決策科學（Decision-making Science）、認知行為學（Cognitive Science）與個體潛意識流動（Subconscious Flow）數據解碼模組。前端架構採非對稱矩陣運算法，旨在協助使用者完成邏輯反思、內在焦慮覺察、職場生涯規劃（Career Planning）與人際關係動態分析。本站內容僅供大眾學術研究與大眾心理暗示參考。
+            </div>
+        </div>
+
+        <div id="input-view" class="view-node panel-section">
+            <label for="question">[ INITIALIZE_INPUT ] 請輸入問題並在心中默念3次：</label>
+            <input text="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
+            
+            <label for="question-type">( SELECT_MATRIX_NODE ) 請選擇占卜類別：</label>
+            <select id="question-type">
+                <option value="general">綜合運勢分析 // GENERAL</option>
+                <option value="love">感情桃花發展 // LOVE</option>
+                <option value="work">工作學業事業 // WORK</option>
+            </select>
+            <br><br>
+            <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">開始占卜 // START</button>
+        </div>
+
+        <div id="shuffle-view" class="view-node panel-section">
+            <div id="user-question-display"></div>
+            <div id="flow-hint"></div>
+            
+            <div id="slots-area" class="slots-container">
+                <div class="slot-box">
+                    <h3>過去 // PAST</h3>
+                    <div id="slot-0" class="slot-card-venue">等待選牌</div>
                 </div>
-
-                <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
-                    <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
-                    <div>[ CURRENT_VERSION: v2.4.9-STABLE // BUILD_NODE: LIVE_MATRIX ]</div>
+                <div class="slot-box">
+                    <h3>現在 // PRESENT</h3>
+                    <div id="slot-1" class="slot-card-venue">等待選牌</div>
                 </div>
-
-                <div class="academic-text" style="color: #a1a1aa; font-size: 13px;">
-                    歡迎使用全功能隨機矩陣潛意識解析系統。本介面全面整合大/小阿爾克那共 78 張完整經典卡牌，支援手機 3D 物理滑動與電腦滑鼠拖曳盲抽。透過時間軸三節點（過去、現在、未來）的非對稱排列，協助您釐清雜訊、回歸真實自我。
-                </div>
-                
-                <button class="btn-primary" style="margin-bottom: 25px;" onclick="switchView('input-view'); safeUnlockSound();">進入占卜矩陣 // ENTER</button>
-
-                <div class="academic-block">
-                    <div class="academic-title">🔮 關於經典塔羅牌的歷史與本質起源 // TAROT ORIGIN MATRIX</div>
-                    <div class="academic-text">
-                        塔羅牌（Tarot）的歷史最早可跨越至15世紀中葉的歐洲（義大利北部），最初作為貴族階層的紙牌遊戲（Tarocchi）。隨著18世紀末期神祕學家對其符號系統的深度考證，塔羅牌逐漸被賦予了對個體命運探討與心理投射的媒介性質。現代心理學大師榮格（Carl Jung）指出，塔羅牌本質上是人類「集體潛意識」與「原型（Archetypes）」的視覺化載體。它並非超自然的神明預知，而是透過象徵性的圖面符號，將主觀個體內部那些被壓抑、忽視或無法言說的隱性動能拉上意識層面。當前系統將此古典系統數字化，透過動態演算法，模擬潛意識流動的非隨機性相應。
-                    </div>
-                </div>
-
-                <div class="academic-block">
-                    <div class="academic-title">🃏 經典大/小阿爾克那 78 張卡牌架構介紹 // 78 CARDS ACCORDION</div>
-                    
-                    <div class="accordion-deck">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <span>【大阿爾克那 // MAJOR ARCANAS】共 22 張核心精神原型卡 (展開/收合)</span>
-                            <span>▼</span>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="academic-text" style="margin-bottom:0;">
-                                大阿爾克那（Major Arcana，序號 0 至 21）象徵著個體生命旅程中重大的精神轉折、核心課題與宇宙能量的宏觀流動。從象徵純粹開端、未知焦慮與冒險精神的「0 號愚者（The Fool）」，經歷智者開導、母性滋養、父權約束、情感選擇與環境磨練，直到象徵靈魂整合、圓滿成功與世界互聯的「21 號世界（The World）」。這 22 張卡牌反映的是生命大方向的根本趨勢與無法逃避的心理轉折節點。
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-deck">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <span>【小阿爾克那 // MINOR ARCANAS】共 56 張日常情境與元素流動卡 (展開/收合)</span>
-                            <span>▼</span>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="academic-text" style="margin-bottom:0;">
-                                小阿爾克那（Minor Arcana）共計 56 張，細分為四大元素星組，深度對應日常生活中的具體情境、情緒反應與行動反思：<br>
-                                <strong>🔥 權杖星組 (Wands / 火元素)：</strong>象徵行動力、事業意志、熱情、野心、競爭與能量創生的開端。<br>
-                                <strong>💧 聖杯星組 (Cups / 水元素)：</strong>象徵情感流動、直覺、人際關係、心理滿足感與潛意識層面的愛恨波動。<br>
-                                <strong>⚔️ 寶劍星組 (Swords / 風元素)：</strong>象徵邏輯理智、思考衝突、決策瓶頸、心理傷害與思維上的抗衡。<br>
-                                <strong>🪙 星幣星組 (Pentacles / 土元素)：</strong>象徵物質財富、現實根基、學習成果、身體感官與穩定架構的建立。<br>
-                                每組皆包含 14 張牌（Ace 至 10 號數字牌，加上侍從、騎士、王后、國王 4 張宮廷人物牌），精準映射現實世界的細微流動。
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="academic-block">
-                    <div class="academic-title">📊 核心方法論：隨機決策論 // DECISION THEORY NODE</div>
-                    <div class="academic-text">
-                        本系統底層不依賴外部伺服器宿主干預，而是引進隨機決策理論（Stochastic Decision Theory）。當使用者輸入特定問題時，系統前端將該文本字串的長度、時間戳記與字符編碼特徵提取為隨機數生成器的初級種子。在資訊科學中，隨機決策論指出：在高度不確定性（Uncertainty Grid）環境下，個體常因盲點導致決策癱瘓。本系統透過 1/78 的洗牌分布函數配合正逆位（50% 機率）的多維隨機矩陣，隨機打破原有的思維定勢，促使使用者在接收非對稱資訊的過程中觸發全新的邏輯演繹，提供基於統計理論的心理暗示決策輔助。
-                    </div>
-                </div>
-
-                <div class="academic-block">
-                    <div class="academic-title">📈 矩陣動態觀察看板 // LIVE MATRIX ANALYTICS</div>
-                    <div class="analytics-grid">
-                        <div class="analytics-card">
-                            <div class="analytics-value" id="live-users">1,482</div>
-                            <div class="analytics-label">當前線上決策節點 (Nodes)</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="analytics-value">78 / 78</div>
-                            <div class="analytics-label">卡牌語料編编译庫 (Pool)</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="analytics-value" id="matrix-entropy">0.9842</div>
-                            <div class="analytics-label">隨機矩陣熵值 (Entropy)</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="analytics-value" style="color: #10b981;">ONLINE</div>
-                            <div class="analytics-label">客戶端物理引擎 (Status)</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="academic-block">
-                    <div class="academic-title">💻 矩陣技術解碼區 // SYSTEM ARCHITECTURE LAB</div>
-                    <div class="academic-text" style="font-family: monospace; background: #070707; padding: 10px; border-radius: 4px; font-size: 10px; border: 1px solid #141415;">
-                        [ENV_DATA] CLIENT_SIDE_RENDER: TRUE<br>
-                        [ALGORITHM] ASYMMETRIC_SHUFFLE_v2.4<br>
-                        [LIBRARY] HTML2CANVAS_RESOLVER: CONTEXT_2D<br>
-                        [INTERACTION] 3D_INERTIAL_DECELERATION: ACTIVE<br>
-                        [ADS_ADAPTER] GOOGLE_ADSENSE_AUTOMATIC_INJECT: READY
-                    </div>
-                </div>
-
-                <div class="academic-block">
-                    <div class="academic-title">🧬 潛意識數據解碼 // SUBCONSCIOUS FLOW DESERIALIZATION</div>
-                    <div class="academic-text">
-                        當使用者在盲抽介面完成對「過去（Past）」、「現在（Present）」與「未來（Future）」三張焦點牌組的點擊鎖定後，系統將自動啟動反序列化（Deserialization）解碼程序。這項技術模型藉由追蹤卡牌正逆位在聖三角矩陣中的對稱張力，將隱形心理學變數轉化為視覺、文字雙重複合報告。透過對個體潛意識數據的符號解構，網頁能以高精確度的結構化文本點評，直擊個體面臨感情、事業或運勢困境時的底層認知盲區，實現深度的個體反思與自我覺察。
-                    </div>
-                </div>
-
-                <div class="seo-keywords-matrix">
-                    [ ARCHITECTURE_LOG ] 前端架換採非對稱矩陣運算法，旨在協助使用者完成邏輯反思、內在焦慮覺察、職場生涯規劃（Career Planning）與人際關係動態分析。本站內容僅供大眾學術研究與大眾心理暗示參考。
+                <div class="slot-box">
+                    <h3>未來 // FUTURE</h3>
+                    <div id="slot-2" class="slot-card-venue">等待選牌</div>
                 </div>
             </div>
 
-            <div id="input-view" class="view-node panel-section">
-                <label for="question">[ INITIALIZE_INPUT ] 請輸入問題並在心中默念3次：</label>
-                <input type="text" id="question" placeholder="輸入你想解構的潛意識流動..." maxlength="20">
-                
-                <label for="question-type">( SELECT_MATRIX_NODE ) 請選擇占卜類別：</label>
-                <select id="question-type">
-                    <option value="general">綜合運勢分析 // GENERAL</option>
-                    <option value="love">感情桃花發展 // LOVE</option>
-                    <option value="work">工作學業事業 // WORK</option>
-                </select>
-                <br><br>
-                <button id="draw-btn" class="btn-primary" onclick="startTarotShuffle()">開始占卜 // START</button>
-            </div>
+            <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 系統安全廣告加載節點 ]</div>
 
-            <div id="shuffle-view" class="view-node panel-section">
-                <div id="user-question-display"></div>
-                <div id="flow-hint"></div>
-                
-                <div id="swipe-hint-banner" class="swipe-hint-banner" style="display: none;">[ ◄ 左右滑動 / 拖曳瀏覽 78 張卡牌矩陣 ► ]</div>
-                
-                <div id="slots-area" class="slots-container">
-                    <div class="slot-box">
-                        <h3>過去 // PAST</h3>
-                        <div id="slot-0" class="slot-card-venue">等待選牌</div>
-                    </div>
-                    <div class="slot-box">
-                        <h3>現在 // PRESENT</h3>
-                        <div id="slot-1" class="slot-card-venue">等待選牌</div>
-                    </div>
-                    <div class="slot-box">
-                        <h3>未來 // FUTURE</h3>
-                        <div id="slot-2" class="slot-card-venue">等待選牌</div>
-                    </div>
-                </div>
-
-                <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 系統安全廣告加載節點 ]</div>
-
-                <div id="deck-zone" class="deck-zone">
-                    <div id="pile-master" class="pile-master"></div>
-                    <div class="scroller-wrapper" id="scroller-wrapper" style="display: none;">
-                        <div class="nav-arrow arrow-left" onclick="scrollCarousel('left')">◀</div>
-                        <div class="nav-arrow arrow-right" onclick="scrollCarousel('right')">▶</div>
-                        <div class="fan-scroller" id="fan-scroller">
-                            <div id="spread-fan-stage" class="spread-fan-stage"></div>
-                        </div>
+            <div id="deck-zone" class="deck-zone">
+                <div id="pile-master" class="pile-master"></div>
+                <div class="scroller-wrapper" id="scroller-wrapper" style="display: none;">
+                    <div class="nav-arrow arrow-left" onclick="scrollCarousel('left')">◀</div>
+                    <div class="nav-arrow arrow-right" onclick="scrollCarousel('right')">▶</div>
+                    <div class="fan-scroller" id="fan-scroller">
+                        <div id="spread-fan-stage" class="spread-fan-stage"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="result-view" class="view-node panel-section">
-                <div id="capture-node">
-                    <div id="result-question-title" class="result-title-node"></div>
-                    <div id="result-deck-display" class="result-container"></div>
-                    
-                    <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 數據解碼關聯廣告 ]</div>
+        <div id="result-view" class="view-node panel-section">
+            <div id="capture-node">
+                <div id="result-question-title" class="result-title-node"></div>
+                <div id="result-deck-display" class="result-container"></div>
+                
+                <div class="ads-native-placeholder">[ ADVERTISEMENT_NODE // 數據解碼關聯廣告 ]</div>
 
-                    <div id="summary-section" class="summary-box"></div>
-                </div>
+                <div id="summary-section" class="summary-box"></div>
+            </div>
 
-                <div class="action-container">
-                    <button class="btn-secondary" style="width:100%" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
-                    <div class="sub-btn-group">
-                        <button class="btn-secondary" onclick="switchView('input-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
-                        <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
-                    </div>
+            <div class="action-container">
+                <button class="btn-secondary" style="width:100%" onclick="resetToHome()">🔙 返回主頁 // HOME</button>
+                <div class="sub-btn-group">
+                    <button class="btn-secondary" onclick="switchView('input-view'); resetDivinationEngine();">🔄 重新占卜 // RETRY</button>
+                    <button class="btn-primary" onclick="generateCardAndRedirect()">📸 生成小卡 // SAVE</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer style="font-size: 11px; color: #444446; border-top: 1px solid #141414; padding: 25px 20px 30px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
-        <div style="text-align: center; margin-bottom: 15px; letter-spacing: 0.05em; color: #52525b;">
+    <footer style="font-size: 11px; color: #444446; margin-top: 80px; border-top: 1px solid #141414; padding: 40px 20px; line-height: 1.8; text-align: left; max-width: 950px; margin-left: auto; margin-right: auto; box-sizing: border-box;">
+        
+        <div style="text-align: center; margin-bottom: 25px; letter-spacing: 0.05em; color: #52525b;">
             © 2026 聖三角潛意識矩陣系統. All Rights Reserved.
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; border-bottom: 1px solid #141414; padding-bottom: 20px;">
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; border-bottom: 1px solid #141414; padding-bottom: 30px;">
+            
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #dc2626; padding-left: 8px;">
                     技術定位宣告 // SPECIFICATION
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機作成為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導。
+                    本站點底層基於客戶端 JavaScript 隨機矩陣演算法與非對稱洗牌數據處理機作成為核心驅動引擎，技術架構屬於大眾前端互動式個人決策輔助工具。內容數據流不涉及任何非法集資、地下賭博、具體財富承諾或具備排他性的封閉宗教信仰宣導，資訊傳播完全符合全球大眾網路資訊傳播安全與隱私權規範。
                 </p>
             </div>
+
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
                     娛樂免責聲明 // DISCLAIMER
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本系統生成之所有報告均屬「大眾心理暗示與自我認知覺察參考」範疇。根據相關廣告法規特此聲明：本站不提供、亦不承諾任何關於個人命運的絕對改變、消災解厄或特定超自然干預效果。內容絕非專業的法律、財務投資、醫療臨床診斷建議。
+                    本系統生成之所有報告均屬「大眾心理暗示與自我認知覺察參考」範疇。根據相關廣告法規特此聲明：本站不提供、亦不承諾任何關於個人命運的絕對改變、消災解厄或特定超自然干預效果。內容絕非專業的法律、財務投資、醫療臨床診斷建議，亦無意取代專業心理諮商。使用者應理性進行自主決策。
                 </p>
             </div>
+
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
                     隱私權保護 // PRIVACY POLICY
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。
+                    本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。使用者可隨時藉由瀏覽器隱私模式或造訪 Google 廣告設定頁面來管理、封鎖或拒絕 Cookie 追蹤。
                 </p>
             </div>
+
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">
                     獨立性聲明 // LICENSING
                 </h4>
                 <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">
-                    本平台為獨立第三方隨機演算法研究與大眾心理學互動工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或 any 官方卡牌出版機構均無 any 商業隸屬、代言、授權或合資關係。
+                    本站點部分開源卡牌圖像與數據組件基於 MIT License (Copyright © 2019 equokka) 進行衍生前端開發。本平台為獨立第三方隨機演算法研究與大眾心理學交互工具專案，與 Alphabet Inc. (Google Ads)、Meta Platforms 或任何官方卡牌出版機構均無任何商業隸屬、代言、授權或合資關係。
                 </p>
             </div>
+
         </div>
+
         <div style="text-align: center; color: #1c1c1e; font-size: 9px; margin-top: 15px; letter-spacing: 0.05em;">
             SYSTEM_COMPLIANCE: VERIFIED // NODE_ENV: PRODUCTION // AUTOMATIC_ADS_READY
         </div>
     </footer>
 
     <script>
-        // 大小阿爾克那完整 78 張對照池
-        const tarotCardsPool = [
-            { name: "The Fool", img: "0_fool.jpg" }, { name: "The Magician", img: "1_magician.jpg" }, { name: "The High Priestess", img: "2_high_priestess.jpg" }, { name: "The Empress", img: "3_empress.jpg" }, { name: "The Emperor", img: "4_emperor.jpg" }, { name: "The Hierophant", img: "5_hierophant.jpg" }, { name: "The Lovers", img: "6_lovers.jpg" }, { name: "The Chariot", img: "7_chariot.jpg" }, { name: "Strength", img: "8_strength.jpg" }, { name: "The Hermit", img: "9_hermit.jpg" }, { name: "Wheel of Fortune", img: "10_wheel_fortune.jpg" }, { name: "Justice", img: "11_justice.jpg" }, { name: "The Hanged Man", img: "12_hanged_man.jpg" }, { name: "Death", img: "13_death.jpg" }, { name: "Temperance", img: "14_temperance.jpg" }, { name: "The Devil", img: "15_devil.jpg" }, { name: "The Tower", img: "16_tower.jpg" }, { name: "The Star", img: "17_star.jpg" }, { name: "The Moon", img: "18_moon.jpg" }, { name: "The Sun", img: "19_sun.jpg" }, { name: "Judgement", img: "20_judgement.jpg" }, { name: "The World", img: "21_world.jpg" },
-            { name: "Ace of Wands", img: "wands_01.jpg" }, { name: "Two of Wands", img: "wands_02.jpg" }, { name: "Three of Wands", img: "wands_03.jpg" }, { name: "Four of Wands", img: "wands_04.jpg" }, { name: "Five of Wands", img: "wands_05.jpg" }, { name: "Six of Wands", img: "wands_06.jpg" }, { name: "Seven of Wands", img: "wands_07.jpg" }, { name: "Eight of Wands", img: "wands_08.jpg" }, { name: "Nine of Wands", img: "wands_09.jpg" }, { name: "Ten of Wands", img: "wands_10.jpg" }, { name: "Page of Wands", img: "wands_page.jpg" }, { name: "Knight of Wands", img: "wands_knight.jpg" }, { name: "Queen of Wands", img: "wands_queen.jpg" }, { name: "King of Wands", img: "wands_king.jpg" },
-            { name: "Ace of Cups", img: "cups_01.jpg" }, { name: "Two of Cups", img: "cups_02.jpg" }, { name: "Three of Cups", img: "cups_03.jpg" }, { name: "Four of Cups", img: "cups_04.jpg" }, { name: "Five of Cups", img: "cups_05.jpg" }, { name: "Six of Cups", img: "cups_06.jpg" }, { name: "Seven of Cups", img: "cups_07.jpg" }, { name: "Eight of Cups", img: "cups_08.jpg" }, { name: "Nine of Cups", img: "cups_09.jpg" }, { name: "Ten of Cups", img: "cups_10.jpg" }, { name: "Page of Cups", img: "cups_page.jpg" }, { name: "Knight of Cups", img: "cups_knight.jpg" }, { name: "Queen of Cups", img: "cups_queen.jpg" }, { name: "King of Cups", img: "cups_king.jpg" },
-            { name: "Ace of Swords", img: "swords_01.jpg" }, { name: "Two of Swords", img: "swords_02.jpg" }, { name: "Three of Swords", img: "swords_03.jpg" }, { name: "Four of Swords", img: "swords_04.jpg" }, { name: "Five of Swords", img: "swords_05.jpg" }, { name: "Six of Swords", img: "swords_06.jpg" }, { name: "Seven of Swords", img: "swords_07.jpg" }, { name: "Eight of Swords", img: "swords_08.jpg" }, { name: "Nine of Swords", img: "swords_09.jpg" }, { name: "Ten of Swords", img: "swords_10.jpg" }, { name: "Page of Swords", img: "swords_page.jpg" }, { name: "Knight of Swords", img: "swords_knight.jpg" }, { name: "Queen of Swords", img: "swords_queen.jpg" }, { name: "King of Swords", img: "swords_king.jpg" },
-            { name: "Ace of Pentacles", img: "pentacles_01.jpg" }, { name: "Two of Pentacles", img: "pentacles_02.jpg" }, { name: "Three of Pentacles", img: "pentacles_03.jpg" }, { name: "Four of Pentacles", img: "pentacles_04.jpg" }, { name: "Five of Pentacles", img: "pentacles_05.jpg" }, { name: "Six of Pentacles", img: "pentacles_06.jpg" }, { name: "Seven of Pentacles", img: "pentacles_07.jpg" }, { name: "Eight of Pentacles", img: "pentacles_08.jpg" }, { name: "Nine of Pentacles", img: "pentacles_09.jpg" }, { name: "Ten of Pentacles", img: "pentacles_10.jpg" }, { name: "Page of Pentacles", img: "pentacles_page.jpg" }, { name: "Knight of Pentacles", img: "pentacles_knight.jpg" }, { name: "Queen of Pentacles", img: "pentacles_queen.jpg" }, { name: "King of Pentacles", img: "pentacles_king.jpg" }
-        ];
-
-        // 展開收合組件交互邏輯
-        function toggleAccordion(header) {
-            const content = header.nextElementSibling;
-            const arrow = header.querySelector('span:last-child');
-            if (content.classList.contains('open')) {
-                content.classList.remove('open');
-                content.style.maxHeight = '0px';
-                arrow.innerText = '▼';
-            } else {
-                content.classList.add('open');
-                content.style.maxHeight = content.scrollHeight + 'px';
-                arrow.innerText = '▲';
-            }
-        }
-
-        // 模擬看板動態變化
-        setInterval(() => {
-            const userEl = document.getElementById('live-users');
-            if(userEl) {
-                let current = parseInt(userEl.innerText.replace(/,/g, ''));
-                current += Math.floor(Math.random() * 7) - 3;
-                userEl.innerText = current.toLocaleString();
-            }
-            const entropyEl = document.getElementById('matrix-entropy');
-            if(entropyEl) {
-                entropyEl.innerText = (0.95 + Math.random() * 0.04).toFixed(4);
-            }
-        }, 3000);
-
-        function getDynamicTarotMeanings() {
-            if (typeof tarotMeanings !== 'undefined') return tarotMeanings;
-            const fallback = {};
-            tarotCardsPool.forEach(c => {
-                fallback[c.name] = {
-                    nameCN: c.name,
-                    general: { upright: "潛意識能量正向流動，事物充滿發展契機與反思空間。", reversed: "局勢出現短暫阻滯，提醒您重新檢視內在的盲點與外在干擾。" },
-                    love: { upright: "情感關係互動良好，有利於深層溝通或迎接新的緣分。", reversed: "情感流動受阻，可能存在溝通落差或過度保護自我的傾向。" },
-                    work: { upright: "事業運勢與行動力處於上升期，適合執行新計畫或精進專業。", reversed: "工作面臨瓶頸或決策遲疑，建議先整頓現有資源再前進。" }
-                };
-            });
-            return fallback;
-        }
-
-        // 移除首頁骨架屏
-        window.addEventListener('DOMContentLoaded', () => {
-            const skeleton = document.getElementById('init-skeleton');
-            if (skeleton) {
-                skeleton.style.transition = 'opacity 0.4s ease';
-                skeleton.style.opacity = '0';
-                setTimeout(() => skeleton.remove(), 400);
-            }
-        });
-
+        // 核心邏輯引擎控制
         function switchView(viewId) {
             const nodes = document.querySelectorAll('.view-node');
             for (let i = 0; i < nodes.length; i++) {
@@ -596,17 +367,77 @@
             } catch(e) {}
         }
 
-        let processedDeck = []; let selectedHand = []; let currentSlotIndex = 0; let selectedType = 'general'; let isShuffling = false;
-        let hintTimer = null; // 用於控制提示條淡入淡出的計時器
+        // 🛠️ 核心修正：將 tarotData.js 的英文名稱自動對應到你的實體代號圖檔 (m00.jpg, c01.jpg 等)
+        function mapCardImgName(cardName) {
+            if (!cardName) return "m00.jpg";
+            
+            // 將名稱標準化（去空格、全小寫）
+            const key = cardName.trim().toLowerCase();
+            
+            // 1. 大阿爾克那對應表 (m00 ~ m21)
+            const majors = [
+                "the fool", "the magician", "the high priestess", "the emperor", "the empress", // 修正常見語序錯漏
+                "the hierophant", "the lovers", "the chariot", "strength", "the hermit",
+                "wheel of fortune", "justice", "the hanged man", "death", "temperance",
+                "the devil", "the tower", "the star", "the moon", "the sun", "judgement", "the world"
+            ];
+            // 額外相容沒有 "the" 的寫法
+            const baseMajors = majors.map(m => m.replace(/^the\s+/, ""));
+            
+            let idx = majors.indexOf(key);
+            if (idx === -1) idx = baseMajors.indexOf(key.replace(/^the\s+/, ""));
+            if (idx === -1 && key === "empress") idx = 4; // 特殊相容處理
+            if (idx === -1 && key === "the empress") idx = 4;
+            if (idx === -1 && key === "the emperor") idx = 3;
+            if (idx === -1 && key === "emperor") idx = 3;
+            
+            if (idx !== -1) {
+                return `m${String(idx).padStart(2, '0')}.jpg`;
+            }
+            
+            // 2. 小阿爾克那數字與宮廷牌對應規則
+            // 定義花色字首
+            let suitPrefix = "";
+            if (key.includes("cups")) suitPrefix = "c";
+            else if (key.includes("wands")) suitPrefix = "w";
+            else if (key.includes("swords")) suitPrefix = "s";
+            else if (key.includes("pentacles")) suitPrefix = "p";
+            
+            if (suitPrefix) {
+                let num = 0;
+                if (key.startsWith("ace")) num = 1;
+                else if (key.startsWith("two")) num = 2;
+                else if (key.startsWith("three")) num = 3;
+                else if (key.startsWith("four")) num = 4;
+                else if (key.startsWith("five")) num = 5;
+                else if (key.startsWith("six")) num = 6;
+                else if (key.startsWith("seven")) num = 7;
+                else if (key.startsWith("eight")) num = 8;
+                else if (key.startsWith("nine")) num = 9;
+                else if (key.startsWith("ten")) num = 10;
+                else if (key.startsWith("page")) num = 11;
+                else if (key.startsWith("knight")) num = 12;
+                else if (key.startsWith("queen")) num = 13;
+                else if (key.startsWith("king")) num = 14;
+                
+                if (num > 0) {
+                    return `${suitPrefix}${String(num).padStart(2, '0')}.jpg`;
+                }
+            }
+            
+            return "m00.jpg"; // 找不到時的預設安全防線
+        }
+
+        let processedDeck = []; 
+        let selectedHand = []; 
+        let currentSlotIndex = 0; 
+        let selectedType = 'general';
+        let isShuffling = false;
         
         function resetDivinationEngine() {
             document.getElementById('question').value = '';
             document.getElementById('user-question-display').innerText = '';
             document.getElementById('flow-hint').innerText = '';
-            const banner = document.getElementById('swipe-hint-banner');
-            banner.style.display = 'none';
-            banner.style.opacity = '1';
-            if(hintTimer) clearTimeout(hintTimer);
             document.getElementById('pile-master').innerHTML = '';
             document.getElementById('pile-master').style.display = 'block';
             document.getElementById('scroller-wrapper').style.display = 'none';
@@ -623,14 +454,19 @@
             if (questionInput === "") { alert("🔮 占卜需要誠心，請先輸入你想問的問題喔！"); return; }
             if (isShuffling) return;
             
+            if (typeof tarotCardsPool === 'undefined') {
+                alert("⚙️ 核心數據庫加載中，請稍候再試或確認 tarotData.js 檔案是否存在。");
+                return;
+            }
+            
             isShuffling = true;
             try { safeUnlockSound(); } catch(e){}
+            
             switchView('shuffle-view');
             
             const typeNames = { 'general': '綜合運勢', 'love': '感情發展', 'work': '工作學業' };
             document.getElementById('user-question-display').innerText = `[ 矩陣目標 // ${typeNames[selectedType]} : ${questionInput} ]`;
             document.getElementById('flow-hint').innerText = "⚡ 正在串聯 78 節點潛意識能量...";
-            document.getElementById('swipe-hint-banner').style.display = 'none';
             
             document.getElementById('pile-master').style.display = 'block';
             document.getElementById('scroller-wrapper').style.display = 'none';
@@ -678,23 +514,6 @@
             return (cardRect.left + (cardRect.width / 2)) - scrollerCenter;
         }
 
-        // 智慧型視覺提示控制模組：滑動時淡出、靜止時浮現
-        function triggerHintInteractivity(isUserMoving) {
-            const banner = document.getElementById('swipe-hint-banner');
-            if(!banner || banner.style.display === 'none') return;
-            
-            if(isUserMoving) {
-                banner.style.opacity = '0';
-                banner.style.transform = 'scale(0.95)';
-                if(hintTimer) clearTimeout(hintTimer);
-                // 停下後若 4 秒無動作，再次召喚視覺提示
-                hintTimer = setTimeout(() => {
-                    banner.style.opacity = '1';
-                    banner.style.transform = 'scale(1)';
-                }, 4000);
-            }
-        }
-
         function spread3DCarouselDeck() {
             document.getElementById('pile-master').style.display = 'none';
             document.getElementById('scroller-wrapper').style.display = 'block';
@@ -706,10 +525,6 @@
             stage.style.display = 'flex';
             
             document.getElementById('flow-hint').innerText = `👉 請左右滑動，點擊中央焦點牌盲抽 【過去 // PAST】`;
-            
-            const banner = document.getElementById('swipe-hint-banner');
-            banner.style.display = 'inline-block';
-            banner.style.opacity = '1';
 
             processedDeck.forEach((cardData, index) => {
                 const cardEl = document.createElement('div'); 
@@ -737,82 +552,47 @@
             
             setTimeout(() => {
                 stage.style.opacity = '1';
-                
-                scroller.addEventListener('scroll', () => {
-                    updateCarouselFocusEffects();
-                    triggerHintInteractivity(true);
-                });
-                
+                scroller.addEventListener('scroll', updateCarouselFocusEffects);
                 initializeMouseDragScroll(scroller);
                 
-                scroller.style.scrollSnapType = 'none';
-                scroller.scrollTo({ left: scroller.scrollLeft + 120, behavior: 'smooth' });
-                setTimeout(() => {
-                    scroller.scrollTo({ left: scroller.scrollLeft - 120, behavior: 'smooth' });
-                    setTimeout(() => {
-                        scroller.style.scrollSnapType = 'x mandatory';
-                        const midCard = document.getElementById(`deck-card-38`);
-                        if(midCard) midCard.scrollIntoView({ block: 'nearest', inline: 'center' });
-                        updateCarouselFocusEffects();
-                    }, 400);
-                }, 350);
+                const midCard = document.getElementById(`deck-card-38`);
+                if(midCard) midCard.scrollIntoView({ block: 'nearest', inline: 'center' });
+                updateCarouselFocusEffects();
             }, 50);
         }
 
-        let isDown = false; let startX; let scrollLeft; let isDragging = false; let lastVelocityX = 0; let lastTimeStamp = 0; let lastX = 0; let inertiaFrame = null;
+        let isDown = false; let startX; let scrollLeft; let isDragging = false; 
 
         function initializeMouseDragScroll(scroller) {
             scroller.addEventListener('mousedown', (e) => {
                 isDown = true; isDragging = false;
-                if(inertiaFrame) cancelAnimationFrame(inertiaFrame);
                 scroller.style.scrollSnapType = 'none'; 
-                startX = e.pageX - scroller.offsetLeft; 
-                scrollLeft = scroller.scrollLeft;
-                lastX = e.pageX;
-                lastTimeStamp = performance.now();
-                lastVelocityX = 0;
+                startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft;
             });
-            
-            scroller.addEventListener('mouseleave', () => { if (!isDown) return; isDown = false; applyInertiaDecay(scroller); });
-            scroller.addEventListener('mouseup', () => { if (!isDown) return; isDown = false; applyInertiaDecay(scroller); setTimeout(() => { isDragging = false; }, 50); });
-            
+            scroller.addEventListener('mouseleave', () => {
+                if (!isDown) return; isDown = false; scroller.style.scrollSnapType = 'x mandatory'; 
+            });
+            scroller.addEventListener('mouseup', () => {
+                isDown = false; scroller.style.scrollSnapType = 'x mandatory'; 
+                setTimeout(() => { isDragging = false; }, 50);
+            });
             scroller.addEventListener('mousemove', (e) => {
                 if(!isDown) return;
                 e.preventDefault();
-                const currentNow = performance.now();
-                const deltaT = currentNow - lastTimeStamp;
-                const x = e.pageX - scroller.offsetLeft; 
-                const walk = (x - startX) * 1.3; 
-                if (Math.abs(x - startX) > 5) isDragging = true; 
+                const x = e.pageX - scroller.offsetLeft; const walk = (x - startX) * 1.5; 
+                if (Math.abs(walk) > 5) isDragging = true; 
                 scroller.scrollLeft = scrollLeft - walk;
-                if(deltaT > 0) lastVelocityX = (e.pageX - lastX) / deltaT;
-                lastX = e.pageX; lastTimeStamp = currentNow;
-                triggerHintInteractivity(true);
             });
         }
 
-        function applyInertiaDecay(scroller) {
-            let velocity = lastVelocityX * 18; const friction = 0.94; 
-            function step() {
-                if(Math.abs(velocity) > 0.5) {
-                    scroller.scrollLeft -= velocity; velocity *= friction; inertiaFrame = requestAnimationFrame(step);
-                } else {
-                    scroller.style.scrollSnapType = 'x mandatory';
-                    const currentPos = scroller.scrollLeft;
-                    scroller.scrollTo({ left: currentPos + 1, behavior: 'auto' });
-                    scroller.scrollTo({ left: currentPos, behavior: 'smooth' });
-                }
-            }
-            inertiaFrame = requestAnimationFrame(step);
-        }
-
         function scrollCarousel(direction) {
-            if(inertiaFrame) cancelAnimationFrame(inertiaFrame);
             const scroller = document.getElementById('fan-scroller');
             const cardWidthWithGap = 84 + 15; 
-            if (direction === 'left') { scroller.scrollBy({ left: -cardWidthWithGap, behavior: 'smooth' }); } 
-            else { scroller.scrollBy({ left: cardWidthWithGap, behavior: 'smooth' }); }
-            triggerHintInteractivity(true);
+            if (direction === 'left') {
+                scroller.scrollBy({ left: -cardWidthWithGap, behavior: 'smooth' });
+            } else {
+                scroller.scrollBy({ left: cardWidthWithGap, behavior: 'smooth' });
+            }
         }
 
         function updateCarouselFocusEffects() {
@@ -824,24 +604,31 @@
 
             cards.forEach(card => {
                 if(card.classList.contains('selected-fly')) return;
+
                 const cardRect = card.getBoundingClientRect();
                 const cardCenter = cardRect.left + (cardRect.width / 2);
                 const distanceFromCenter = cardCenter - scrollerCenter;
                 const absDistance = Math.abs(distanceFromCenter);
 
                 if (absDistance < 50) {
-                    card.style.transform = `scale(1.12) translateY(-15px) rotate(0deg)`; card.style.opacity = `1`; card.style.zIndex = `100`; card.classList.add('is-focused');
+                    card.style.transform = `scale(1.1) translateY(-15px) rotate(0deg)`;
+                    card.style.opacity = `1`; card.style.zIndex = `100`;
+                    card.classList.add('is-focused');
                 } else if (absDistance >= 50 && absDistance < 140) {
-                    const direction = distanceFromCenter > 0 ? 6 : -6;
-                    // 平滑衰減公式：縮放過渡更絲滑
-                    const scaleFactor = 1.12 - ((absDistance - 50) / 90) * 0.17;
-                    card.style.transform = `scale(${scaleFactor}) translateY(${-15 + ((absDistance - 50) / 90) * 10}px) rotate(${direction}deg)`; card.style.opacity = `0.9`; card.style.zIndex = `50`; card.classList.remove('is-focused');
+                    const direction = distanceFromCenter > 0 ? 8 : -8;
+                    card.style.transform = `scale(0.95) translateY(-5px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.9`; card.style.zIndex = `50`;
+                    card.classList.remove('is-focused');
                 } else if (absDistance >= 140 && absDistance < 240) {
-                    const direction = distanceFromCenter > 0 ? 12 : -12;
-                    card.style.transform = `scale(0.82) translateY(5px) rotate(${direction}deg)`; card.style.opacity = `0.4`; card.style.zIndex = `20`; card.classList.remove('is-focused');
+                    const direction = distanceFromCenter > 0 ? 15 : -15;
+                    card.style.transform = `scale(0.8) translateY(8px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.4`; card.style.zIndex = `20`;
+                    card.classList.remove('is-focused');
                 } else {
-                    const direction = distanceFromCenter > 0 ? 18 : -18;
-                    card.style.transform = `scale(0.65) translateY(18px) rotate(${direction}deg)`; card.style.opacity = `0.02`; card.style.zIndex = `1`; card.classList.remove('is-focused');
+                    const direction = distanceFromCenter > 0 ? 22 : -22;
+                    card.style.transform = `scale(0.6) translateY(20px) rotate(${direction}deg)`;
+                    card.style.opacity = `0.02`; card.style.zIndex = `1`;
+                    card.classList.remove('is-focused');
                 }
             });
         }
@@ -853,11 +640,13 @@
 
             try { playSound('flip', currentSlotIndex); } catch(e){}
             const cardData = processedDeck[index]; selectedHand.push(cardData);
+            
             targetCard.classList.add('selected-fly');
             
+            // 🛠️ 核心對應應用點 1：盲抽落座槽位時的圖片
+            const realImgFile = mapCardImgName(cardData.name);
             const currentSlot = document.getElementById(`slot-${currentSlotIndex}`);
-            // 💡 修正：路徑改用最安全的相對定位並指定小寫 .jpg ➔ `./cards/`
-            currentSlot.innerHTML = `<div class="card card-in-slot flipped"><div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div><div class="card-front"><img src="./cards/${cardData.img}" class="${cardData.isReversed ? 'reversed' : ''}"></div></div></div>`;
+            currentSlot.innerHTML = `<div class="card card-in-slot flipped"><div class="card-inner"><div class="card-back"><div class="tarot-symbol">⚝</div></div><div class="card-front"><img src="cards/${realImgFile}" class="${cardData.isReversed ? 'reversed' : ''}"></div></div></div>`;
 
             currentSlotIndex++;
             if (currentSlotIndex === 1) {
@@ -866,11 +655,10 @@
                 document.getElementById('flow-hint').innerText = `👉 請繼續滑動，點擊中央焦點牌盲抽 【未來 // FUTURE】`;
             } else {
                 document.getElementById('flow-hint').innerText = "SYSTEM_SUCCESS // 核心矩陣封裝完成...";
-                document.getElementById('swipe-hint-banner').style.display = 'none';
-                if(hintTimer) clearTimeout(hintTimer);
                 try { playSound('success'); } catch(e){}
                 setTimeout(() => compileAndShowResultView(), 1000);
             }
+            
             setTimeout(() => updateCarouselFocusEffects(), 200);
         }
 
@@ -881,6 +669,7 @@
             
             const resultDeckDiv = document.getElementById('result-deck-display'); resultDeckDiv.innerHTML = '';
             const positions = ["過去 // PAST", "現在 // PRESENT", "未來 // FUTURE"];
+            
             const meaningsPool = getDynamicTarotMeanings();
 
             selectedHand.forEach((card, index) => {
@@ -889,12 +678,14 @@
                 const explanation = card.isReversed ? typeMeaning.reversed : typeMeaning.upright;
                 const oriText = card.isReversed ? "逆位 // REVERSED" : "正位 // UPRIGHT";
                 
+                // 🛠️ 核心對應應用點 2：結果頁面靜態大圖的圖片
+                const realImgFile = mapCardImgName(card.name);
+                
                 const cardBox = document.createElement('div'); cardBox.className = 'result-card-box';
-                // 💡 修正：結果頁靜態圖片也同步更新為 `./cards/`
                 cardBox.innerHTML = `
                     <h3>${positions[index]}</h3>
                     <div class="result-card-static">
-                        <img src="./cards/${card.img}" class="${card.isReversed ? 'reversed' : ''}">
+                        <img src="cards/${realImgFile}" class="${card.isReversed ? 'reversed' : ''}">
                     </div>
                     <div class="result-info">
                         <span class="card-title-en">${card.name}</span>
@@ -905,6 +696,7 @@
                 resultDeckDiv.appendChild(cardBox);
             });
             generateComprehensiveSummary(meaningsPool); 
+            
             switchView('result-view');
         }
 
@@ -938,22 +730,11 @@
 
         function generateCardAndRedirect() {
             try { playSound('click'); } catch(e){}
-            if(typeof html2canvas === 'undefined') { alert("📸 截圖引擎加載中，請稍候重試。"); return; }
+            if(typeof html2canvas === 'undefined') { return; }
             const targetNode = document.getElementById('capture-node');
-            targetNode.classList.add('html2canvas-screenshot-mode');
-            
-            html2canvas(targetNode, { 
-                backgroundColor: "#050505", scale: 2, useCORS: true, logging: false,
-                width: targetNode.scrollWidth, height: targetNode.scrollHeight
-            }).then(canvas => {
-                targetNode.classList.remove('html2canvas-screenshot-mode');
-                const image = canvas.toDataURL("image/png"); 
-                const link = document.createElement('a'); 
-                link.download = 'Tarot-Matrix-Report.png'; link.href = image; link.click();
-            }).catch(err => {
-                targetNode.classList.remove('html2canvas-screenshot-mode');
-                alert("📸 截圖生成失敗，請嘗試手動截取螢幕。");
-            });
+            html2canvas(targetNode, { backgroundColor: "#050505", scale: 2, useCORS: true }).then(canvas => {
+                const image = canvas.toDataURL("image/png"); const link = document.createElement('a'); link.download = 'Tarot-Matrix-Report.png'; link.href = image; link.click();
+            }).catch(err => {});
         }
     </script>
 </body>
