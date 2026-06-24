@@ -104,17 +104,26 @@
         .arrow-left { left: 5px; }
         .arrow-right { right: 5px; }
 
-        .spread-fan-stage { display: flex; padding: 0 calc(50% - 42px); gap: 15px; width: max-content; opacity: 0; transition: opacity 0.5s ease; }
+        /* 增強動態移除時的靠攏效果 */
+        .spread-fan-stage { 
+            display: flex; 
+            padding: 0 calc(50% - 42px); 
+            gap: 15px; 
+            width: max-content; 
+            opacity: 0; 
+            transition: opacity 0.5s ease, gap 0.35s ease; 
+        }
 
-        /* 增強景深特效（模糊與過渡效果） */
+        /* 支援物理寬度與間距收縮 */
         .card { 
             width: 84px; height: 144px; perspective: 1000px; cursor: pointer; position: relative; flex-shrink: 0; scroll-snap-align: center;
-            transform-origin: center center; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease, filter 0.35s ease, z-index 0.35s;
+            transform-origin: center center; 
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease, filter 0.35s ease, z-index 0.35s, width 0.35s cubic-bezier(0.25, 1, 0.5, 1), margin 0.35s cubic-bezier(0.25, 1, 0.5, 1);
             filter: blur(2px); opacity: 0.3;
         }
         .pile-master .card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: none; opacity: 1; }
         
-        /* 平滑的飛升落座物理動畫軌跡 */
+        /* 飛升落座軌跡 */
         .card.flying-to-slot {
             position: fixed !important;
             z-index: 9999 !important;
@@ -143,7 +152,7 @@
         }
         .card-front img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* 槽位內卡牌樣式（帶有流暢登場淡入與微縮放效果） */
+        /* 槽位內登場動畫 */
         .card-in-slot { 
             width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; 
             animation: slotBounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -173,28 +182,8 @@
         .summary-box h2 { color: #ffffff; text-align: center; font-size: 14px; border-bottom: 1px solid #1f1f1f; padding-bottom: 12px; margin-top: 0; letter-spacing: 0.1em; }
         .summary-box p { margin: 14px 0 0 0; font-size: 12px; text-align: justify; color: #d4d4d8; }
 
-        /* 精緻化的隱形截圖專用容器（保證生成小卡不跑版且美觀） */
-        .capture-wrapper {
-            padding: 25px 20px;
-            background: #050505;
-            border-radius: 16px;
-            border: 1px solid #1f1f1f;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-            position: relative;
-        }
-        /* 黑客風格流水證書戳記 */
-        .capture-footer-matrix {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px dashed #27272a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 9px;
-            color: #52525b;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
+        .capture-wrapper { padding: 25px 20px; background: #050505; border-radius: 16px; border: 1px solid #1f1f1f; box-shadow: 0 20px 50px rgba(0,0,0,0.9); position: relative; }
+        .capture-footer-matrix { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #27272a; display: flex; justify-content: space-between; align-items: center; font-size: 9px; color: #52525b; letter-spacing: 0.05em; text-transform: uppercase; }
 
         .action-container { margin: 30px auto 10px auto; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 420px; width: 100%; }
         .sub-btn-group { display: flex; gap: 12px; justify-content: center; width: 100%; }
@@ -224,7 +213,7 @@
         <div id="home-view" class="view-node active-node panel-section">
             <div style="font-size: 10px; color: #444446; text-align: left; margin-bottom: 20px; border-bottom: 1px dashed #141414; padding-bottom: 12px; letter-spacing: 0.05em; font-family: inherit; line-height: 1.5;">
                 <div>[ SECURITY_VERIFICATION: PASSED_COMPLIANCE ]</div>
-                <div>[ CURRENT_VERSION: v2.5.0-STABLE // ENHANCED_ANIMATION ]</div>
+                <div>[ CURRENT_VERSION: v2.6.0-DYNAMIC_REMOVAL ]</div>
             </div>
 
             <div class="intro-text">
@@ -325,7 +314,7 @@
             </div>
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">隱私權保護 // PRIVACY POLICY</h4>
-                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。使用者可隨時藉由瀏覽器隱私模式或造訪 Google 廣告設定頁面來管理、封鎖或拒絕 Cookie 追蹤。</p>
+                <p style="margin: 0; color: #444446; font-size: 10px; text-align: justify;">本網頁採用本地運行技術，您輸入的文本與盲抽卡牌序列均僅於個人瀏覽器中即時渲染，本站不進行伺服器端數據存儲。系統嵌入之 Google 流量標籤與廣告控制模組僅作匿名化流量統計。使用者可隨時藉由瀏覽器隱私模式或造訪 Google 廣告設定頁面來管理、封鎖或拒現 Cookie 追蹤。</p>
             </div>
             <div>
                 <h4 style="color: #a1a1aa; font-size: 11px; margin: 0 0 10px 0; letter-spacing: 0.1em; text-transform: uppercase; border-left: 2px solid #52525b; padding-left: 8px;">獨立性聲明 // LICENSING</h4>
@@ -669,6 +658,9 @@
             animatedProxy.style.height = `${originRect.height}px`;
             document.body.appendChild(animatedProxy);
 
+            // 【物理優化】：原牌庫節點空間立即收縮並隱藏，觸發兩側卡牌平滑靠攏補位
+            targetCard.style.width = '0px';
+            targetCard.style.margin = '0px';
             targetCard.style.opacity = '0';
             targetCard.style.pointerEvents = 'none';
 
@@ -680,7 +672,6 @@
                 animatedProxy.style.transform = `scale(1) rotate(0deg)`;
             });
 
-            const currentSlotIndexCaptured = currentSlotIndex;
             currentSlotIndex++;
 
             if (currentSlotIndex === 1) {
@@ -695,6 +686,9 @@
 
             setTimeout(() => {
                 animatedProxy.remove();
+                // 動態飛升落座完成後，徹底將原牌庫節點從 HTML 樹中刪除
+                targetCard.remove(); 
+                
                 const realImgFile = mapCardImgName(cardData.name);
                 slotVenue.innerHTML = `
                     <div class="card card-in-slot flipped">
@@ -727,7 +721,6 @@
             selectedHand.forEach((card, index) => {
                 const cardMeaning = meaningsPool[card.name] || { nameCN: "未知", general: { upright: "無數據", reversed: "無數據" } };
                 
-                // 安全防禦：如果特定類別不存在，自動降級相容使用 general 欄位
                 let typeMeaning = cardMeaning[selectedType] || cardMeaning["general"];
                 if (!typeMeaning) {
                     typeMeaning = cardMeaning["general"] || { upright: "無數據說明", reversed: "無數據說明" };
@@ -772,7 +765,7 @@
             } else if (totalUprights === 2) { 
                 introText = `矩陣分析顯示，整體局勢正朝著積極的方向靠攏。雖然在特定時間節點上伴隨著些微的能量阻滯或調整，但主流動能依然由正位主導。`; 
                 coreAnalysis = `過去、現在、未來三節點中，【${pName}】與【${prName}】相互交織，顯示出雖然仍有一些盲點或環境阻力需要時間消化， 但不足以阻擋未來的【${fName}】所帶來的破局氣象。`; 
-                adviceText = "建議維持現有的基礎步調並進行局部微調，保持足夠的耐心，短暫的遲滯將自然迎刃而解。"; 
+                adviceText = "建議維持現有的基礎步調並進行局部微調，保持足夠的耐心，短暫的遲滯將自然迎痕而解。"; 
             } else if (totalUprights === 1) { 
                 introText = `當前牌陣中出現了較多的逆位能量拉扯。目前的局勢中隱藏著較多的制約、焦慮、不確定性或是能量嚴重受阻的情況。`; 
                 coreAnalysis = `從整體時間軸的張力來看，逆位的壓抑力量明顯壓過了前進的動能，這意味著內部盲點或環境帶來的拉扯正處於需要被重視的關鍵期。`; 
@@ -793,7 +786,6 @@
             }
             const targetNode = document.getElementById('capture-node');
             
-            // 優化跨網域圖片加載與清晰度，強制不污染畫布
             html2canvas(targetNode, { 
                 backgroundColor: "#050505", 
                 scale: 2, 
